@@ -79,12 +79,14 @@ class Reader
 
   def load_builtin( name )  ## convenience helper (requires proper named files w/ convention)
 
-## add motor, wikipedia, net, etc.
-
     if name =~ /\/fifa/
-       load_fifa_builtin( name )
+       load_xxx_builtin( 'fifa', name )
     elsif name =~ /\/iso3/
-       load_iso3_builtin( name )
+       load_xxx_builtin( 'iso3', name )
+    elsif name =~ /\/internet/
+       load_xxx_builtin( 'net', name )
+    elsif name =~ /\/motor/
+       load_xxx_builtin( 'motor', name )
     elsif name =~ /^([a-z]{3,})\/countries/     # e.g. africa/countries or america/countries
       ## auto-add continent (from folder structure) as tag
        load_countries_builtin( name, :tags => $1 )
@@ -117,55 +119,20 @@ class Reader
   end
 
 
-  def load_iso3_builtin( name )
+  def load_xxx_builtin( xxx, name )
     path = "#{WorldDB.root}/data/#{name}.yml"
 
     puts "*** parsing data '#{name}' (#{path})..."
 
     reader = HashReader.new( logger, path )
-    
-    ### fix: use each on reader!!! move normalize into reader
-    reader.hash.each do |key_wild, value_wild|
-    
-      # normalize
-      # - key n value as string (not symbols, bool? int? array?)
-      # - remove leading and trailing whitespace
-      key   = key_wild.to_s.strip
-      value = value_wild.to_s.strip
-      
-      puts ">>#{key}<< >>#{value}<<"
-    
+
+    reader.each do |key, value|
       country = Country.find_by_key!( key )
-      country.iso3 = value
+      country.send( "#{xxx}=", value )
       country.save!
-    
     end
 
     Prop.create!( key: "db.#{fixture_name_to_prop_key(name)}.version", value: "world.yml.#{WorldDB::VERSION}" )
-  end
-
-  def load_fifa_builtin( name )
-    path = "#{WorldDB.root}/data/#{name}.yml"
-
-    puts "*** parsing data '#{name}' (#{path})..."
-
-    reader = HashReader.new( logger, path )
-    
-    reader.hash.each do |key_wild, value_wild|
-    
-      # normalize
-      key   = key_wild.to_s.strip
-      value = value_wild.to_s.strip
-      
-      puts ">>#{key}<< >>#{value}<<"
-    
-      country = Country.find_by_key!( key )
-      country.fifa = value
-      country.save!
-    
-    end
-
-    Prop.create!( key: "db.#{fixture_name_to_prop_key(name)}.version", value: "world.yml.#{WorldDB::VERSION}"  )
   end
 
 

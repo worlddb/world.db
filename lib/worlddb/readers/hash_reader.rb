@@ -18,6 +18,20 @@ class HashReader
     @hash = YAML.load( File.read_utf8( @path ))
   end
 
-  attr_reader :logger, :hash
+  attr_reader :logger
   
+  def each
+    @hash.each do |key_wild, value_wild|
+      # normalize
+      # - key n value as string (not symbols, bool? int? array?)
+      # - remove leading and trailing whitespace
+      key   = key_wild.to_s.strip
+      value = value_wild.to_s.strip
+      
+      puts ">>#{key}<< >>#{value}<<"
+    
+      yield( key, value )
+    end
+  end # method each
+
 end # class HashReader

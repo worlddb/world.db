@@ -69,9 +69,14 @@ module WorldDB
   def self.fixtures  # all builtin fixtures; helper for covenience
 
   ['africa/countries',
-   'africa/fifa',
-   'africa/iso3',
+   'africa/1_codes/fifa',
+   'africa/1_codes/internet',
+   'africa/1_codes/iso3',
    'america/countries',
+   'america/1_codes/fifa',
+   'america/1_codes/internet',
+   'america/1_codes/iso3',
+   'america/1_codes/motor',
    'america/br/regions',
    'america/br/cities',
    'america/ca/regions',
@@ -83,8 +88,15 @@ module WorldDB
    'america/ve/regions',
    'america/ve/cities',
    'asia/countries',
+   'asia/1_codes/fifa',
+   'asia/1_codes/internet',
+   'asia/1_codes/iso3',
    'asia/jp/cities',
    'europe/countries',
+   'europe/1_codes/fifa',
+   'europe/1_codes/internet',
+   'europe/1_codes/iso3',
+   'europe/1_codes/motor',
    'europe/at/regions',
    'europe/at/cities',
    'europe/be/regions',
@@ -126,6 +138,9 @@ module WorldDB
    'europe/ua/cities',
    'europe/wa/cities',
    'oceania/countries',
+   'oceania/1_codes/fifa',
+   'oceania/1_codes/internet',
+   'oceania/1_codes/iso3',
    'oceania/au/cities'
    ]
   end

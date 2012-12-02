@@ -25,4 +25,5 @@ doc/
 ###########
 # ignore linked data folder (from world.db) do NOT duplicate/checkin
 
+data
 data/
