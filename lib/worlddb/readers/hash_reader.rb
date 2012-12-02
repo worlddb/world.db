@@ -28,6 +28,13 @@ class HashReader
       key   = key_wild.to_s.strip
       value = value_wild.to_s.strip
       
+      ### hack - hack - hack -change
+      ##  no: in yml  becomes false !!! check how to escape!
+      
+      key   = 'no' if key   == 'false'
+      value = 'no' if value == 'false'
+      ### todo: issue warnings
+      
       puts ">>#{key}<< >>#{value}<<"
     
       yield( key, value )
