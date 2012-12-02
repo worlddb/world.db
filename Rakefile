@@ -18,8 +18,8 @@ Hoe.spec 'worlddb' do
     
   # switch extension to .markdown for gihub formatting
   #  - auto-added from Manifest.txt (see define_spec in class Hoe)
-  # self.readme_file  = 'README.markdown'
-  # self.history_file = 'History.markdown'
+  # self.readme_file  = 'README.md'
+  # self.history_file = 'History.md'
   
   self.extra_deps = [
     ['activerecord', '~> 3.2']  # NB: will include activesupport,etc.
