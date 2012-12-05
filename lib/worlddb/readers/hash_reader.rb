@@ -15,7 +15,15 @@ class HashReader
 
     ## nb: assume/enfore utf-8 encoding (with or without BOM - byte order mark)
     ## - see worlddb/utils.rb
-    @hash = YAML.load( File.read_utf8( @path ))
+    
+    text = File.read_utf8( @path )
+    ### hack for syck yaml parser (e.g.ruby 1.9.2) (cannot handle !!null)
+    ##   change it to !null to get plain nil
+    ##   w/ both syck and psych/libyml
+    
+    text = text.gsub( '!!null', '!null' )
+    
+    @hash = YAML.load( text )
   end
 
   attr_reader :logger

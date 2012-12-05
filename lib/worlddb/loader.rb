@@ -2,11 +2,6 @@ module WorldDB
 
 class Loader
 
-## make models available in worlddb module by default with namespace
-#  e.g. lets you use City instead of Models::City 
-  include WorldDB::Models
-
-
   def initialize( logger=nil )
     if logger.nil?
       @logger = Logger.new(STDOUT)
@@ -34,42 +29,27 @@ class Loader
   end # method run
 
 
+  class CodeContext
+    ## make models available in worlddb module by default with namespace
+    #  e.g. lets you use City instead of Models::City 
+    include WorldDB::Models
+  end
+
+  ### todo: rename to load_fixtures_w_include_path (a little shorter - why? why not?)
   def load_fixtures_with_include_path( name, include_path )  # load from file system
     path = "#{include_path}/#{name}.rb"
  
     puts "*** loading data '#{name}' (#{path})..."
 
-    code = File.read( path )
-    
-    load_fixtures_worker( code )
+    CodeReader.new( logger, path ).eval( CodeContext )
+
+    # Prop.create!( :key => "db.#{name}.version", :value => WorldDB::VERSION )    
   end
-  
+
   def load_fixtures_builtin( name ) # load from gem (built-in)
-    path = "#{WorldDB.root}/data/#{name}.rb"
-
-    puts "*** loading data '#{name}' (#{path})..."
-
-    code = File.read( path )
-    
-    load_fixtures_worker( code )
+    load_fixtures_with_include_path( name, WorldDB.data_path )
   end
-  
 
-private
-  def load_fixtures_worker( code )
-    
-    self.class_eval( code )
 
-    # NB: same as
-    #
-    # module WorldDB
-    #   include WorldDB::Models
-    #  <code here>
-    # end
-    
-    # Prop.create!( :key => "db.#{name}.version", :value => SportDB::VERSION )
-    
-  end
-  
 end # class Loader
 end # module WorldDB

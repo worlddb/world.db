@@ -30,6 +30,7 @@ require 'worlddb/models/tag'
 require 'worlddb/models/tagging'
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/utils'
+require 'worlddb/readers/code_reader'
 require 'worlddb/readers/line_reader'
 require 'worlddb/readers/values_reader'
 require 'worlddb/readers/hash_reader'
@@ -46,6 +47,11 @@ module WorldDB
 
   def self.root
     "#{File.expand_path( File.dirname(File.dirname(__FILE__)) )}"
+  end
+  
+  # builtin path to fixture data
+  def self.data_path
+    "#{root}/data"
   end
 
   def self.main
@@ -67,82 +73,100 @@ module WorldDB
   end
 
   def self.fixtures  # all builtin fixtures; helper for covenience
+     africa_fixtures  +
+     america_fixtures +
+     europe_fixtures  +
+     asia_fixtures    +
+     oceania_fixtures
+  end
 
-  ['africa/countries',
-   'africa/1_codes/fifa',
-   'africa/1_codes/internet',
-   'africa/1_codes/iso3',
-   'america/countries',
-   'america/1_codes/fifa',
-   'america/1_codes/internet',
-   'america/1_codes/iso3',
-   'america/1_codes/motor',
-   'america/br/regions',
-   'america/br/cities',
-   'america/ca/regions',
-   'america/ca/cities',
-   'america/mx/regions',
-   'america/mx/cities',
-   'america/us/regions',
-   'america/us/cities',
-   'america/ve/regions',
-   'america/ve/cities',
-   'asia/countries',
-   'asia/1_codes/fifa',
-   'asia/1_codes/internet',
-   'asia/1_codes/iso3',
-   'asia/jp/cities',
-   'europe/countries',
-   'europe/1_codes/fifa',
-   'europe/1_codes/internet',
-   'europe/1_codes/iso3',
-   'europe/1_codes/motor',
-   'europe/at/regions',
-   'europe/at/cities',
-   'europe/be/regions',
-   'europe/be/cities',
-   'europe/bg/cities',
-   'europe/by/cities',
-   'europe/ch/cities',
-   'europe/cy/cities',
-   'europe/cz/regions',
-   'europe/cz/cities',
-   'europe/de/regions',
-   'europe/de/cities',
-   'europe/dk/cities',
-   'europe/ee/cities',
-   'europe/en/regions',
-   'europe/en/cities',
-   'europe/es/regions',
-   'europe/es/cities',
-   'europe/fi/cities',
-   'europe/fr/regions',
-   'europe/fr/cities',
-   'europe/gr/cities',
-   'europe/hr/cities',
-   'europe/hu/cities',
-   'europe/ie/cities',
-   'europe/it/cities',
-   'europe/lt/cities',
-   'europe/lv/cities',
-   'europe/nl/cities',
-   'europe/no/cities',
-   'europe/pl/cities',
-   'europe/pt/cities',
-   'europe/ro/cities',
-   'europe/rs/cities',
-   'europe/ru/cities',
-   'europe/sc/cities',
-   'europe/se/cities',
-   'europe/tr/cities',
-   'europe/ua/cities',
-   'europe/wa/cities',
-   'oceania/countries',
-   'oceania/1_codes/fifa',
-   'oceania/1_codes/internet',
-   'oceania/1_codes/iso3',
-   'oceania/au/cities'
-   ]
+  def self.africa_fixtures
+    ['countries',
+    '1_codes/fifa',
+    '1_codes/internet',
+    '1_codes/iso3'].map { |path| "africa/#{path}" }
+  end
+
+  def self.america_fixtures
+  ['countries',
+   '1_codes/fifa',
+   '1_codes/internet',
+   '1_codes/iso3',
+   '1_codes/motor',
+   'br/regions',
+   'br/cities',
+   'ca/regions',
+   'ca/cities',
+   'mx/regions',
+   'mx/cities',
+   'us/regions',
+   'us/cities',
+   've/regions',
+   've/cities'].map { |path| "america/#{path}" }
+  end
+
+  def self.asia_fixtures
+  ['countries',
+   '1_codes/fifa',
+   '1_codes/internet',
+   '1_codes/iso3',
+   'jp/cities'].map { |path| "asia/#{path}" }
+  end
+  
+  def self.europe_fixtures
+  ['countries',
+   '1_codes/fifa',
+   '1_codes/internet',
+   '1_codes/iso3',
+   '1_codes/motor',
+   'at/regions',
+   'at/cities',
+   'be/regions',
+   'be/cities',
+   'bg/cities',
+   'by/cities',
+   'ch/cities',
+   'cy/cities',
+   'cz/regions',
+   'cz/cities',
+   'de/regions',
+   'de/cities',
+   'dk/cities',
+   'ee/cities',
+   'en/regions',
+   'en/cities',
+   'es/regions',
+   'es/cities',
+   'fi/cities',
+   'fr/regions',
+   'fr/cities',
+   'gr/cities',
+   'hr/cities',
+   'hu/cities',
+   'ie/cities',
+   'it/cities',
+   'lt/cities',
+   'lv/cities',
+   'nl/cities',
+   'no/cities',
+   'pl/cities',
+   'pt/cities',
+   'ro/cities',
+   'rs/cities',
+   'ru/cities',
+   'sc/cities',
+   'se/cities',
+   'tr/cities',
+   'ua/cities',
+   'wa/cities'].map { |path| "europe/#{path}" }
+  end
+
+  def self.oceania_fixtures
+   ['countries',
+   '1_codes/fifa',
+   '1_codes/internet',
+   '1_codes/iso3',
+   'au/cities'].map { |path| "oceania/#{path}" }
   end
 
 

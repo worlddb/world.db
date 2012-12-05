@@ -23,25 +23,33 @@ class Reader
     args.each do |arg|
       name = arg     # File.basename( arg, '.*' )
 
-      if opts.load?
-        load_countries_builtin( name )             if opts.countries?
-        load_regions_builtin( opts.country, name ) if opts.regions?
-        load_cities_builtin( opts.country, name )  if opts.cities?
+      data_path = opts.load? ? WorldDB.data_path : opts.data_path
+
+      if opts.countries?
+        load_countries_with_include_path( name, data_path )
+      elsif opts.regions?
+        load_regions_with_include_path( opts.country, name, data_path )
+      elsif opts.cities?
+        load_cities_with_include_path( opts.country, name, data_path )
       else
-        load_countries_with_include_path( name, opts.data_path )              if opts.countries?
-        load_regions_with_include_path( opts.country, name, opts.data_path )  if opts.regions?
-        load_cities_with_include_path( opts.country, name, opts.data_path )   if opts.cities?
+        ## todo: issue a warning here; no fixture type specified; assume country?
       end
-    end
+    end # each arg
 
   end
 
 
-  ############################
-  # load from file system
-  
   def load_with_include_path( name, include_path )
-    if name =~ /^([a-z]{3,})\/countries/
+
+    if name =~ /\/fifa/
+       load_xxx_with_include_path( 'fifa', name, include_path )
+    elsif name =~ /\/iso3/
+       load_xxx_with_include_path( 'iso3', name, include_path )
+    elsif name =~ /\/internet/
+       load_xxx_with_include_path( 'net', name, include_path )
+    elsif name =~ /\/motor/
+       load_xxx_with_include_path( 'motor', name, include_path )
+    elsif name =~ /^([a-z]{3,})\/countries/     # e.g. africa/countries or america/countries
       ## auto-add continent (from folder structure) as tag
       load_countries_with_include_path( name, include_path, :tags => $1 )
     elsif name =~ /\/([a-z]{2})\/cities/
@@ -56,9 +64,19 @@ class Reader
     end
   end
 
+  def load_builtin( name )  ## convenience helper (requires proper named files w/ convention)
+    load_with_include_path( name, WorldDB.data_path )
+  end
+
+
   def load_countries_with_include_path( name, include_path, more_values={} )
     load_fixtures_with_include_path_for( Country, name, include_path, more_values )
   end
+
+  def load_countries_builtin( name, more_values={} )
+    load_countries_with_include_path( name, WorldDB.data_path, more_values )
+  end
+
 
   def load_regions_with_include_path( country_key, name, include_path )
     country = Country.find_by_key!( country_key )
@@ -67,60 +85,25 @@ class Reader
     load_fixtures_with_include_path_for( Region, name, include_path, country_id: country.id )
   end
 
-  def load_cities_with_include_path( country_key, name, include_path )  
+  def load_regions_builtin( country_key, name )
+    load_regions_with_include_path( country_key, name, WorldDB.data_path )
+  end
+
+
+  def load_cities_with_include_path( country_key, name, include_path )
     country = Country.find_by_key!( country_key )
     puts "Country #{country.key} >#{country.title} (#{country.code})<"
 
     load_fixtures_with_include_path_for( City, name, include_path, country_id: country.id )
   end
-  
-  ##################################
-  #  load from gem (built-in)
 
-  def load_builtin( name )  ## convenience helper (requires proper named files w/ convention)
-
-    if name =~ /\/fifa/
-       load_xxx_builtin( 'fifa', name )
-    elsif name =~ /\/iso3/
-       load_xxx_builtin( 'iso3', name )
-    elsif name =~ /\/internet/
-       load_xxx_builtin( 'net', name )
-    elsif name =~ /\/motor/
-       load_xxx_builtin( 'motor', name )
-    elsif name =~ /^([a-z]{3,})\/countries/     # e.g. africa/countries or america/countries
-      ## auto-add continent (from folder structure) as tag
-       load_countries_builtin( name, :tags => $1 )
-    elsif name =~ /\/([a-z]{2})\/cities/
-       load_cities_builtin( $1, name )
-    elsif name =~ /\/([a-z]{2})\/regions/
-       load_regions_builtin( $1, name )
-    else
-       puts "*** error: unknown world.db fixture type >#{name}<"
-       # todo/fix: exit w/ error
-    end
-  end
-
-  def load_countries_builtin( name, more_values )
-    load_fixtures_builtin_for( Country, name, more_values )
-  end
-
-  def load_regions_builtin( country_key, name )
-    country = Country.find_by_key!( country_key )
-    puts "Country #{country.key} >#{country.title} (#{country.code})<"
-  
-    load_fixtures_builtin_for( Region, name, country_id: country.id )
-  end
-  
   def load_cities_builtin( country_key, name )
-    country = Country.find_by_key!( country_key )
-    puts "Country #{country.key} >#{country.title} (#{country.code})<"
-
-    load_fixtures_builtin_for( City, name, country_id: country.id )
+    load_cities_with_include_path( country_key, name, WorldDB.data_path )
   end
 
 
-  def load_xxx_builtin( xxx, name )
-    path = "#{WorldDB.root}/data/#{name}.yml"
+  def load_xxx_with_include_path( xxx, name, include_path )
+    path = "#{include_path}/#{name}.yml"
 
     puts "*** parsing data '#{name}' (#{path})..."
 
@@ -132,7 +115,11 @@ class Reader
       country.save!
     end
 
-    Prop.create!( key: "db.#{fixture_name_to_prop_key(name)}.version", value: "world.yml.#{WorldDB::VERSION}" )
+    Prop.create_from_worlddb_fixture!( name, path )
+  end
+
+  def load_xxx_builtin( xxx, name )
+    load_xxx_with_include_path( xxx, name, WorldDB.data_path )
   end
 
 
@@ -146,19 +133,7 @@ private
     
     load_fixtures_worker_for( clazz, reader )
 
-    Prop.create!( key: "db.#{fixture_name_to_prop_key(name)}.version", value: "file.txt.#{File.mtime(path).strftime('%Y.%m.%d')}" )        
-  end
-
-  def load_fixtures_builtin_for( clazz, name, more_values={} ) # load from gem (built-in)
-    path = "#{WorldDB.root}/data/#{name}.txt"
-
-    puts "*** parsing data '#{name}' (#{path})..."
-
-    reader = ValuesReader.new( logger, path, more_values )
-    
-    load_fixtures_worker_for( clazz, reader )
-
-    Prop.create!( key: "db.#{fixture_name_to_prop_key(name)}.version", value: "world.txt.#{WorldDB::VERSION}" )
+    Prop.create_from_worlddb_fixture!( name, path )
   end
 
 

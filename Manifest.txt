@@ -102,6 +102,7 @@ lib/worlddb/models/region.rb
 lib/worlddb/models/tag.rb
 lib/worlddb/models/tagging.rb
 lib/worlddb/reader.rb
+lib/worlddb/readers/code_reader.rb
 lib/worlddb/readers/hash_reader.rb
 lib/worlddb/readers/line_reader.rb
 lib/worlddb/readers/values_reader.rb
