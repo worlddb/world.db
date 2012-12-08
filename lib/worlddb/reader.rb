@@ -146,6 +146,7 @@ private
   
       value_numbers     = []
       value_tag_keys    = []
+      value_cities      = []
       
       ### check for "default" tags - that is, if present attribs[:tags] remove from hash
       
@@ -231,10 +232,18 @@ private
           
           value_tag_keys += tag_keys
         else
+          
+          if clazz == Country || clazz == Region
+            ### assume it is the capital city - mark it for auto add
+            value_cities << value
+            next
+          end
+
           # issue warning: unknown type for value
           puts "!!!! >>>> warning: unknown type for value >#{value}<"
         end
-      end
+      end # each value
+
       
       if value_numbers.size > 0
         if clazz == City
@@ -303,6 +312,45 @@ private
       puts attribs.to_json
    
       rec.update_attributes!( attribs )
+
+      #################
+      ## auto add capital cities
+
+      value_cities.each do |city_title|
+        
+        city_attribs = {}
+        city_key = reader.title_to_key( city_title )
+        
+        ## check if it exists
+        ## todo/fix: add country_id for lookup?
+        city = City.find_by_key( city_key )
+        if city.present?
+          puts "*** update city #{city.id}-#{city.key}:"
+        else
+          puts "*** create city:"
+          city = City.new
+          city_attribs[ :key ] = city_key
+        end
+        
+        city_attribs[ :title ] = city_title
+     
+        if clazz == Country
+          city_attribs[ :country_id ] = rec.id
+        elsif clazz == Region
+          city_attribs[ :region_id  ] = rec.id
+          city_attribs[ :country_id ] = rec.country_id
+        else
+          ## issue warning: unknown type for city!!!
+        end
+        
+        puts city_attribs.to_json
+   
+        city.update_attributes!( city_attribs )
+        
+        ### todo/fix: add captial ref to country/region
+        
+       end # each city
+
       
       ##################
       ## add taggings 

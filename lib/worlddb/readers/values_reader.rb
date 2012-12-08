@@ -136,26 +136,28 @@ class ValuesReader
       alternatives = [
         ['ß', 'ss'],
         ['æ', 'ae'],
-        ['á', 'a' ],  ## e.g. Bogotá, Králové
-        ['ã', 'a' ],  ## e.g  São Paulo
-        ['ä', 'ae'],  ## 
-        ['ö', 'oe'],  ## 
-        ['ó', 'o' ],  ## e.g. Colón, Łódź, Kraków
-        ['ü', 'ue'],  ## 
-        ['é', 'e' ],  ## e.g. Vélez, Králové
-        ['è', 'e' ],  ## e.g. Rivières
-        ['ê', 'e' ],  ## e.g. Grêmio
-        ['ě', 'e' ],  ## e.g. Budějovice
-        ['ñ', 'n' ],  ## e.g. Porteño
-        ['ň', 'n' ],  ## e.g. Plzeň, Třeboň
-        ['ú', 'u' ],  ## e.g. Fútbol
-        ['ì', 'i' ],  ## e.g. Potosì
-        ['í', 'i' ],  ## e.g. Ústí
-        ['ř', 'r' ],  ## e.g. Třeboň
-        ['ź', 'z' ],  ## e.g. Łódź
-        ['Ú', 'u' ],  ## e.g. Ústí
-        ['Č', 'c' ],  ## e.g. České
-        ['Ł', 'l' ],  ## e.g. Łódź
+        ['ä', 'ae'],  
+        ['á', 'a' ],  # e.g. Bogotá, Králové
+        ['ã', 'a' ],  # e.g  São Paulo
+        ['ă', 'a' ],  # e.g. Chișinău
+        ['é', 'e' ],  # e.g. Vélez, Králové
+        ['è', 'e' ],  # e.g. Rivières
+        ['ê', 'e' ],  # e.g. Grêmio
+        ['ě', 'e' ],  # e.g. Budějovice
+        ['ì', 'i' ],  # e.g. Potosì
+        ['í', 'i' ],  # e.g. Ústí
+        ['ñ', 'n' ],  # e.g. Porteño
+        ['ň', 'n' ],  # e.g. Plzeň, Třeboň
+        ['ö', 'oe'],  
+        ['ó', 'o' ],  # e.g. Colón, Łódź, Kraków
+        ['ř', 'r' ],  # e.g. Třeboň
+        ['ș', 's' ],  # e.g. Chișinău
+        ['ü', 'ue'],  
+        ['ú', 'u' ],  # e.g. Fútbol
+        ['ź', 'z' ],  # e.g. Łódź
+        ['Č', 'c' ],  # e.g. České
+        ['Ł', 'l' ],  # e.g. Łódź
+        ['Ú', 'u' ],  # e.g. Ústí
       ]
       
       alternatives.each do |alt|
