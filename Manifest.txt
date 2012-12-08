@@ -94,7 +94,6 @@ lib/worlddb.rb
 lib/worlddb/cli/opts.rb
 lib/worlddb/cli/runner.rb
 lib/worlddb/console.rb
-lib/worlddb/loader.rb
 lib/worlddb/models/city.rb
 lib/worlddb/models/country.rb
 lib/worlddb/models/prop.rb

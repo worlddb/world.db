@@ -35,7 +35,6 @@ require 'worlddb/readers/line_reader'
 require 'worlddb/readers/values_reader'
 require 'worlddb/readers/hash_reader'
 require 'worlddb/reader'
-require 'worlddb/loader'
 require 'worlddb/cli/opts'
 require 'worlddb/cli/runner'
 
@@ -60,16 +59,6 @@ module WorldDB
   
   def self.create
     CreateDB.up
-  end
-
-  # load built-in (that is, bundled within the gem) named seeds
-  # - pass in an array of seed names e.g. [ 'countries', 'at/cities', 'de/cities' ] etc.
-
-  def self.load( ary )
-    loader = Loader.new
-    ary.each do |name|
-      loader.load_fixtures_builtin( name )
-    end
   end
 
   def self.fixtures  # all builtin fixtures; helper for covenience
@@ -169,6 +158,7 @@ module WorldDB
    'au/cities'].map { |path| "oceania/#{path}" }
   end
 
+  ## todo/fix: rename to load/load_all - why? why not?? or just add an alias?
 
   def self.read( ary )
     reader = Reader.new

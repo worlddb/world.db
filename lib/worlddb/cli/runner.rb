@@ -99,11 +99,8 @@ EOS
       WorldDB.create   if opts.create?
       WorldDB.delete!  if opts.delete?
 
-      if opts.countries? || opts.regions? || opts.cities?
-        Reader.new( logger ).run( opts, args )  # load/read plain text country/region/city fixtures
-      else
-        Loader.new( logger ).run( opts, args ) # load ruby fixtures
-      end
+      # read plain text country/region/city fixtures
+      Reader.new( logger ).run( opts, args )
     end
 
     WorldDB.stats

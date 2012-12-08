@@ -17,11 +17,29 @@ class HashReader
     ## - see worlddb/utils.rb
     
     text = File.read_utf8( @path )
+   
     ### hack for syck yaml parser (e.g.ruby 1.9.2) (cannot handle !!null)
     ##   change it to !null to get plain nil
     ##   w/ both syck and psych/libyml
-    
+
     text = text.gsub( '!!null', '!null' )
+   
+    ### hacks for yaml
+
+    ## replace all tabs w/ two spaces and issue a warning
+    ## nb: yaml does NOT support tabs see why here -> yaml.org/faq.html
+    
+    text = text.gsub( "\t" ) do |_|
+      puts "*** warn: hash reader - found tab (\t) replacing w/ two spaces; yaml forbids tabs; see yaml.org/faq.html"
+      '  '  # replace w/ two spaces
+    end
+
+    ## quote implicit boolean types on,no,n,y
+    
+    text = text.gsub( /\b(ON|On|on|NO|No|no|N|n|Y|y)\b/ ) do |value|
+      puts "*** warn: hash reader - found implicit bool (#{$1}); adding quotes to turn into string; see yaml.org/refcard.html"
+      "'#{$1}'"  # add quotes to turn it into a string (not bool e.g. true|false)
+    end
     
     @hash = YAML.load( text )
   end
@@ -35,13 +53,6 @@ class HashReader
       # - remove leading and trailing whitespace
       key   = key_wild.to_s.strip
       value = value_wild.to_s.strip
-      
-      ### hack - hack - hack -change
-      ##  no: in yml  becomes false !!! check how to escape!
-      
-      key   = 'no' if key   == 'false'
-      value = 'no' if value == 'false'
-      ### todo: issue warnings
       
       puts ">>#{key}<< >>#{value}<<"
     
