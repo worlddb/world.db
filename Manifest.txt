@@ -16,7 +16,6 @@ data/america/1_codes/motor.yml
 data/america/2_names/de.yml
 data/america/2_names/es.yml
 data/america/3_more/en.wikipedia.yml
-data/america/br/cities.txt
 data/america/br/regions.txt
 data/america/ca/cities.txt
 data/america/ca/regions.txt
