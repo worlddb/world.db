@@ -183,6 +183,8 @@ private
         elsif value =~ /^supra$/   ## supra(national)
           attribs[ :c ] = false   # turn off default c|country flag; make it s|supra only
           attribs[ :s ] = true
+          ## auto-add tag supra
+          value_tag_keys << 'supra'
         elsif value =~ /^supra:/   ## supra:
           value_country_key = value[6..-1]  ## cut off supra: prefix
           value_country = Country.find_by_key!( value_country_key )
@@ -192,7 +194,9 @@ private
           value_country = Country.find_by_key!( value_country_key )
           attribs[ :country_id ] = value_country.id
           attribs[ :c ] = false # turn off default c|country flag; make it d|depend only
-          attribs[ :d ] = true  
+          attribs[ :d ] = true
+          ## auto-add tag supra
+          value_tag_keys << 'territory'  # rename tag to dependency? why? why not?
         elsif value =~ /^metro:/   ## metro:
           value_city_key = value[6..-1]  ## cut off metro: prefix
           value_city = City.find_by_key!( value_city_key )
@@ -239,6 +243,43 @@ private
         else   # countries,regions
           attribs[ :area ] = value_numbers[0]
           attribs[ :pop  ] = value_numbers[1]
+          
+          if clazz == Country
+            # auto-add tags
+            area = value_numbers[0]
+            pop  = value_numbers[1]
+            
+            # categorize into brackets
+            if area >= 1_000_000
+              value_tag_keys << 'area_1_000_000_n_up'
+            elsif area >= 100_000
+              value_tag_keys << 'area_1_000_000_n_100_000'
+            elsif area >= 1000
+              value_tag_keys << 'area_100_000_n_1_000'
+            else
+              value_tag_keys << 'area_1_000_n_less' # microstate
+            end
+
+            # include all
+            value_tag_keys << 'area_100_000_n_up'  if area >= 100_000
+            value_tag_keys << 'area_1_000_n_up'    if area >=   1_000
+
+            
+            # categorize into brackets
+            if pop >= 100_000_000
+              value_tag_keys << 'pop_100m_n_up'
+            elsif pop >= 10_000_000
+              value_tag_keys << 'pop_100m_n_10m'
+            elsif pop >= 1_000_000
+              value_tag_keys << 'pop_10m_n_1m'
+            else
+              value_tag_keys << 'pop_1m_n_less'
+            end
+            
+            # include all
+            value_tag_keys << 'pop_10m_n_up'  if pop >= 10_000_000
+            value_tag_keys << 'pop_1m_n_up'   if pop >=  1_000_000
+          end
         end
       end
 

@@ -25,6 +25,10 @@ class HashReader
     text = text.gsub( '!!null', '!null' )
    
     ### hacks for yaml
+    
+    ### see yaml gotschas
+    ##  - http://www.perlmonks.org/?node_id=738671
+    ##  - 
 
     ## replace all tabs w/ two spaces and issue a warning
     ## nb: yaml does NOT support tabs see why here -> yaml.org/faq.html

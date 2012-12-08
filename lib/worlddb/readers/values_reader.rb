@@ -68,26 +68,102 @@ class ValuesReader
       end
       
       puts "  values: >>#{values.join('<< >>')}<<"
-            
-      attribs = {
-        key: values[0]
-      }
       
+      
+      ### todo/fix: allow check - do NOT allow mixed use of with key and w/o key
+      ##  either use keys or do NOT use keys; do NOT mix in a single fixture file
+      
+      
+      ### support autogenerate key from first title value
+      if values[0] =~ /^[a-z]{2,}$/   # if it looks like a key (only a-z lower case allowed); assume it's a key
+        key_col         = values[0]
+        title_col       = values[1]
+        more_cols       = values[2..-1]
+      else
+        key_col         = '<auto>'
+        title_col       = values[0]
+        more_cols       = values[1..-1]
+      end
+
+      attribs = {}
+
       ## title (split of optional synonyms)
       # e.g. FC Bayern Muenchen|Bayern Muenchen|Bayern
-      titles = values[1].split('|')
+      titles = title_col.split('|')
       
       attribs[ :title ]    =  titles[0]
-      ## add optional synonyms
+     
+      ## add optional synonyms if present
       attribs[ :synonyms ] =  titles[1..-1].join('|')  if titles.size > 1
+      
+      if key_col == '<auto>'
+        ## autogenerate key from first title
+        key_col = title_to_key( titles[0] )
+        puts "   autogen key >#{key_col}< from title >#{titles[0]}<"
+      end
+      
+      attribs[ :key ] = key_col
       
       attribs = attribs.merge( @more_values )  # e.g. merge country_id and other defaults if present
                         
-      yield( attribs, values[2..-1] )
+      yield( attribs, more_cols )
 
     end # each lines
 
   end # method each_line
   
-end # class ValuesReader
+  
 
+  def title_to_key( title )
+
+      ## NB: downcase does NOT work for accented chars (thus, include in alternatives)
+      key = title.downcase
+
+      ### remove optional english translation in square brackets ([]) e.g. Wien [Vienna]
+      key = key.gsub( /\[.+\]/, '' )
+
+      ## remove optional longer title part in () e.g. Las Palmas (de Gran Canaria), Palma (de Mallorca)
+      key = key.gsub( /\(.+\)/, '' )
+
+      ## remove all whitespace and punctuation
+      key = key.gsub( /[ \t_\-\.()\[\]'"\/]/, '' )
+
+      ##  turn accented char into ascii look alike if possible
+      ##
+      ## todo: add some more
+      ## see http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references  for more
+      
+      alternatives = [
+        ['ß', 'ss'],
+        ['æ', 'ae'],
+        ['á', 'a' ],  ## e.g. Bogotá, Králové
+        ['ã', 'a' ],  ## e.g  São Paulo
+        ['ä', 'ae'],  ## 
+        ['ö', 'oe'],  ## 
+        ['ó', 'o' ],  ## e.g. Colón, Łódź, Kraków
+        ['ü', 'ue'],  ## 
+        ['é', 'e' ],  ## e.g. Vélez, Králové
+        ['è', 'e' ],  ## e.g. Rivières
+        ['ê', 'e' ],  ## e.g. Grêmio
+        ['ě', 'e' ],  ## e.g. Budějovice
+        ['ñ', 'n' ],  ## e.g. Porteño
+        ['ň', 'n' ],  ## e.g. Plzeň, Třeboň
+        ['ú', 'u' ],  ## e.g. Fútbol
+        ['ì', 'i' ],  ## e.g. Potosì
+        ['í', 'i' ],  ## e.g. Ústí
+        ['ř', 'r' ],  ## e.g. Třeboň
+        ['ź', 'z' ],  ## e.g. Łódź
+        ['Ú', 'u' ],  ## e.g. Ústí
+        ['Č', 'c' ],  ## e.g. České
+        ['Ł', 'l' ],  ## e.g. Łódź
+      ]
+      
+      alternatives.each do |alt|
+        key = key.gsub( alt[0], alt[1] )
+      end
+
+      key
+  end # method title_to_key
+
+  
+end # class ValuesReader

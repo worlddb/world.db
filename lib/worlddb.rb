@@ -83,7 +83,6 @@ module WorldDB
    '1_codes/iso3',
    '1_codes/motor',
    'br/regions',
-   'br/cities',
    'ca/regions',
    'ca/cities',
    'mx/regions',
@@ -173,7 +172,6 @@ module WorldDB
     # too big for heroku free db plan (10,000 record limit)
     #  - sorry, can't load by default
     fixture_excludes = [
-      'america/br/cities',
       'america/ve/cities'
     ]
     
