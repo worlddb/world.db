@@ -28,6 +28,8 @@ require 'worlddb/models/region'
 require 'worlddb/models/city'
 require 'worlddb/models/tag'
 require 'worlddb/models/tagging'
+require 'worlddb/models/lang'
+require 'worlddb/models/usage'
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/utils'
 require 'worlddb/readers/code_reader'
@@ -62,11 +64,21 @@ module WorldDB
   end
 
   def self.fixtures  # all builtin fixtures; helper for covenience
-     africa_fixtures  +
-     america_fixtures +
-     europe_fixtures  +
-     asia_fixtures    +
-     oceania_fixtures
+     lang_fixtures + 
+     tag_fixtures     + []
+#     africa_fixtures  + []
+#     america_fixtures +
+#     europe_fixtures  +
+#     asia_fixtures    +
+#     oceania_fixtures
+  end
+
+  def self.lang_fixtures
+    ['langs']
+  end
+
+  def self.tag_fixtures
+    ['tags.1', 'tags.3']
   end
 
   def self.africa_fixtures
@@ -198,6 +210,8 @@ module WorldDB
       City.delete_all
       Region.delete_all
       Country.delete_all
+      Usage.delete_all
+      Lang.delete_all
       Prop.delete_all
     end
     
@@ -221,6 +235,8 @@ module WorldDB
       puts " #{'%5d' % City.where(d: true).count} districts"
       puts " #{'%5d' % Tag.count} tags"
       puts " #{'%5d' % Tagging.count} taggings"
+      puts " #{'%5d' % Lang.count} langs"
+      puts " #{'%5d' % Usage.count} usages"
     end
     
     def props

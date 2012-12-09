@@ -5,6 +5,9 @@ module WorldDB::Models
 class Country < ActiveRecord::Base
   self.table_name = 'countries'
 
+  has_many :usages
+  has_many :langs, :through => :usages # lang(uage)s through usages (that is, countries_langs) join table
+
   has_many :regions, :class_name => 'Region', :foreign_key => 'country_id'
   has_many :cities,  :class_name => 'City',   :foreign_key => 'country_id'
   

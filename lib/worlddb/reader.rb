@@ -41,7 +41,9 @@ class Reader
 
   def load_with_include_path( name, include_path )
 
-    if name =~ /\/fifa/
+    if name =~ /^lang/
+       load_langs_with_include_path( name, include_path )
+    elsif name =~ /\/fifa/
        load_xxx_with_include_path( 'fifa', name, include_path )
     elsif name =~ /\/iso3/
        load_xxx_with_include_path( 'iso3', name, include_path )
@@ -49,6 +51,8 @@ class Reader
        load_xxx_with_include_path( 'net', name, include_path )
     elsif name =~ /\/motor/
        load_xxx_with_include_path( 'motor', name, include_path )
+    elsif name =~ /^tag.*\.(\d)$/
+       load_tags_with_include_path( name, include_path, :grade => $1.to_i )
     elsif name =~ /^([a-z]{3,})\/countries/     # e.g. africa/countries or america/countries
       ## auto-add continent (from folder structure) as tag
       load_countries_with_include_path( name, include_path, :tags => $1 )
@@ -63,6 +67,7 @@ class Reader
       # todo/fix: exit w/ error
     end
   end
+  
 
   def load_builtin( name )  ## convenience helper (requires proper named files w/ convention)
     load_with_include_path( name, WorldDB.data_path )
@@ -99,6 +104,109 @@ class Reader
 
   def load_cities_builtin( country_key, name )
     load_cities_with_include_path( country_key, name, WorldDB.data_path )
+  end
+
+
+  def load_langs_with_include_path( name, include_path )
+    path = "#{include_path}/#{name}.yml"
+
+    puts "*** parsing data '#{name}' (#{path})..."
+
+    reader = HashReader.new( logger, path )
+
+    reader.each do |key, value|
+
+      puts "adding lang >>#{key}<< >>#{value}<<..."
+      
+      lang_key   = key.strip
+      lang_title = value.strip
+      
+      lang_attribs = {}
+        
+      ## check if it exists
+      lang = Lang.find_by_key( lang_key )
+      if lang.present?
+        puts "*** update lang #{lang.id}-#{lang.key}:"
+      else
+        puts "*** create lang:"
+        lang = Lang.new
+        lang_attribs[ :key ] = lang_key
+      end
+        
+      lang_attribs[ :title ] = lang_title
+        
+      puts lang_attribs.to_json
+   
+      lang.update_attributes!( lang_attribs )
+    end # each key,value
+
+    Prop.create_from_worlddb_fixture!( name, path )
+  end
+  
+  def load_langs_builtin( name )
+    load_langs_with_include_path( name, WorldDB.data_path )
+  end
+
+
+  def load_tags_with_include_path( name, include_path, more_values={} )
+    path = "#{include_path}/#{name}.yml"
+
+    puts "*** parsing data '#{name}' (#{path})..."
+
+    reader = HashReader.new( logger, path )
+
+    grade = 1
+    
+    if more_values[:grade].present?
+      grade = more_values[:grade].to_i
+    end
+
+    reader.each do |key, value|
+      ### split value by comma (e.g. northern america,southern america, etc.)
+      puts "adding grade #{grade} tags >>#{key}<< >>#{value}<<..."
+      tag_pairs = value.split(',')
+      tag_pairs.each do |pair|
+        ## split key|title
+        values = pair.split('|')
+        
+        key   = values[0]
+        ## remove optional quotes (e.g. 'n' auto-added by reader
+        key = key.gsub( "'", '' )
+        ### remove (optional comment) from key (e.g. carribean (islands))
+        key = key.gsub( /\(.+\)/, '' )
+        ## remove leading n trailing space
+        key = key.strip
+        
+        title = values[1] || ''  # nb: title might be empty/missing
+        title = title.strip
+        
+        tag_attribs = {}
+        
+        ## check if it exists
+        ## todo/fix: add country_id for lookup?
+        tag = Tag.find_by_key( key )
+        if tag.present?
+          puts "*** update tag #{tag.id}-#{tag.key}:"
+        else
+          puts "*** create tag:"
+          tag = Tag.new
+          tag_attribs[ :key ] = key
+        end
+        
+        tag_attribs[ :title ] = title
+        tag_attribs[ :grade ] = grade
+        
+        puts tag_attribs.to_json
+   
+        tag.update_attributes!( tag_attribs )
+      end
+    end # each key,value
+
+    Prop.create_from_worlddb_fixture!( name, path )
+  end # method load_tags_with_include_path
+
+  def load_tags_builtin( name, include_path, more_values={} )
+    load_tags_with_include_path( name, WorldDB.data_path, more_values )
   end
 
 
@@ -262,9 +370,9 @@ private
             if area >= 1_000_000
               value_tag_keys << 'area_1_000_000_n_up'
             elsif area >= 100_000
-              value_tag_keys << 'area_1_000_000_n_100_000'
+              value_tag_keys << 'area_100_000_to_1_000_000'
             elsif area >= 1000
-              value_tag_keys << 'area_100_000_n_1_000'
+              value_tag_keys << 'area_1_000_to_100_000'
             else
               value_tag_keys << 'area_1_000_n_less' # microstate
             end
@@ -278,9 +386,9 @@ private
             if pop >= 100_000_000
               value_tag_keys << 'pop_100m_n_up'
             elsif pop >= 10_000_000
-              value_tag_keys << 'pop_100m_n_10m'
+              value_tag_keys << 'pop_10m_to_100m'
             elsif pop >= 1_000_000
-              value_tag_keys << 'pop_10m_n_1m'
+              value_tag_keys << 'pop_1m_to_10m'
             else
               value_tag_keys << 'pop_1m_n_less'
             end

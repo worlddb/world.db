@@ -82,7 +82,8 @@ end
 create_table :tags do |t|
   t.string :key,  :null => false
   t.string :slug, :null => false
-  t.string :title    # todo: make required? 
+  t.string :title    # todo: make required?
+  t.integer :grade, :null => false, :default => 1  # grade/tier e.g. 1/2/3 for now
   ## todo: add parent or similar for hierachy (for tag stacks/packs)
   t.timestamps
 end
@@ -98,6 +99,21 @@ end
 add_index :taggings, :tag_id
 add_index :taggings, [:taggable_id, :taggable_type]
 
+
+create_table :langs do |t|  # langs == languages (e.g. en/English, de/Deutsch, etc.)
+  t.string :key,   :null => false
+  t.string :title, :null => false
+  t.timestamps
+end
+
+create_table :usages do |t|  # join table for countries_langs
+  t.references :country,  :null => false
+  t.references :lang,     :null => false
+  t.boolean    :official, :null => false, :default => true  # is_official language in country
+  t.boolean    :minor,    :null => false, :default => false # spoken by minority 
+  t.float      :percent     # usage in percent e.g. 90.0, 0.55, etc.
+  t.timestamps
+end
 
 create_table :props do |t|
   t.string :key,   :null => false
