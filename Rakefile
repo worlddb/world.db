@@ -77,7 +77,9 @@ namespace :dev do
 
 
   desc 'worlddb - test loading of builtin fixtures'
-  task :test => [:clean, :create, :import] 
+  task :test => [:clean, :create, :import]
 
+  desc 'worlddb - test loading of builtin fixtures (update)'
+  task :update => [:import]
 
 end  # namespace :dev

@@ -43,6 +43,8 @@ class Reader
 
     if name =~ /^lang/
        load_langs_with_include_path( name, include_path )
+    elsif name =~ /\/lang/
+       load_usages_with_include_path( name, include_path )
     elsif name =~ /\/fifa/
        load_xxx_with_include_path( 'fifa', name, include_path )
     elsif name =~ /\/iso3/
@@ -170,8 +172,6 @@ class Reader
         values = pair.split('|')
         
         key   = values[0]
-        ## remove optional quotes (e.g. 'n' auto-added by reader
-        key = key.gsub( "'", '' )
         ### remove (optional comment) from key (e.g. carribean (islands))
         key = key.gsub( /\(.+\)/, '' )
         ## remove leading n trailing space
@@ -209,6 +209,38 @@ class Reader
     load_tags_with_include_path( name, WorldDB.data_path, more_values )
   end
 
+
+  def load_usages_with_include_path( name, include_path )
+    path = "#{include_path}/#{name}.yml"
+
+    puts "*** parsing data '#{name}' (#{path})..."
+
+    reader = HashReader.new( logger, path )
+
+    reader.each do |key, value|
+      puts "   adding langs >>#{value}<<to country >>#{key}<<"
+      
+      country = Country.find_by_key!( key )
+      
+      lang_keys = value.split(',')
+      lang_keys.each do |lang_key|
+
+        ### remove (optional comment) from key (e.g. carribean (islands))
+        lang_key = lang_key.gsub( /\(.+\)/, '' )
+        ## remove leading n trailing space
+        lang_key = lang_key.strip
+
+        lang = Lang.find_by_key!( lang_key )
+        Usage.create!( country_id: country.id, lang_id: lang.id, official: true, minor: false )
+      end
+    end
+
+    Prop.create_from_worlddb_fixture!( name, path )
+  end
+  
+  def load_usages_builtin( name )
+    load_usages_with_include_path( name, WorldDB.data_path )
+  end
 
   def load_xxx_with_include_path( xxx, name, include_path )
     path = "#{include_path}/#{name}.yml"

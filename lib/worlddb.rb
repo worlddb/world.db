@@ -64,33 +64,47 @@ module WorldDB
   end
 
   def self.fixtures  # all builtin fixtures; helper for covenience
-     lang_fixtures + 
-     tag_fixtures     + []
-#     africa_fixtures  + []
-#     america_fixtures +
-#     europe_fixtures  +
-#     asia_fixtures    +
-#     oceania_fixtures
+     tag_fixtures  + 
+     country_fixtures +
+     lang_fixtures +
+     africa_fixtures  +
+     america_fixtures +
+     europe_fixtures  +
+     asia_fixtures    +
+     oceania_fixtures
   end
 
-  def self.lang_fixtures
-    ['langs']
-  end
 
   def self.tag_fixtures
     ['tags.1', 'tags.3']
   end
+  
+  def self.country_fixtures
+    ['africa/countries',
+     'america/countries',
+     'asia/countries',
+     'europe/countries',
+     'oceania/countries']
+  end
+
+  def self.lang_fixtures
+    ['langs',
+     'africa/3_more/lang',
+     'america/3_more/lang',
+     'asia/3_more/lang',
+     'europe/3_more/lang',
+     'oceania/3_more/lang'
+    ]
+  end
 
   def self.africa_fixtures
-    ['countries',
-    '1_codes/fifa',
-    '1_codes/internet',
-    '1_codes/iso3'].map { |path| "africa/#{path}" }
+    ['1_codes/fifa',
+     '1_codes/internet',
+     '1_codes/iso3'].map { |path| "africa/#{path}" }
   end
 
   def self.america_fixtures
-  ['countries',
-   '1_codes/fifa',
+  ['1_codes/fifa',
    '1_codes/internet',
    '1_codes/iso3',
    '1_codes/motor',
@@ -106,16 +120,14 @@ module WorldDB
   end
 
   def self.asia_fixtures
-  ['countries',
-   '1_codes/fifa',
+  ['1_codes/fifa',
    '1_codes/internet',
    '1_codes/iso3',
    'jp/cities'].map { |path| "asia/#{path}" }
   end
   
   def self.europe_fixtures
-  ['countries',
-   '1_codes/fifa',
+  ['1_codes/fifa',
    '1_codes/internet',
    '1_codes/iso3',
    '1_codes/motor',
@@ -162,11 +174,10 @@ module WorldDB
   end
 
   def self.oceania_fixtures
-   ['countries',
-   '1_codes/fifa',
-   '1_codes/internet',
-   '1_codes/iso3',
-   'au/cities'].map { |path| "oceania/#{path}" }
+   ['1_codes/fifa',
+    '1_codes/internet',
+    '1_codes/iso3',
+    'au/cities'].map { |path| "oceania/#{path}" }
   end
 
   ## todo/fix: rename to load/load_all - why? why not?? or just add an alias?

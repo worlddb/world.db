@@ -39,11 +39,25 @@ class HashReader
     end
 
     ## quote implicit boolean types on,no,n,y
-    
-    text = text.gsub( /\b(ON|On|on|NO|No|no|N|n|Y|y)\b/ ) do |value|
-      puts "*** warn: hash reader - found implicit bool (#{$1}); adding quotes to turn into string; see yaml.org/refcard.html"
-      "'#{$1}'"  # add quotes to turn it into a string (not bool e.g. true|false)
+
+    ## nb: escape only if key e.g. no: or "free standing" value on its own line e.g.
+    ##   no: no
+
+    text = text.gsub( /^([ ]*)(ON|On|on|NO|No|no|N|n|Y|y)[ ]*:/ ) do |value|
+      puts "*** warn: hash reader - found implicit bool (#{$1}#{$2}) for key; adding quotes to turn into string; see yaml.org/refcard.html"
+      # nb: preserve leading spaces for structure - might be significant
+      "#{$1}'#{$2}':"  # add quotes to turn it into a string (not bool e.g. true|false)
     end
+
+    ## nb: value must be freestanding (only allow optional eol comment)
+    ##  do not escape if part of string sequence e.g.
+    ##  key: nb,nn,no,se   => nb,nn,'no',se  -- avoid!!
+
+    text = text.gsub( /:[ ]+(ON|On|on|NO|No|no|N|n|Y|y)[ ]*($| #.*$)/ ) do |value|
+      puts "*** warn: hash reader - found implicit bool (#{$1}) for value; adding quotes to turn into string; see yaml.org/refcard.html"
+      ": '#{$1}'"  # add quotes to turn it into a string (not bool e.g. true|false)
+    end
+
     
     @hash = YAML.load( text )
   end
@@ -58,7 +72,7 @@ class HashReader
       key   = key_wild.to_s.strip
       value = value_wild.to_s.strip
       
-      puts ">>#{key}<< >>#{value}<<"
+      puts "yaml key:#{key_wild.class.name} >>#{key}<<, value:#{value_wild.class.name} >>#{value}<<"
     
       yield( key, value )
     end
