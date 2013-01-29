@@ -64,6 +64,11 @@ class HashReader
 
   attr_reader :logger
   
+  
+  ###
+  # nb: returns all values as strings
+  #
+  
   def each
     @hash.each do |key_wild, value_wild|
       # normalize
@@ -77,5 +82,28 @@ class HashReader
       yield( key, value )
     end
   end # method each
+  
+  ###
+  # todo: what name to use: each_object or each_typed ???
+  #   or use new TypedHashReader class or similar??
+  
+  def each_typed
+    @hash.each do |key_wild, value_wild|
+      # normalize
+      # - key n value as string (not symbols, bool? int? array?)
+      # - remove leading and trailing whitespace
+      key   = key_wild.to_s.strip
+      
+      if value_wild.is_a?( String )
+        value = value_wild.strip
+      else
+        value = value_wild
+      end
+      
+      puts "yaml key:#{key_wild.class.name} >>#{key}<<, value:#{value_wild.class.name} >>#{value}<<"
+    
+      yield( key, value )
+    end
+  end # method each  
 
 end # class HashReader
