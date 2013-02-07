@@ -53,19 +53,22 @@ end # class File
       ##  reuse for all readers!
       
       alternatives = [
-        ['-', '(-| )'],
-        ['ß', '(ß|ss)'],
-        ['æ', '(æ|ae)'],
+        ['-', '(-| )'],  ## e.g. Blau-Weiß Linz
+        ['æ', '(æ|ae)'],  ## e.g. 
         ['á', '(á|a)'],  ## e.g. Bogotá
         ['ã', '(ã|a)'],  ## e.g  São Paulo
-        ['ä', '(ä|ae)'],  ## add a ?
-        ['Ö', '(Ö|Oe)'], ## e.g. Österreich
-        ['ö', '(ö|oe)'],  ## add o ?
-        ['ó', '(ó|o)'],  ## e.g. Colón
-        ['ü', '(ü|ue)'],  ## add u ?
+        ['ä', '(ä|ae)'],  ## e.g. 
+        ['ç', '(ç|c)'],  ## e.g. Fenerbahçe
         ['é', '(é|e)'],  ## e.g. Vélez
         ['ê', '(ê|e)'],  ## e.g. Grêmio
         ['ñ', '(ñ|n)'],  ## e.g. Porteño
+        ['ň', '(ň|n)'],  ## e.g. Plzeň         
+        ['Ö', '(Ö|Oe)'], ## e.g. Österreich
+        ['ö', '(ö|oe)'],  ## e.g. Mönchengladbach
+        ['ó', '(ó|o)'],   ## e.g. Colón
+        ['ș', '(ș|s)'],   ## e.g. Bucarești
+        ['ß', '(ß|ss)'],  ## e.g. Blau-Weiß Linz
+        ['ü', '(ü|ue)'],  ## e.g. 
         ['ú', '(ú|u)']  ## e.g. Fútbol
       ]
       
