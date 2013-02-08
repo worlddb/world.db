@@ -55,7 +55,7 @@ end # class File
       alternatives = [
         ['-', '(-| )'],  ## e.g. Blau-Weiß Linz
         ['æ', '(æ|ae)'],  ## e.g. 
-        ['á', '(á|a)'],  ## e.g. Bogotá
+        ['á', '(á|a)'],  ## e.g. Bogotá, Sársfield
         ['ã', '(ã|a)'],  ## e.g  São Paulo
         ['ä', '(ä|ae)'],  ## e.g. 
         ['ç', '(ç|c)'],  ## e.g. Fenerbahçe
