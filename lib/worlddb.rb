@@ -37,6 +37,11 @@ require 'worlddb/readers/line_reader'
 require 'worlddb/readers/values_reader'
 require 'worlddb/readers/hash_reader'
 require 'worlddb/reader'
+require 'worlddb/deleter'
+require 'worlddb/stats'
+
+require 'worlddb/data/fixtures'
+
 require 'worlddb/cli/opts'
 require 'worlddb/cli/runner'
 
@@ -63,133 +68,15 @@ module WorldDB
     CreateDB.up
   end
 
-  def self.fixtures  # all builtin fixtures; helper for covenience
-     tag_fixtures  + 
-     country_fixtures +
-     lang_fixtures +
-     africa_fixtures  +
-     america_fixtures +
-     europe_fixtures  +
-     asia_fixtures    +
-     oceania_fixtures
-  end
 
-
-  def self.tag_fixtures
-    ['tags.1', 'tags.3']
-  end
-  
-  def self.country_fixtures
-    ['africa/countries',
-     'america/countries',
-     'asia/countries',
-     'europe/countries',
-     'oceania/countries']
-  end
-
-  def self.lang_fixtures
-    ['langs',
-     'africa/3_more/lang',
-     'america/3_more/lang',
-     'asia/3_more/lang',
-     'europe/3_more/lang',
-     'oceania/3_more/lang'
-    ]
-  end
-
-  def self.africa_fixtures
-    ['1_codes/fifa',
-     '1_codes/internet',
-     '1_codes/iso3'].map { |path| "africa/#{path}" }
-  end
-
-  def self.america_fixtures
-  ['1_codes/fifa',
-   '1_codes/internet',
-   '1_codes/iso3',
-   '1_codes/motor',
-   'br/regions',
-   'ca/regions',
-   'ca/cities',
-   'mx/regions',
-   'mx/cities',
-   'us/regions',
-   'us/cities',
-   've/regions',
-   've/cities'].map { |path| "america/#{path}" }
-  end
-
-  def self.asia_fixtures
-  ['1_codes/fifa',
-   '1_codes/internet',
-   '1_codes/iso3',
-   'jp/cities'].map { |path| "asia/#{path}" }
-  end
-  
-  def self.europe_fixtures
-  ['1_codes/fifa',
-   '1_codes/internet',
-   '1_codes/iso3',
-   '1_codes/motor',
-   'at/regions',
-   'at/cities',
-   'be/regions',
-   'be/cities',
-   'bg/cities',
-   'by/cities',
-   'ch/cities',
-   'cy/cities',
-   'cz/regions',
-   'cz/cities',
-   'de/regions',
-   'de/cities',
-   'dk/cities',
-   'ee/cities',
-   'en/regions',
-   'en/cities',
-   'es/regions',
-   'es/cities',
-   'fi/cities',
-   'fr/regions',
-   'fr/cities',
-   'gr/cities',
-   'hr/cities',
-   'hu/cities',
-   'ie/cities',
-   'it/cities',
-   'lt/cities',
-   'lv/cities',
-   'nl/cities',
-   'no/cities',
-   'pl/cities',
-   'pt/cities',
-   'ro/cities',
-   'rs/cities',
-   'ru/cities',
-   'sc/cities',
-   'se/cities',
-   'tr/cities',
-   'ua/cities',
-   'wa/cities'].map { |path| "europe/#{path}" }
-  end
-
-  def self.oceania_fixtures
-   ['1_codes/fifa',
-    '1_codes/internet',
-    '1_codes/iso3',
-    'au/cities'].map { |path| "oceania/#{path}" }
-  end
-
-  ## todo/fix: rename to load/load_all - why? why not?? or just add an alias?
-
-  def self.read( ary )
+  def self.read( ary, include_path )
     reader = Reader.new
     ary.each do |name|
-      reader.load_builtin( name )
+      reader.load_with_include_path( name, include_path )
     end
   end
 
-  def self.read_all  # load all builtins (using plain text reader); helper for convenience
+  def self.read_all( include_path )  # load all builtins (using plain text reader); helper for convenience
     reader = Reader.new
 
     # too big for heroku free db plan (10,000 record limit)
@@ -198,35 +85,18 @@ module WorldDB
       'america/ve/cities'
     ]
     
-    ary = fixtures - fixture_excludes
+    ary = Fixtures.all - fixture_excludes
     
     ary.each do |name|
-     reader.load_builtin( name )
+     reader.load_with_include_path( name, include_path )
     end # each name
-  end # method load_all
-
-
-  class Deleter
-    ## todo: move into its own file???    
-    
-    ## make models available in worlddb module by default with namespace
-    #  e.g. lets you use City instead of Models::City 
-    include WorldDB::Models
-
-    def run( args=[] )
-      # for now delete all tables
-      
-      Tagging.delete_all
-      Tag.delete_all
-      City.delete_all
-      Region.delete_all
-      Country.delete_all
-      Usage.delete_all
-      Lang.delete_all
-      Prop.delete_all
-    end
-    
+  end # method read_all
+  
+  
+  def self.read_setup( setup, include_path )
+    ## fix: to be done  (see sport.db.ruby)
   end
+
   
   # delete ALL records (use with care!)
   def self.delete!
@@ -234,30 +104,7 @@ module WorldDB
     Deleter.new.run
   end # method delete!
 
-  class Stats
-    include WorldDB::Models
-
-    def tables
-      puts "Stats:"
-      puts " #{'%5d' % Country.count} countries (#{Country.where(s: true).count} supras, #{Country.where(d:true).count} deps)"
-      puts " #{'%5d' % Region.count} regions"
-      puts " #{'%5d' % City.where(m: true).where(c: false).count} metros"
-      puts " #{'%5d' % City.where(c: true).count} cities (#{City.where(c: true).where(m: true).count} metros)"
-      puts " #{'%5d' % City.where(d: true).count} districts"
-      puts " #{'%5d' % Tag.count} tags"
-      puts " #{'%5d' % Tagging.count} taggings"
-      puts " #{'%5d' % Lang.count} langs"
-      puts " #{'%5d' % Usage.count} usages"
-    end
-    
-    def props
-      puts "Props:"
-      Prop.order( 'created_at asc' ).all.each do |prop|
-        puts "  #{prop.key} / #{prop.value} || #{prop.created_at}"
-      end
-    end
-  end
-
+ 
   def self.stats
     stats = Stats.new
     stats.tables

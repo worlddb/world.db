@@ -20,9 +20,16 @@ end # class Time
 
 class File
   def self.read_utf8( path )
-    open( path, 'r:bom|utf-8' ) do |file|
+    text = open( path, 'r:bom|utf-8' ) do |file|
       file.read
     end
+    ### for convenience for now convert fancy dash to "plain" dash
+    ## todo: check char codes for "fancy" dash alternatives
+    text.gsub!( /—|–/ ) do |_|
+      puts "*** warning: convert fancy dash to 'plain' dash"
+      '-'
+    end
+    text
   end
 end # class File
 
