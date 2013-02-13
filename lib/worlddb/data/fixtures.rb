@@ -11,7 +11,7 @@ def find_world_db_path_from_gemfile_gitref!
     
     # nb: avoid matching /world.db.ruby/ (e.g. gem "worlddb", "0.10.0", :path => "../world.db.ruby")
     
-    if path =~ /world\.db-[a-z0-9]+/
+    if path =~ /\/(world\.db-[a-z0-9]+)|(world\.db)\//
       candidates << path.dup
     end
   end
@@ -25,7 +25,10 @@ def find_world_db_path_from_gemfile_gitref!
   
   ## nb: *? is non-greedy many operator
   
-  regex = /(\/world\.db-.*?)(\/.*)/
+  ## todo: why not just cut off trailing /lib - is it good enough??
+  # it's easier  
+  
+  regex = /(\/world\.db.*?)(\/.*)/
   cand = cand.sub( regex ) do |_|
     puts "cutting off >>#{$2}<<"
     $1
