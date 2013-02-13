@@ -12,13 +12,15 @@ require 'optparse'
 require 'fileutils'
 require 'erb'
 
-# rubygems
+# rubygems / 3rd party libs
 
 require 'active_record'   ## todo: add sqlite3? etc.
 
+require 'logutils'
+require 'textutils'
+
 
 # our own code
-
 
 require 'worlddb/version'
 
@@ -32,10 +34,6 @@ require 'worlddb/models/lang'
 require 'worlddb/models/usage'
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/utils'
-require 'worlddb/readers/code_reader'
-require 'worlddb/readers/line_reader'
-require 'worlddb/readers/values_reader'
-require 'worlddb/readers/hash_reader'
 require 'worlddb/reader'
 require 'worlddb/deleter'
 require 'worlddb/stats'
