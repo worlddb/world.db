@@ -41,7 +41,7 @@ require 'worlddb/stats'
 require 'worlddb/data/fixtures'
 
 require 'worlddb/cli/opts'
-require 'worlddb/cli/runner'
+
 
 module WorldDB
 
@@ -59,7 +59,8 @@ module WorldDB
   end
 
   def self.main
-    Runner.new.run(ARGV)
+    require 'worlddb/cli/main'
+    ## Runner.new.run(ARGV) - old code
   end
   
   def self.create

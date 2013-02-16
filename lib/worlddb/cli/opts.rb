@@ -2,6 +2,30 @@ module WorldDB
 
 class Opts
 
+  def merge_commander_options!( options = {} )
+    @db_path   = options[:dbpath]  if options[:dbpath].present?
+    @db_name   = options[:dbname]  if options[:dbname].present?
+
+    @data_path = options[:include] if options[:include].present?
+    
+    @country   = options[:country]   if options[:country].present?
+    
+    @countries = options[:countries] if options[:countries].present?
+    @regions   = options[:regions]   if options[:regions].present?
+    @cities    = options[:cities]    if options[:cities].present?
+  end
+
+
+  def db_path
+    @db_path || '.'
+  end
+
+  def db_name
+    @db_name || 'world.db'
+  end
+
+
+
   def country=(value)
     @country = value
   end
@@ -36,56 +60,6 @@ class Opts
   def cities?
     return false if @cities.nil?   # default cities flag is false
     @cities == true
-  end
-
-
-  def create=(boolean)
-    @create = boolean
-  end
-
-  def create?
-    return false if @create.nil?   # default create flag is false
-    @create == true
-  end
-
-
-  def setup=(boolean)
-    @setup = boolean
-  end
-
-  def setup?
-    return false if @setup.nil?   # default create flag is false
-    @setup == true
-  end
-
-
-  def delete=(boolean)
-    @delete = boolean
-  end
-
-  def delete?
-    return false if @delete.nil?   # default create flag is false
-    @delete == true
-  end
-
-
-  # use loader? (that is, built-in seed data)
-  def load=(boolean)
-    @load = boolean
-  end
-
-  def load?
-    return false if @load.nil?   # default create flag is false
-    @load == true
-  end
-
-
-  def output_path=(value)
-    @output_path = value
-  end
-  
-  def output_path
-    @output_path || '.'
   end
   
 
