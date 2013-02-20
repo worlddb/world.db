@@ -12,7 +12,7 @@ require 'optparse'
 require 'fileutils'
 require 'erb'
 
-# rubygems / 3rd party libs
+# 3rd party gems / libs
 
 require 'active_record'   ## todo: add sqlite3? etc.
 
@@ -40,7 +40,6 @@ require 'worlddb/stats'
 
 require 'worlddb/data/fixtures'
 
-require 'worlddb/cli/opts'
 
 
 module WorldDB
@@ -51,11 +50,6 @@ module WorldDB
 
   def self.root
     "#{File.expand_path( File.dirname(File.dirname(__FILE__)) )}"
-  end
-  
-  # builtin path to fixture data
-  def self.data_path
-    "#{root}/data"
   end
 
   def self.main

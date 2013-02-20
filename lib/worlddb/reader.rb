@@ -9,34 +9,13 @@ class Reader
 
   def initialize( logger=nil )
     if logger.nil?
-      @logger = Logger.new(STDOUT)
-      @logger.level = Logger::INFO
+      @logger = LogUtils::Logger.new
     else
       @logger = logger
     end
   end
 
   attr_reader :logger
-
-  def run( opts, args )
- 
-    args.each do |arg|
-      name = arg     # File.basename( arg, '.*' )
-
-      data_path = opts.load? ? WorldDB.data_path : opts.data_path
-
-      if opts.countries?
-        load_countries_with_include_path( name, data_path )
-      elsif opts.regions?
-        load_regions_with_include_path( opts.country, name, data_path )
-      elsif opts.cities?
-        load_cities_with_include_path( opts.country, name, data_path )
-      else
-        ## todo: issue a warning here; no fixture type specified; assume country?
-      end
-    end # each arg
-
-  end
 
 
   def load_with_include_path( name, include_path )
@@ -65,60 +44,43 @@ class Reader
       ## auto-add required country code (from folder structure)
       load_regions_with_include_path( $1, name, include_path )
     else
-      puts "*** error: unknown world.db fixture type >#{name}<"
+      logger.error "unknown world.db fixture type >#{name}<"
       # todo/fix: exit w/ error
     end
   end
   
 
-  def load_builtin( name )  ## convenience helper (requires proper named files w/ convention)
-    load_with_include_path( name, WorldDB.data_path )
-  end
-
-
   def load_countries_with_include_path( name, include_path, more_values={} )
     load_fixtures_with_include_path_for( Country, name, include_path, more_values )
-  end
-
-  def load_countries_builtin( name, more_values={} )
-    load_countries_with_include_path( name, WorldDB.data_path, more_values )
   end
 
 
   def load_regions_with_include_path( country_key, name, include_path )
     country = Country.find_by_key!( country_key )
-    puts "Country #{country.key} >#{country.title} (#{country.code})<"
+    logger.info "Country #{country.key} >#{country.title} (#{country.code})<"
 
     load_fixtures_with_include_path_for( Region, name, include_path, country_id: country.id )
-  end
-
-  def load_regions_builtin( country_key, name )
-    load_regions_with_include_path( country_key, name, WorldDB.data_path )
   end
 
 
   def load_cities_with_include_path( country_key, name, include_path )
     country = Country.find_by_key!( country_key )
-    puts "Country #{country.key} >#{country.title} (#{country.code})<"
+    logger.info "Country #{country.key} >#{country.title} (#{country.code})<"
 
     load_fixtures_with_include_path_for( City, name, include_path, country_id: country.id )
-  end
-
-  def load_cities_builtin( country_key, name )
-    load_cities_with_include_path( country_key, name, WorldDB.data_path )
   end
 
 
   def load_langs_with_include_path( name, include_path )
     path = "#{include_path}/#{name}.yml"
 
-    puts "*** parsing data '#{name}' (#{path})..."
+    logger.info "*** parsing data '#{name}' (#{path})..."
 
     reader = HashReader.new( logger, path )
 
     reader.each do |key, value|
 
-      puts "adding lang >>#{key}<< >>#{value}<<..."
+      logger.debug "adding lang >>#{key}<< >>#{value}<<..."
       
       lang_key   = key.strip
       lang_title = value.strip
@@ -143,10 +105,6 @@ class Reader
     end # each key,value
 
     Prop.create_from_worlddb_fixture!( name, path )
-  end
-  
-  def load_langs_builtin( name )
-    load_langs_with_include_path( name, WorldDB.data_path )
   end
 
 
@@ -205,10 +163,6 @@ class Reader
     Prop.create_from_worlddb_fixture!( name, path )
   end # method load_tags_with_include_path
 
-  def load_tags_builtin( name, include_path, more_values={} )
-    load_tags_with_include_path( name, WorldDB.data_path, more_values )
-  end
-
 
   def load_usages_with_include_path( name, include_path )
     path = "#{include_path}/#{name}.yml"
@@ -237,10 +191,7 @@ class Reader
 
     Prop.create_from_worlddb_fixture!( name, path )
   end
-  
-  def load_usages_builtin( name )
-    load_usages_with_include_path( name, WorldDB.data_path )
-  end
+
 
   def load_xxx_with_include_path( xxx, name, include_path )
     path = "#{include_path}/#{name}.yml"
@@ -256,10 +207,6 @@ class Reader
     end
 
     Prop.create_from_worlddb_fixture!( name, path )
-  end
-
-  def load_xxx_builtin( xxx, name )
-    load_xxx_with_include_path( xxx, name, WorldDB.data_path )
   end
 
 
@@ -380,7 +327,7 @@ private
           end
 
           # issue warning: unknown type for value
-          puts "!!!! >>>> warning: unknown type for value >#{value}<"
+          logger.warn "unknown type for value >#{value}<"
         end
       end # each value
 

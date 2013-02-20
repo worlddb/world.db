@@ -6,12 +6,6 @@ require './lib/worlddb/version.rb'
 Hoe::plugin :manifest   # more options for manifests (in the future; not yet)
 
 
-###########
-#### NB: if you try this script at home
-#    you need to create a (symbolic) link to the world.db fixtures
-#     e.g. use ln -s ../world.db  data  or similar
-
-
 Hoe.spec 'worlddb' do
   
   self.version = WorldDB::VERSION
@@ -25,6 +19,7 @@ Hoe.spec 'worlddb' do
   self.email   = 'opensport@googlegroups.com'
   
   self.extra_deps = [
+    ['textutils', '~> 0.3.0'],
     ['activerecord', '~> 3.2']  # NB: will include activesupport,etc.
     ### ['sqlite3',      '~> 1.3']  # NB: install on your own; remove dependency
   ]

@@ -8,7 +8,7 @@ module WorldDB
     #  e.g. lets you use City instead of Models::City 
     include WorldDB::Models
 
-    def run( args=[] )
+    def run
       # for now delete all tables
       
       Tagging.delete_all

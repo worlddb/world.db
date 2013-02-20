@@ -2,6 +2,10 @@
 
 require 'commander/import'
 
+require 'worlddb/cli/opts'
+
+
+
 program :name,  'worlddb'
 program :version, WorldDB::VERSION
 program :description, "world.db command line tool, version #{WorldDB::VERSION}"
@@ -114,7 +118,22 @@ command :load do |c|
     WorldDB.delete! if options.delete.present?
 
     # read plain text country/region/city fixtures
-    WorldDB::Reader.new( logger ).run( myopts, args )
+    reader = WorldDB::Reader.new  # todo: add logger here?
+    args.each do |arg|
+      name = arg     # File.basename( arg, '.*' )
+
+      if myopts.countries?
+        reader.load_countries_with_include_path( name, myopts.data_path )
+      elsif myopts.regions?
+        reader.load_regions_with_include_path( myopts.country, name, myopts.data_path )
+      elsif myopts.cities?
+        reader.load_cities_with_include_path( myopts.country, name, myopts.data_path )
+      else
+        reader.load_with_include_path( name, myopts.data_path )
+        ## todo: issue a warning here; no fixture type specified; assume country?
+      end
+      
+    end # each arg
     
     puts 'Done.'
   end
