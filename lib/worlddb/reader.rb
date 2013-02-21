@@ -6,43 +6,44 @@ class Reader
 #  e.g. lets you use City instead of Models::City
   include WorldDB::Models
 
+  ### todo/fix: make include_path
+  ## required first arg in ctor!!!
+  ## cleanup load_   and remove include_path
 
-  def initialize( logger=nil )
-    if logger.nil?
-      @logger = LogUtils::Logger.new
-    else
-      @logger = logger
-    end
+  def initialize( opts={} )
+    @logger = LogUtils::Logger.new
+    
+    # todo/fix/cleanup: allow initialize( opts = {} ) for logger: logger 
   end
 
   attr_reader :logger
 
 
-  def load_with_include_path( name, include_path )
+  def load( name, include_path )
 
     if name =~ /^lang/
-       load_langs_with_include_path( name, include_path )
+       load_langs( name, include_path )
     elsif name =~ /\/lang/
-       load_usages_with_include_path( name, include_path )
+       load_usages( name, include_path )
     elsif name =~ /\/fifa/
-       load_xxx_with_include_path( 'fifa', name, include_path )
+       load_xxx( 'fifa', name, include_path )
     elsif name =~ /\/iso3/
-       load_xxx_with_include_path( 'iso3', name, include_path )
+       load_xxx( 'iso3', name, include_path )
     elsif name =~ /\/internet/
-       load_xxx_with_include_path( 'net', name, include_path )
+       load_xxx( 'net', name, include_path )
     elsif name =~ /\/motor/
-       load_xxx_with_include_path( 'motor', name, include_path )
+       load_xxx( 'motor', name, include_path )
     elsif name =~ /^tag.*\.(\d)$/
-       load_tags_with_include_path( name, include_path, :grade => $1.to_i )
+       load_tags( name, include_path, :grade => $1.to_i )
     elsif name =~ /^([a-z]{3,})\/countries/     # e.g. africa/countries or america/countries
       ## auto-add continent (from folder structure) as tag
-      load_countries_with_include_path( name, include_path, :tags => $1 )
+      load_countries( name, include_path, :tags => $1 )
     elsif name =~ /\/([a-z]{2})\/cities/
       ## auto-add required country code (from folder structure)
-      load_cities_with_include_path( $1, name, include_path )
+      load_cities( $1, name, include_path )
     elsif name =~ /\/([a-z]{2})\/regions/
       ## auto-add required country code (from folder structure)
-      load_regions_with_include_path( $1, name, include_path )
+      load_regions( $1, name, include_path )
     else
       logger.error "unknown world.db fixture type >#{name}<"
       # todo/fix: exit w/ error
@@ -50,121 +51,137 @@ class Reader
   end
   
 
-  def load_countries_with_include_path( name, include_path, more_values={} )
-    load_fixtures_with_include_path_for( Country, name, include_path, more_values )
+  def load_countries( name, include_path, more_values={} )
+    load_fixtures_for( Country, name, include_path, more_values )
   end
 
 
-  def load_regions_with_include_path( country_key, name, include_path )
+  def load_regions( country_key, name, include_path )
     country = Country.find_by_key!( country_key )
-    logger.info "Country #{country.key} >#{country.title} (#{country.code})<"
+    logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-    load_fixtures_with_include_path_for( Region, name, include_path, country_id: country.id )
+    load_fixtures_for( Region, name, include_path, country_id: country.id )
   end
 
 
-  def load_cities_with_include_path( country_key, name, include_path )
+  def load_cities( country_key, name, include_path )
     country = Country.find_by_key!( country_key )
-    logger.info "Country #{country.key} >#{country.title} (#{country.code})<"
+    logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-    load_fixtures_with_include_path_for( City, name, include_path, country_id: country.id )
+    load_fixtures_for( City, name, include_path, country_id: country.id )
   end
 
 
-  def load_langs_with_include_path( name, include_path )
+
+  def with_path_for( name, include_path )
+    ## todo: find a better name?
+    # e.g. find_path_for  or open_fixture_for ??
+
     path = "#{include_path}/#{name}.yml"
 
-    logger.info "*** parsing data '#{name}' (#{path})..."
-
-    reader = HashReader.new( logger, path )
-
-    reader.each do |key, value|
-
-      logger.debug "adding lang >>#{key}<< >>#{value}<<..."
-      
-      lang_key   = key.strip
-      lang_title = value.strip
-      
-      lang_attribs = {}
-        
-      ## check if it exists
-      lang = Lang.find_by_key( lang_key )
-      if lang.present?
-        puts "*** update lang #{lang.id}-#{lang.key}:"
-      else
-        puts "*** create lang:"
-        lang = Lang.new
-        lang_attribs[ :key ] = lang_key
-      end
-        
-      lang_attribs[ :title ] = lang_title
-        
-      puts lang_attribs.to_json
-   
-      lang.update_attributes!( lang_attribs )
-    end # each key,value
-
-    Prop.create_from_worlddb_fixture!( name, path )
-  end
-
-
-  def load_tags_with_include_path( name, include_path, more_values={} )
-    path = "#{include_path}/#{name}.yml"
-
-    puts "*** parsing data '#{name}' (#{path})..."
-
-    reader = HashReader.new( logger, path )
-
-    grade = 1
+    logger.info "parsing data '#{name}' (#{path})..."
     
-    if more_values[:grade].present?
-      grade = more_values[:grade].to_i
-    end
+    yield( path )
+    
+    Prop.create_from_fixture!( name, path )
+  end
 
-    reader.each do |key, value|
-      ### split value by comma (e.g. northern america,southern america, etc.)
-      puts "adding grade #{grade} tags >>#{key}<< >>#{value}<<..."
-      tag_pairs = value.split(',')
-      tag_pairs.each do |pair|
-        ## split key|title
-        values = pair.split('|')
-        
-        key   = values[0]
-        ### remove (optional comment) from key (e.g. carribean (islands))
-        key = key.gsub( /\(.+\)/, '' )
-        ## remove leading n trailing space
-        key = key.strip
-        
-        title = values[1] || ''  # nb: title might be empty/missing
-        title = title.strip
-        
-        tag_attribs = {}
+
+
+  def load_langs( name, include_path )
+    
+    with_path_for( name, include_path) do |path|
+  
+      reader = HashReader.new( logger, path )
+
+      reader.each do |key, value|
+
+        logger.debug "adding lang >>#{key}<< >>#{value}<<..."
+      
+        lang_key   = key.strip
+        lang_title = value.strip
+      
+        lang_attribs = {}
         
         ## check if it exists
-        ## todo/fix: add country_id for lookup?
-        tag = Tag.find_by_key( key )
-        if tag.present?
-          puts "*** update tag #{tag.id}-#{tag.key}:"
+        lang = Lang.find_by_key( lang_key )
+        if lang.present?
+          logger.debug "update lang #{lang.id}-#{lang.key}:"
         else
-          puts "*** create tag:"
-          tag = Tag.new
-          tag_attribs[ :key ] = key
+          logger.debug "create lang:"
+          lang = Lang.new
+          lang_attribs[ :key ] = lang_key
         end
         
-        tag_attribs[ :title ] = title
-        tag_attribs[ :grade ] = grade
+        lang_attribs[ :title ] = lang_title
         
-        puts tag_attribs.to_json
-   
-        tag.update_attributes!( tag_attribs )
+        logger.debug lang_attribs.to_json
+     
+        lang.update_attributes!( lang_attribs )
+      end # each key,value
+    end # with_path_for
+
+  end # method load_langs
+
+
+  def load_tags( name, include_path, more_values={} )
+    
+    with_path_for( name, include_path) do |path|
+
+      ### fix/todo/cleanup: HashReader -> make logger a keyword option only; do NOT use here
+      reader = HashReader.new( logger, path )
+
+      grade = 1
+    
+      if more_values[:grade].present?
+        grade = more_values[:grade].to_i
       end
-    end # each key,value
 
-    Prop.create_from_worlddb_fixture!( name, path )
-  end # method load_tags_with_include_path
+      reader.each do |key, value|
+        ### split value by comma (e.g. northern america,southern america, etc.)
+        logger.debug "adding grade #{grade} tags >>#{key}<< >>#{value}<<..."
+        tag_pairs = value.split(',')
+        tag_pairs.each do |pair|
+        ## split key|title
+          values = pair.split('|')
+        
+          key   = values[0]
+          ### remove (optional comment) from key (e.g. carribean (islands))
+          key = key.gsub( /\(.+\)/, '' )
+          ## remove leading n trailing space
+          key = key.strip
+        
+          title = values[1] || ''  # nb: title might be empty/missing
+          title = title.strip
+        
+          tag_attribs = {}
+        
+          ## check if it exists
+          ## todo/fix: add country_id for lookup?
+          tag = Tag.find_by_key( key )
+          if tag.present?
+            logger.debug "update tag #{tag.id}-#{tag.key}:"
+          else
+            logger.debug "create tag:"
+            tag = Tag.new
+            tag_attribs[ :key ] = key
+          end
+        
+          tag_attribs[ :title ] = title
+          tag_attribs[ :grade ] = grade
+        
+          logger.debug tag_attribs.to_json
+   
+          tag.update_attributes!( tag_attribs )
+        end
+      end # each key,value
+    
+    end # with_path_for
+    
+  end # method load_tags
 
 
-  def load_usages_with_include_path( name, include_path )
+  def load_usages( name, include_path )
     path = "#{include_path}/#{name}.yml"
 
     puts "*** parsing data '#{name}' (#{path})..."
@@ -189,11 +206,11 @@ class Reader
       end
     end
 
-    Prop.create_from_worlddb_fixture!( name, path )
+    Prop.create_from_fixture!( name, path )
   end
 
 
-  def load_xxx_with_include_path( xxx, name, include_path )
+  def load_xxx( xxx, name, include_path )
     path = "#{include_path}/#{name}.yml"
 
     puts "*** parsing data '#{name}' (#{path})..."
@@ -206,12 +223,12 @@ class Reader
       country.save!
     end
 
-    Prop.create_from_worlddb_fixture!( name, path )
+    Prop.create_from_fixture!( name, path )
   end
 
 
 private
-  def load_fixtures_with_include_path_for( clazz, name, include_path, more_values={} )  # load from file system
+  def load_fixtures_for( clazz, name, include_path, more_values={} )  # load from file system
     path = "#{include_path}/#{name}.txt"
 
     puts "*** parsing data '#{name}' (#{path})..."
@@ -220,7 +237,7 @@ private
     
     load_fixtures_worker_for( clazz, reader )
 
-    Prop.create_from_worlddb_fixture!( name, path )
+    Prop.create_from_fixture!( name, path )
   end
 
 

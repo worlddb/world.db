@@ -118,18 +118,18 @@ command :load do |c|
     WorldDB.delete! if options.delete.present?
 
     # read plain text country/region/city fixtures
-    reader = WorldDB::Reader.new  # todo: add logger here?
+    reader = WorldDB::Reader.new
     args.each do |arg|
       name = arg     # File.basename( arg, '.*' )
 
       if myopts.countries?
-        reader.load_countries_with_include_path( name, myopts.data_path )
+        reader.load_countries( name, myopts.data_path )
       elsif myopts.regions?
-        reader.load_regions_with_include_path( myopts.country, name, myopts.data_path )
+        reader.load_regions( myopts.country, name, myopts.data_path )
       elsif myopts.cities?
-        reader.load_cities_with_include_path( myopts.country, name, myopts.data_path )
+        reader.load_cities( myopts.country, name, myopts.data_path )
       else
-        reader.load_with_include_path( name, myopts.data_path )
+        reader.load( name, myopts.data_path )
         ## todo: issue a warning here; no fixture type specified; assume country?
       end
       

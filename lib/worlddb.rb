@@ -65,7 +65,7 @@ module WorldDB
   def self.read( ary, include_path )
     reader = Reader.new
     ary.each do |name|
-      reader.load_with_include_path( name, include_path )
+      reader.load( name, include_path )
     end
   end
 
@@ -81,7 +81,7 @@ module WorldDB
     ary = Fixtures.all - fixture_excludes
     
     ary.each do |name|
-     reader.load_with_include_path( name, include_path )
+     reader.load( name, include_path )
     end # each name
   end # method read_all
   

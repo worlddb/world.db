@@ -4,14 +4,10 @@ module WorldDB::Models
 
   class Prop < ActiveRecord::Base
 
-    def self.create_from_worlddb_fixture!( name, path )
+    def self.create_from_fixture!( name, path )
       key   = "db.#{fixture_name_to_prop_key(name)}.version"
     
-      if path.starts_with?( WorldDB.data_path )
-        value = "world.yml.#{WorldDB::VERSION}"  # assume builtin
-      else
-        value = "file.txt.#{File.mtime(path).strftime('%Y.%m.%d')}"
-      end
+      value = "txt.#{File.mtime(path).strftime('%Y.%m.%d')}"
     
       Prop.create!( key: key, value: value )
     end
