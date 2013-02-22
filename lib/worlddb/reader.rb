@@ -2,6 +2,10 @@ module WorldDB
 
 class Reader
 
+  def logger
+    @logger ||= LogUtils[ self ]
+  end
+
 ## make models available in sportdb module by default with namespace
 #  e.g. lets you use City instead of Models::City
   include WorldDB::Models
@@ -10,13 +14,8 @@ class Reader
   ## required first arg in ctor!!!
   ## cleanup load_   and remove include_path
 
-  def initialize( opts={} )
-    @logger = LogUtils::Logger.new
-    
-    # todo/fix/cleanup: allow initialize( opts = {} ) for logger: logger 
+  def initialize
   end
-
-  attr_reader :logger
 
 
   def load( name, include_path )
@@ -92,7 +91,7 @@ class Reader
     
     with_path_for( name, include_path) do |path|
   
-      reader = HashReader.new( logger, path )
+      reader = HashReader.new( path )
 
       reader.each do |key, value|
 
@@ -128,8 +127,7 @@ class Reader
     
     with_path_for( name, include_path) do |path|
 
-      ### fix/todo/cleanup: HashReader -> make logger a keyword option only; do NOT use here
-      reader = HashReader.new( logger, path )
+      reader = HashReader.new( path )
 
       grade = 1
     
@@ -186,10 +184,10 @@ class Reader
 
     puts "*** parsing data '#{name}' (#{path})..."
 
-    reader = HashReader.new( logger, path )
+    reader = HashReader.new( path )
 
     reader.each do |key, value|
-      puts "   adding langs >>#{value}<<to country >>#{key}<<"
+      logger.debug "   adding langs >>#{value}<<to country >>#{key}<<"
       
       country = Country.find_by_key!( key )
       
@@ -215,7 +213,7 @@ class Reader
 
     puts "*** parsing data '#{name}' (#{path})..."
 
-    reader = HashReader.new( logger, path )
+    reader = HashReader.new( path )
 
     reader.each do |key, value|
       country = Country.find_by_key!( key )
@@ -233,7 +231,7 @@ private
 
     puts "*** parsing data '#{name}' (#{path})..."
 
-    reader = ValuesReader.new( logger, path, more_values )
+    reader = ValuesReader.new( path, more_values )
     
     load_fixtures_worker_for( clazz, reader )
 
@@ -323,7 +321,7 @@ private
           value_numbers << value.gsub(/[ _]/, '').to_i
         elsif (values.size==(index+1)) && value =~ /^[a-z0-9\|_ ]+$/   # tags must be last entry
 
-          puts "   found tags: >>#{value}<<"
+          logger.debug "   found tags: >>#{value}<<"
 
           tag_keys = value.split('|')
   
@@ -407,13 +405,13 @@ private
 
       if rec.present?
         ## nb: [17..-1] cut off WorldDB::Models:: in name
-        puts "*** update #{clazz.name[17..-1].downcase} #{rec.id}-#{rec.key}:"
+        logger.debug "update #{clazz.name[17..-1].downcase} #{rec.id}-#{rec.key}:"
       else
-        puts "*** create #{clazz.name[17..-1].downcase}:"
+        logger.debug "create #{clazz.name[17..-1].downcase}:"
         rec = clazz.new
       end
       
-      puts attribs.to_json
+      logger.debug attribs.to_json
    
       rec.update_attributes!( attribs )
 
@@ -429,9 +427,9 @@ private
         ## todo/fix: add country_id for lookup?
         city = City.find_by_key( city_key )
         if city.present?
-          puts "*** update city #{city.id}-#{city.key}:"
+          logger.debug "update city #{city.id}-#{city.key}:"
         else
-          puts "*** create city:"
+          logger.debug "create city:"
           city = City.new
           city_attribs[ :key ] = city_key
         end
@@ -447,7 +445,7 @@ private
           ## issue warning: unknown type for city!!!
         end
         
-        puts city_attribs.to_json
+        logger.debug city_attribs.to_json
    
         city.update_attributes!( city_attribs )
         
@@ -462,14 +460,14 @@ private
       if value_tag_keys.size > 0
 
         value_tag_keys.uniq!  # remove duplicates
-        puts "   adding #{value_tag_keys.size} taggings: >>#{value_tag_keys.join('|')}<<..."
+        logger.debug "   adding #{value_tag_keys.size} taggings: >>#{value_tag_keys.join('|')}<<..."
 
         ### fix/todo: check tag_ids and only update diff (add/remove ids)
 
         value_tag_keys.each do |key|
           tag = Tag.find_by_key( key )
           if tag.nil?  # create tag if it doesn't exit
-            puts "   creating tag >#{key}<"
+            logger.debug "   creating tag >#{key}<"
             tag = Tag.create!( key: key )
           end
           rec.tags << tag

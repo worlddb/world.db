@@ -2,6 +2,7 @@
 
 require 'commander/import'
 
+require 'logutils/db'   # add support for logging to db
 require 'worlddb/cli/opts'
 
 
@@ -58,6 +59,8 @@ def connect_to_db( options )
   pp db_config
 
   ActiveRecord::Base.establish_connection( db_config )
+  
+  LogDb.setup  # turn on logging to db
 end
 
 
