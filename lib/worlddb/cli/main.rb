@@ -5,6 +5,7 @@ require 'commander/import'
 require 'logutils/db'   # add support for logging to db
 require 'worlddb/cli/opts'
 
+LogUtils::Logger.root.level = :info   # set logging level to info 
 
 
 program :name,  'worlddb'
@@ -44,6 +45,10 @@ global_option '-i', '--include PATH', String, "Data path (default is #{myopts.da
 global_option '-d', '--dbpath PATH', String, "Database path (default is #{myopts.db_path})"
 global_option '-n', '--dbname NAME', String, "Database name (datault is #{myopts.db_name})"
 
+global_option '-q', '--quiet', "Only show warnings, errors and fatal messages"
+### todo/fix: just want --debug/--verbose flag (no single letter option wanted) - fix
+global_option '-w', '--verbose', "Show debug messages"
+
 
 def connect_to_db( options )
   puts WorldDB.banner
@@ -68,6 +73,10 @@ command :create do |c|
   c.syntax = 'worlddb create [options]'
   c.description = 'Create DB schema'
   c.action do |args, options|
+
+    LogUtils::Logger.root.level = :warn    if options.quiet.present?
+    LogUtils::Logger.root.level = :debug   if options.verbose.present?
+
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts )
     
@@ -84,6 +93,10 @@ command :setup do |c|
   c.option '--delete', 'Delete all records'
 
   c.action do |args, options|
+
+    LogUtils::Logger.root.level = :warn    if options.quiet.present?
+    LogUtils::Logger.root.level = :debug   if options.verbose.present?
+
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts )
 
@@ -115,6 +128,10 @@ command :load do |c|
   c.option '--delete', 'Delete all records'
 
   c.action do |args, options|
+
+    LogUtils::Logger.root.level = :warn    if options.quiet.present?
+    LogUtils::Logger.root.level = :debug   if options.verbose.present?
+
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts )
     
@@ -147,14 +164,57 @@ command :stats do |c|
   c.syntax = 'worlddb stats [options]'
   c.description = 'Show stats'
   c.action do |args, options|
+
+    LogUtils::Logger.root.level = :warn    if options.quiet.present?
+    LogUtils::Logger.root.level = :debug   if options.verbose.present?
+
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts ) 
     
-    WorldDB.stats
+    WorldDB.tables
     
     puts 'Done.'
   end
 end
+
+
+command :props do |c|
+  c.syntax = 'worlddb props [options]'
+  c.description = 'Show props'
+  c.action do |args, options|
+
+    LogUtils::Logger.root.level = :warn    if options.quiet.present?
+    LogUtils::Logger.root.level = :debug   if options.verbose.present?
+
+    myopts.merge_commander_options!( options.__hash__ )
+    connect_to_db( myopts ) 
+    
+    WorldDB.props
+    
+    puts 'Done.'
+  end
+end
+
+
+command :logs do |c|
+  c.syntax = 'worlddb logs [options]'
+  c.description = 'Show logs'
+  c.action do |args, options|
+
+    LogUtils::Logger.root.level = :warn    if options.quiet.present?
+    LogUtils::Logger.root.level = :debug   if options.verbose.present?
+
+    myopts.merge_commander_options!( options.__hash__ )
+    connect_to_db( myopts ) 
+    
+    LogDB::Models::Log.all.each do |log|
+      puts "[#{log.level}] -- #{log.msg}"
+    end
+    
+    puts 'Done.'
+  end
+end
+
 
 
 command :test do |c|

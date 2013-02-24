@@ -2,9 +2,7 @@ module WorldDB
 
 class Reader
 
-  def logger
-    @logger ||= LogUtils[ self ]
-  end
+  include LogUtils::Logging
 
 ## make models available in sportdb module by default with namespace
 #  e.g. lets you use City instead of Models::City

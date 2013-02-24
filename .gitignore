@@ -28,3 +28,8 @@ doc/
 
 build
 build/
+
+##################
+# ignore dbs in root folder (e.g. world.db used for testing)
+
+*.db

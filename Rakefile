@@ -19,7 +19,7 @@ Hoe.spec 'worlddb' do
   self.email   = 'opensport@googlegroups.com'
   
   self.extra_deps = [
-    ['textutils', '~> 0.4.0'],
+    ['textutils', '>= 0.5.0'],
     ['commander', '~> 4.1.3'],
     ['activerecord', '~> 3.2']  # NB: will include activesupport,etc.
     ### ['sqlite3',      '~> 1.3']  # NB: install on your own; remove dependency
@@ -58,6 +58,8 @@ namespace :dev do
   task :env => BUILD_DIR do
     require './lib/worlddb.rb'
 
+    LogUtils::Logger.root.level = :info
+
     pp DB_CONFIG
     ActiveRecord::Base.establish_connection( DB_CONFIG )
   end
@@ -67,7 +69,7 @@ namespace :dev do
   end
   
   task :import => :env do
-    WorldDB.read_all  # populate world tables
+    WorldDB.read_all( '../world.db' )  # populate world tables
     WorldDB.stats
   end
 
