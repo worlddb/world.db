@@ -56,7 +56,8 @@ namespace :dev do
   end
 
   task :env => BUILD_DIR do
-    require './lib/worlddb.rb'
+    require 'worlddb'   ### NB: for local testing use rake -I ./lib dev:test e.g. do NOT forget to add -I ./lib
+    require 'logutils/db'
 
     LogUtils::Logger.root.level = :info
 
@@ -65,6 +66,7 @@ namespace :dev do
   end
 
   task :create => :env do
+    LogDb.create
     WorldDB.create
   end
   
