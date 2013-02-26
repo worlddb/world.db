@@ -16,6 +16,64 @@ class Reader
   end
 
 
+  def load_setup( setup, include_path )
+    ary = load_fixture_setup( setup, include_path )
+
+    ### fix/todo:
+    #  use to setups - use comment to remove fixtures
+
+    # too big for heroku free db plan (10,000 record limit)
+    #  - sorry, can't load by default
+    fixture_excludes = [
+      'south-america/ve/cities'
+    ]
+    
+    ary = ary - fixture_excludes
+
+    ary.each do |name|
+      load( name, include_path )
+    end
+  end # method load_setup
+
+
+  ## fix/todo: rename ??
+  def load_fixture_setup( name, include_path )
+    
+   ## todo/fix: cleanup quick and dirty code
+    
+    path = "#{include_path}/#{name}.yml"
+
+    logger.info "parsing data '#{name}' (#{path})..."
+
+    text = File.read_utf8( path )
+    
+    hash = YAML.load( text )
+    
+    ### build up array for fixtures from hash
+    
+    ary = []
+    
+    hash.each do |key_wild, value_wild|
+      key   = key_wild.to_s.strip
+      
+      logger.debug "yaml key:#{key_wild.class.name} >>#{key}<<, value:#{value_wild.class.name} >>#{value_wild}<<"
+    
+      if value_wild.kind_of?( String ) # assume single fixture name
+        ary << value_wild
+      elsif value_wild.kind_of?( Array ) # assume array of fixture names as strings
+        ary = ary + value_wild
+      else
+        logger.error "unknow fixture type in setup (yaml key:#{key_wild.class.name} >>#{key}<<, value:#{value_wild.class.name} >>#{value_wild}<<); skipping"
+      end
+    end
+    
+    logger.debug "fixture setup:"
+    logger.debug ary.to_json
+    
+    ary
+  end # load_fixture_setup
+
+
   def load( name, include_path )
 
     if name =~ /^lang/
@@ -32,9 +90,12 @@ class Reader
        load_xxx( 'motor', name, include_path )
     elsif name =~ /^tag.*\.(\d)$/
        load_tags( name, include_path, :grade => $1.to_i )
-    elsif name =~ /^([a-z]{3,})\/countries/     # e.g. africa/countries or america/countries
+    elsif name =~ /^([a-z][a-z\-]+[a-z])\/countries/     # e.g. africa/countries or america/countries
+      ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
+      ### fix/cleanup/todo:
       ## auto-add continent (from folder structure) as tag
-      load_countries( name, include_path, :tags => $1 )
+      ## load_countries( name, include_path, :tags => $1 )
+      load_countries( name, include_path )
     elsif name =~ /\/([a-z]{2})\/cities/
       ## auto-add required country code (from folder structure)
       load_cities( $1, name, include_path )

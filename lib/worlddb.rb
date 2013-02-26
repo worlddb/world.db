@@ -69,26 +69,15 @@ module WorldDB
     end
   end
 
-  def self.read_all( include_path )  # load all builtins (using plain text reader); helper for convenience
-    reader = Reader.new
 
-    # too big for heroku free db plan (10,000 record limit)
-    #  - sorry, can't load by default
-    fixture_excludes = [
-      'america/ve/cities'
-    ]
-    
-    ary = Fixtures.all - fixture_excludes
-    
-    ary.each do |name|
-     reader.load( name, include_path )
-    end # each name
-  end # method read_all
-  
-  
   def self.read_setup( setup, include_path )
-    ## fix: to be done  (see sport.db.ruby)
+    reader = Reader.new
+    reader.load_setup( setup, include_path )
   end
+
+  def self.read_all( include_path )  # load all builtins (using plain text reader); helper for convenience
+    read_setup( 'setups/all', include_path )
+  end # method read_all
 
   
   # delete ALL records (use with care!)
