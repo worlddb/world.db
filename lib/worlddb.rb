@@ -70,13 +70,13 @@ module WorldDB
   end
 
 
-  def self.read_setup( setup, include_path )
-    reader = Reader.new
+  def self.read_setup( setup, include_path, opts={} )
+    reader = Reader.new( opts )
     reader.load_setup( setup, include_path )
   end
 
-  def self.read_all( include_path )  # load all builtins (using plain text reader); helper for convenience
-    read_setup( 'setups/all', include_path )
+  def self.read_all( include_path, opts={} )  # load all builtins (using plain text reader); helper for convenience
+    read_setup( 'setups/all', include_path, opts )
   end # method read_all
 
   

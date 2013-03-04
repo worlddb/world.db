@@ -71,7 +71,7 @@ namespace :dev do
   end
   
   task :import => :env do
-    WorldDB.read_all( '../world.db' )  # populate world tables
+    WorldDB.read_setup( 'setups/sport.db.admin', '../world.db', { skip_tags: true } )  # populate world tables
     WorldDB.stats
   end
 

@@ -12,7 +12,19 @@ class Reader
   ## required first arg in ctor!!!
   ## cleanup load_   and remove include_path
 
-  def initialize
+  def initialize( opts = {} )
+    ## option: do NOT generate/add any tags for countries/regions/cities
+    @skip_tags =  opts[:skip_tags].present? ? true : false
+    ## option: for now issue warning on update, that is, if key/record (country,region,city) already exists
+    @strict    =  opts[:strict].present? ? true : false
+  end
+
+  def skip_tags?
+    @skip_tags == true
+  end
+
+  def strict?
+    @strict == true
   end
 
 
@@ -517,19 +529,23 @@ private
       ## add taggings 
 
       if value_tag_keys.size > 0
+        
+        if skip_tags?
+          logger.debug "   skipping add taggings (flag skip_tag)"
+        else
+          value_tag_keys.uniq!  # remove duplicates
+          logger.debug "   adding #{value_tag_keys.size} taggings: >>#{value_tag_keys.join('|')}<<..."
 
-        value_tag_keys.uniq!  # remove duplicates
-        logger.debug "   adding #{value_tag_keys.size} taggings: >>#{value_tag_keys.join('|')}<<..."
+          ### fix/todo: check tag_ids and only update diff (add/remove ids)
 
-        ### fix/todo: check tag_ids and only update diff (add/remove ids)
-
-        value_tag_keys.each do |key|
-          tag = Tag.find_by_key( key )
-          if tag.nil?  # create tag if it doesn't exit
-            logger.debug "   creating tag >#{key}<"
-            tag = Tag.create!( key: key )
+          value_tag_keys.each do |key|
+            tag = Tag.find_by_key( key )
+            if tag.nil?  # create tag if it doesn't exit
+              logger.debug "   creating tag >#{key}<"
+              tag = Tag.create!( key: key )
+            end
+            rec.tags << tag
           end
-          rec.tags << tag
         end
       end
 
