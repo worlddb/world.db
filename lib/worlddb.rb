@@ -22,6 +22,8 @@ require 'textutils'
 
 # our own code
 
+
+
 require 'worlddb/version'
 
 require 'worlddb/models/prop'
@@ -42,7 +44,7 @@ require 'worlddb/data/fixtures'
 
 
 
-module WorldDB
+module WorldDb
 
   def self.banner
     "worlddb #{VERSION} on Ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE}) [#{RUBY_PLATFORM}]"
@@ -58,7 +60,8 @@ module WorldDB
   end
   
   def self.create
-    CreateDB.up
+    CreateDb.new.up
+    WorldDb::Models::Prop.create!( key: 'db.schema.world.version', value: VERSION )
   end
 
 
@@ -101,12 +104,12 @@ module WorldDB
     Stats.new.props
   end
 
-end  # module WorldDB
+end  # module WorldDb
 
 
 if __FILE__ == $0
-  WorldDB.main
+  WorldDb.main
 else
   # say hello
-  puts WorldDB.banner
+  puts WorldDb.banner
 end

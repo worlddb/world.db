@@ -1,14 +1,9 @@
 
-module WorldDB
+module WorldDb
 
-class CreateDB
+class CreateDb < ActiveRecord::Migration
 
-  include WorldDB::Models
-
-
-def self.up
-
-  ActiveRecord::Schema.define do
+def up
 
 create_table :countries do |t|
   t.string  :title,  :null => false
@@ -115,18 +110,19 @@ create_table :usages do |t|  # join table for countries_langs
   t.timestamps
 end
 
+### fix: move to PropDb ? into props gem? why? why not?
 create_table :props do |t|
   t.string :key,   :null => false
   t.string :value, :null => false
   t.timestamps
 end
 
-  end # block Schema.define
-
-  Prop.create!( key: 'db.schema.world.version', value: WorldDB::VERSION )
-
 end # method up
 
-end # class CreateDB
+def down
+  raise ActiveRecord::IrreversibleMigration
+end
 
-end # module WorldDB
+end # class CreateDb
+
+end # module WorldDb

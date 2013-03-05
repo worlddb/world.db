@@ -3,7 +3,7 @@ require 'hoe'
 require './lib/worlddb/version.rb'
 
 ## NB: plugin (hoe-manifest) not required; just used for future testing/development
-Hoe::plugin :manifest   # more options for manifests (in the future; not yet)
+### Hoe::plugin :manifest   # more options for manifests (in the future; not yet)
 
 
 Hoe.spec 'worlddb' do
@@ -71,7 +71,7 @@ namespace :dev do
   end
   
   task :import => :env do
-    WorldDB.read_setup( 'setups/sport.db.admin', '../world.db', { skip_tags: true } )  # populate world tables
+    WorldDB.read_setup( 'setups/sport.db.admin', '../world.db', skip_tags: true )  # populate world tables
     WorldDB.stats
   end
 
