@@ -298,7 +298,7 @@ class Reader
 
 
 private
-  def load_fixtures_for( clazz, more_values={} )  # load from file system
+  def load_fixtures_for( clazz, name, more_values={} )  # load from file system
     path = "#{include_path}/#{name}.txt"
 
     puts "*** parsing data '#{name}' (#{path})..."
