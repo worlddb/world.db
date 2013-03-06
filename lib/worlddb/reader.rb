@@ -1,4 +1,4 @@
-module WorldDB
+module WorldDb
 
 class Reader
 
@@ -6,18 +6,9 @@ class Reader
 
 ## make models available in sportdb module by default with namespace
 #  e.g. lets you use City instead of Models::City
-  include WorldDB::Models
+  include WorldDb::Models
 
-  ### todo/fix: make include_path
-  ## required first arg in ctor!!!
-  ## cleanup load_   and remove include_path
-
-  def initialize( opts = {} )
-    ## option: do NOT generate/add any tags for countries/regions/cities
-    @skip_tags =  opts[:skip_tags].present? ? true : false
-    ## option: for now issue warning on update, that is, if key/record (country,region,city) already exists
-    @strict    =  opts[:strict].present? ? true : false
-  end
+  attr_reader :include_path
 
   def skip_tags?
     @skip_tags == true
@@ -27,9 +18,19 @@ class Reader
     @strict == true
   end
 
+  def initialize( include_path, opts = {} )
+    
+    @include_path = include_path
+    
+    ## option: do NOT generate/add any tags for countries/regions/cities
+    @skip_tags =  opts[:skip_tags].present? ? true : false
+    ## option: for now issue warning on update, that is, if key/record (country,region,city) already exists
+    @strict    =  opts[:strict].present? ? true : false
+  end
 
-  def load_setup( setup, include_path )
-    ary = load_fixture_setup( setup, include_path )
+
+  def load_setup( setup )
+    ary = load_fixture_setup( setup )
 
     ### fix/todo:
     #  use to setups - use comment to remove fixtures
@@ -43,13 +44,13 @@ class Reader
     ary = ary - fixture_excludes
 
     ary.each do |name|
-      load( name, include_path )
+      load( name )
     end
   end # method load_setup
 
 
   ## fix/todo: rename ??
-  def load_fixture_setup( name, include_path )
+  def load_fixture_setup( name )
     
    ## todo/fix: cleanup quick and dirty code
     
@@ -86,34 +87,34 @@ class Reader
   end # load_fixture_setup
 
 
-  def load( name, include_path )
+  def load( name )
 
     if name =~ /^lang/
-       load_langs( name, include_path )
+       load_langs( name )
     elsif name =~ /\/lang/
-       load_usages( name, include_path )
+       load_usages( name )
     elsif name =~ /\/fifa/
-       load_xxx( 'fifa', name, include_path )
+       load_xxx( 'fifa', name )
     elsif name =~ /\/iso3/
-       load_xxx( 'iso3', name, include_path )
+       load_xxx( 'iso3', name )
     elsif name =~ /\/internet/
-       load_xxx( 'net', name, include_path )
+       load_xxx( 'net', name )
     elsif name =~ /\/motor/
-       load_xxx( 'motor', name, include_path )
+       load_xxx( 'motor', name )
     elsif name =~ /^tag.*\.(\d)$/
-       load_tags( name, include_path, :grade => $1.to_i )
+       load_tags( name, :grade => $1.to_i )
     elsif name =~ /^([a-z][a-z\-]+[a-z])\/countries/     # e.g. africa/countries or america/countries
       ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
       ### fix/cleanup/todo:
       ## auto-add continent (from folder structure) as tag
       ## load_countries( name, include_path, :tags => $1 )
-      load_countries( name, include_path )
+      load_countries( name )
     elsif name =~ /\/([a-z]{2})\/cities/
       ## auto-add required country code (from folder structure)
-      load_cities( $1, name, include_path )
+      load_cities( $1, name )
     elsif name =~ /\/([a-z]{2})\/regions/
       ## auto-add required country code (from folder structure)
-      load_regions( $1, name, include_path )
+      load_regions( $1, name )
     else
       logger.error "unknown world.db fixture type >#{name}<"
       # todo/fix: exit w/ error
@@ -121,29 +122,29 @@ class Reader
   end
   
 
-  def load_countries( name, include_path, more_values={} )
-    load_fixtures_for( Country, name, include_path, more_values )
+  def load_countries( name, more_values={} )
+    load_fixtures_for( Country, name, more_values )
   end
 
 
-  def load_regions( country_key, name, include_path )
+  def load_regions( country_key, name )
     country = Country.find_by_key!( country_key )
     logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-    load_fixtures_for( Region, name, include_path, country_id: country.id )
+    load_fixtures_for( Region, name, country_id: country.id )
   end
 
 
-  def load_cities( country_key, name, include_path )
+  def load_cities( country_key, name )
     country = Country.find_by_key!( country_key )
     logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-    load_fixtures_for( City, name, include_path, country_id: country.id )
+    load_fixtures_for( City, name, country_id: country.id )
   end
 
 
 
-  def with_path_for( name, include_path )
+  def with_path_for( name )
     ## todo: find a better name?
     # e.g. find_path_for  or open_fixture_for ??
 
@@ -158,9 +159,9 @@ class Reader
 
 
 
-  def load_langs( name, include_path )
+  def load_langs( name )
     
-    with_path_for( name, include_path) do |path|
+    with_path_for( name ) do |path|
   
       reader = HashReader.new( path )
 
@@ -194,9 +195,9 @@ class Reader
   end # method load_langs
 
 
-  def load_tags( name, include_path, more_values={} )
+  def load_tags( name, more_values={} )
     
-    with_path_for( name, include_path) do |path|
+    with_path_for( name ) do |path|
 
       reader = HashReader.new( path )
 
@@ -250,7 +251,7 @@ class Reader
   end # method load_tags
 
 
-  def load_usages( name, include_path )
+  def load_usages( name )
     path = "#{include_path}/#{name}.yml"
 
     puts "*** parsing data '#{name}' (#{path})..."
@@ -279,7 +280,7 @@ class Reader
   end
 
 
-  def load_xxx( xxx, name, include_path )
+  def load_xxx( xxx, name )
     path = "#{include_path}/#{name}.yml"
 
     puts "*** parsing data '#{name}' (#{path})..."
@@ -297,7 +298,7 @@ class Reader
 
 
 private
-  def load_fixtures_for( clazz, name, include_path, more_values={} )  # load from file system
+  def load_fixtures_for( clazz, more_values={} )  # load from file system
     path = "#{include_path}/#{name}.txt"
 
     puts "*** parsing data '#{name}' (#{path})..."
@@ -556,4 +557,4 @@ private
 
   
 end # class Reader
-end # module WorldDB
+end # module WorldDb

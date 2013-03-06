@@ -1,4 +1,4 @@
-module WorldDB::Models
+module WorldDb::Models
 
 class Region < ActiveRecord::Base
 
@@ -50,4 +50,4 @@ class Region < ActiveRecord::Base
 
 end # class Region
 
-end # module WorldDB::Models
+end # module WorldDb::Models

@@ -9,8 +9,8 @@ LogUtils::Logger.root.level = :info   # set logging level to info
 
 
 program :name,  'worlddb'
-program :version, WorldDB::VERSION
-program :description, "world.db command line tool, version #{WorldDB::VERSION}"
+program :version, WorldDb::VERSION
+program :description, "world.db command line tool, version #{WorldDb::VERSION}"
 
 
 # default_command :help
@@ -36,7 +36,7 @@ Further information:
 
 
 ## todo: find a better name e.g. change to settings? config? safe_opts? why? why not?
-myopts = WorldDB::Opts.new
+myopts = WorldDb::Opts.new
 
 ### global option (required)
 ## todo: add check that path is valid?? possible?
@@ -51,7 +51,7 @@ global_option '-w', '--verbose', "Show debug messages"
 
 
 def connect_to_db( options )
-  puts WorldDB.banner
+  puts WorldDb.banner
 
   puts "working directory: #{Dir.pwd}"
 
@@ -80,8 +80,8 @@ command :create do |c|
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts )
     
-    LogDB.create
-    WorldDB.create
+    LogDb.create
+    WorldDb.create
     puts 'Done.'
   end # action
 end # command create
@@ -102,13 +102,13 @@ command :setup do |c|
 
     if options.delete.present?
       # w/ delete flag assume tables already exit
-      WorldDB.delete!
+      WorldDb.delete!
     else
-      LogDB.create
-      WorldDB.create
+      LogDb.create
+      WorldDb.create
     end
 
-    WorldDB.read_all( myopts.data_path )
+    WorldDb.read_all( myopts.data_path )
     puts 'Done.'
   end # action
 end  # command setup
@@ -135,10 +135,10 @@ command :load do |c|
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts )
     
-    WorldDB.delete! if options.delete.present?
+    WorldDb.delete! if options.delete.present?
 
     # read plain text country/region/city fixtures
-    reader = WorldDB::Reader.new
+    reader = WorldDb::Reader.new
     args.each do |arg|
       name = arg     # File.basename( arg, '.*' )
 
@@ -171,7 +171,7 @@ command :stats do |c|
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts ) 
     
-    WorldDB.tables
+    WorldDb.tables
     
     puts 'Done.'
   end
@@ -189,7 +189,7 @@ command :props do |c|
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts ) 
     
-    WorldDB.props
+    WorldDb.props
     
     puts 'Done.'
   end
@@ -207,7 +207,7 @@ command :logs do |c|
     myopts.merge_commander_options!( options.__hash__ )
     connect_to_db( myopts ) 
     
-    LogDB::Models::Log.all.each do |log|
+    LogDb::Models::Log.all.each do |log|
       puts "[#{log.level}] -- #{log.msg}"
     end
     

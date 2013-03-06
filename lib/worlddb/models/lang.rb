@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDB::Models
+module WorldDb::Models
 
   class Lang < ActiveRecord::Base
     
@@ -12,4 +12,4 @@ module WorldDB::Models
 
   end  # class Lang
 
-end # module WorldDB::Models
+end # module WorldDb::Models

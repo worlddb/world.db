@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDB::Models
+module WorldDb::Models
 
 class Country < ActiveRecord::Base
   self.table_name = 'countries'
@@ -96,4 +96,4 @@ class Country < ActiveRecord::Base
 end # class Country
 
 
-end # module WorldDB::Models
+end # module WorldDb::Models

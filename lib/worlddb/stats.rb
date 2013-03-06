@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-module WorldDB
+module WorldDb
 
   class Stats
-    include WorldDB::Models
+    include WorldDb::Models
 
     def tables
       puts "Stats:"
@@ -27,4 +27,4 @@ module WorldDB
   end # class Stats
 
 
-end # module WorldDB
+end # module WorldDb

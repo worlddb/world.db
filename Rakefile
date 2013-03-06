@@ -8,7 +8,7 @@ require './lib/worlddb/version.rb'
 
 Hoe.spec 'worlddb' do
   
-  self.version = WorldDB::VERSION
+  self.version = WorldDb::VERSION
   
   self.summary = "worlddb - world.db command line tool"
   self.description = summary
@@ -38,7 +38,7 @@ end
 ##
 ## NB: use rake -I ./lib dev:test      # fresh import (starts w/ clean wipe out)
 
-namespace :dev do
+namespace :worlddb do
   
   BUILD_DIR = "./build"
   
@@ -67,19 +67,19 @@ namespace :dev do
 
   task :create => :env do
     LogDb.create
-    WorldDB.create
+    WorldDb.create
   end
   
   task :import => :env do
-    WorldDB.read_setup( 'setups/sport.db.admin', '../world.db', skip_tags: true )  # populate world tables
-    WorldDB.stats
+    WorldDb.read_setup( 'setups/sport.db.admin', '../world.db', skip_tags: true )  # populate world tables
+    WorldDb.stats
   end
 
 
-  desc 'worlddb - test loading of builtin fixtures'
-  task :test => [:clean, :create, :import]
+  desc 'worlddb - build from scratch'
+  task :build => [:clean, :create, :import]
 
-  desc 'worlddb - test loading of builtin fixtures (update)'
+  desc 'worlddb - update'
   task :update => [:import]
 
-end  # namespace :dev
+end  # namespace :worlddb

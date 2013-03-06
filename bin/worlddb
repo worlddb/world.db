@@ -4,4 +4,4 @@ require 'worlddb'
 
 ## todo: set x flag for file
 
-WorldDB.main
+WorldDb.main

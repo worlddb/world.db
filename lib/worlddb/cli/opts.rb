@@ -1,4 +1,4 @@
-module WorldDB
+module WorldDb
 
 class Opts
 
@@ -74,4 +74,4 @@ class Opts
 
 end # class Opts
 
-end # module WorldDB
+end # module WorldDb

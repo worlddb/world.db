@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDB::Models
+module WorldDb::Models
 
   class Prop < ActiveRecord::Base
 
@@ -28,4 +28,4 @@ private
     
   end  # class Prop
 
-end # module WorldDB::Models
+end # module WorldDb::Models

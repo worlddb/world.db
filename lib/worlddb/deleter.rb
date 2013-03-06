@@ -1,12 +1,12 @@
 # encoding: utf-8
 
-module WorldDB
+module WorldDb
 
   class Deleter
     
     ## make models available in worlddb module by default with namespace
     #  e.g. lets you use City instead of Models::City 
-    include WorldDB::Models
+    include WorldDb::Models
 
     def run
       # for now delete all tables
@@ -23,4 +23,4 @@ module WorldDB
     
   end # class Deleter
 
-end # module WorldDB
+end # module WorldDb

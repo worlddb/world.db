@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDB::Models
+module WorldDb::Models
 
   class Usage < ActiveRecord::Base
 
@@ -9,4 +9,4 @@ module WorldDB::Models
 
   end  # class Usage
 
-end # module WorldDB::Models
+end # module WorldDb::Models
