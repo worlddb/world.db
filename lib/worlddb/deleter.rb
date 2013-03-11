@@ -16,6 +16,7 @@ module WorldDb
       City.delete_all
       Region.delete_all
       Country.delete_all
+      Continent.delete_all
       Usage.delete_all
       Lang.delete_all
       Prop.delete_all

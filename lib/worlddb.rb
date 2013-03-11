@@ -27,6 +27,7 @@ require 'textutils'
 require 'worlddb/version'
 
 require 'worlddb/models/prop'
+require 'worlddb/models/continent'
 require 'worlddb/models/country'
 require 'worlddb/models/region'
 require 'worlddb/models/city'

@@ -5,6 +5,18 @@ class CreateDb < ActiveRecord::Migration
 
 def up
 
+create_table :continents do |t|
+  t.string  :title,  :null => false
+  t.string  :key,    :null => false
+  t.string  :synonyms  # comma separated list of synonyms
+
+  ## timestamp at last
+  t.timestamps
+end
+
+add_index :continents, :key,  :unique => true
+
+
 create_table :countries do |t|
   t.string  :title,  :null => false
   t.string  :key,    :null => false
@@ -12,7 +24,8 @@ create_table :countries do |t|
   t.string  :synonyms  # comma separated list of synonyms
   t.integer :pop,    :null => false    # population count
   t.integer :area,   :null => false    #  area in square km (sq. km)
-  t.references :country  # for supra(nationals) n depend(encies)
+  t.references :continent
+  t.references :country    # for supra(nationals) n depend(encies)
   
   ## flags (use single int named flags - why? why not?  
   t.boolean :s,  :null => false, :default => false   # supra(national) flag e.g. eu
