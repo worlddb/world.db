@@ -10,6 +10,7 @@ lib/worlddb/console.rb
 lib/worlddb/data/fixtures.rb
 lib/worlddb/deleter.rb
 lib/worlddb/models/city.rb
+lib/worlddb/models/continent.rb
 lib/worlddb/models/country.rb
 lib/worlddb/models/lang.rb
 lib/worlddb/models/prop.rb

@@ -14,12 +14,13 @@ require 'yaml'
 
 ## shortcuts for models
 
-Tag     = WorldDb::Models::Tag
-Tagging = WorldDb::Models::Tagging
-Country = WorldDb::Models::Country
-Region  = WorldDb::Models::Region
-City    = WorldDb::Models::City
-Prop    = WorldDb::Models::Prop
+Tag        = WorldDb::Models::Tag
+Tagging    = WorldDb::Models::Tagging
+Continent  = WorldDb::Models::Continent
+Country    = WorldDb::Models::Country
+Region     = WorldDb::Models::Region
+City       = WorldDb::Models::City
+Prop       = WorldDb::Models::Prop
 
 ## connect to db
 
@@ -36,11 +37,9 @@ ActiveRecord::Base.establish_connection( DB_CONFIG )
 ## test drive
 
 puts "Welcome to world.db, version #{WorldDb::VERSION}!"
-puts "  #{'%6d' % Country.count} countries"
-puts "  #{'%6d' % Region.count} regions"
-puts "  #{'%6d' % City.count} cities"
-puts "  #{'%6d' % Tagging.count} taggings"
-puts "  #{'%6d' % Tag.count} tags"
+
+WorldDb.stats
+
 puts "Ready."
 
 ## some countries
