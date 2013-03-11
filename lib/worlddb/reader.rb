@@ -89,7 +89,11 @@ class Reader
 
   def load( name )
 
-    if name =~ /^lang/
+    if name =~ /^continents/
+       load_continent_defs( name )
+    elsif name =~ /\/continents/
+       load_continent_refs( name )
+    elsif name =~ /^lang/
        load_langs( name )
     elsif name =~ /\/lang/
        load_usages( name )
@@ -157,6 +161,55 @@ class Reader
     Prop.create_from_fixture!( name, path )
   end
 
+
+  def load_continent_refs( name )
+    path = "#{include_path}/#{name}.yml"
+
+    logger.info "parsing data '#{name}' (#{path})..."
+
+    reader = HashReader.new( path )
+
+    reader.each do |key, value|
+      country = Country.find_by_key!( key )
+      continent = Continent.find_by_key!( value )
+      country.continent_id = continent.id
+      country.save!
+    end
+
+    Prop.create_from_fixture!( name, path )
+  end
+
+  def load_continent_defs( name, more_values={} )
+    path = "#{include_path}/#{name}.txt"
+
+    logger.info "parsing data '#{name}' (#{path})..."
+
+    reader = ValuesReader.new( path, more_values )
+
+    reader.each_line do |attribs, values|
+
+      ## check optional values
+      values.each_with_index do |value, index|
+        logger.warn "unknown type for value >#{value}<"
+      end
+
+      rec = Continent.find_by_key( attribs[ :key ] )
+      if rec.present?
+        logger.debug "update Continent #{rec.id}-#{rec.key}:"
+      else
+        logger.debug "create Continent:"
+        rec = Continent.new
+      end
+      
+      logger.debug attribs.to_json
+   
+      rec.update_attributes!( attribs )
+
+    end # each lines
+    
+    Prop.create_from_fixture!( name, path )
+     
+  end # load_continent_defs
 
 
   def load_langs( name )

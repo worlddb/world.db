@@ -5,9 +5,9 @@ module WorldDb::Models
   class Continent < ActiveRecord::Base
     
     has_many :countries
-    
-    validates :key, :format => { :with => /^[a-z]{2,}$/, :message => 'expected two or more lowercase letters a-z' }
 
+    # NB: allow dots in keys e.g. concacaf.naf etc.    
+    
   end  # class Continent
 
 end # module WorldDb::Models
