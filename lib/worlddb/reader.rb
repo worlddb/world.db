@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module WorldDb
 
 class Reader
@@ -107,15 +109,18 @@ class Reader
        load_xxx( 'motor', name )
     elsif name =~ /^tag.*\.(\d)$/
        load_tags( name, :grade => $1.to_i )
-    elsif name =~ /^([a-z][a-z\-]+[a-z])\/countries/     # e.g. africa/countries or america/countries
+    elsif name =~ /^([a-z][a-z\-_]+[a-z])\/countries/     # e.g. africa/countries or america/countries
       ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
-      ### fix/cleanup/todo:
       ## auto-add continent (from folder structure) as tag
-      ## load_countries( name, include_path, :tags => $1 )
-      load_countries( name )
+      ## fix: allow dash/hyphen/minus in tag
+      load_countries( name, :tags => $1.tr('-', '_') )
     elsif name =~ /\/([a-z]{2})\/cities/
       ## auto-add required country code (from folder structure)
       load_cities( $1, name )
+    elsif name =~ /\/([a-z]{2})\/regions\.abbr/
+      load_regions_xxx( $1, 'abbr', name )
+    elsif name =~ /\/([a-z]{2})\/regions\.iso/
+      load_regions_xxx( $1, 'iso', name )
     elsif name =~ /\/([a-z]{2})\/regions/
       ## auto-add required country code (from folder structure)
       load_regions( $1, name )
@@ -136,6 +141,26 @@ class Reader
     logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
     load_fixtures_for( Region, name, country_id: country.id )
+  end
+
+
+  def load_regions_xxx( country_key, xxx, name )
+    path = "#{include_path}/#{name}.yml"
+
+    logger.info "parsing data '#{name}' (#{path})..."
+
+    country = Country.find_by_key!( country_key )
+    logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+
+    reader = HashReader.new( path )
+
+    reader.each do |key, value|
+      region = Region.find_by_country_id_and_key!( country.id, key )
+      region.send( "#{xxx}=", value )
+      region.save!
+    end
+
+    Prop.create_from_fixture!( name, path )
   end
 
 
@@ -307,7 +332,7 @@ class Reader
   def load_usages( name )
     path = "#{include_path}/#{name}.yml"
 
-    puts "*** parsing data '#{name}' (#{path})..."
+    logger.info "parsing data '#{name}' (#{path})..."
 
     reader = HashReader.new( path )
 
@@ -336,7 +361,7 @@ class Reader
   def load_xxx( xxx, name )
     path = "#{include_path}/#{name}.yml"
 
-    puts "*** parsing data '#{name}' (#{path})..."
+    logger.info "parsing data '#{name}' (#{path})..."
 
     reader = HashReader.new( path )
 
@@ -354,7 +379,7 @@ private
   def load_fixtures_for( clazz, name, more_values={} )  # load from file system
     path = "#{include_path}/#{name}.txt"
 
-    puts "*** parsing data '#{name}' (#{path})..."
+    logger.info "parsing data '#{name}' (#{path})..."
 
     reader = ValuesReader.new( path, more_values )
     
@@ -440,9 +465,15 @@ private
           value_popm = value_popm_str.gsub(/[ _]/, '').to_i
           attribs[ :popm ] = value_popm
           attribs[ :m ] = true   #  auto-mark city as m|metro too
+        elsif value =~ /^[A-Z]{2}$/ && clazz == City   ## assume region code e.g. TX for city
+          value_region = Region.find_by_key_and_country_id!( value.downcase, attribs[:country_id] )
+          attribs[ :region_id ] = value_region.id
         elsif value =~ /^[A-Z]{2,3}$/  ## assume two or three-letter code
           attribs[ :code ] = value
-        elsif value =~ /(^[0-9]{1,2}$)|(^[0-9][0-9 _]+[0-9]$)/    ## numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
+        elsif value =~ /^([0-9][0-9 _]+[0-9]|[0-9]{1,2})(?:\s*(?:km2|km²)\s*)$/
+          ## allow numbers like 453 km²
+          value_numbers << value.gsub( 'km2', '').gsub( 'km²', '' ).gsub(/[ _]/, '').to_i
+        elsif value =~ /^([0-9][0-9 _]+[0-9])|([0-9]{1,2})$/    ## numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
           value_numbers << value.gsub(/[ _]/, '').to_i
         elsif (values.size==(index+1)) && value =~ /^[a-z0-9\|_ ]+$/   # tags must be last entry
 
@@ -479,7 +510,9 @@ private
         else   # countries,regions
           attribs[ :area ] = value_numbers[0]
           attribs[ :pop  ] = value_numbers[1]
-          
+
+
+=begin
           if clazz == Country
             # auto-add tags
             area = value_numbers[0]
@@ -516,8 +549,11 @@ private
             value_tag_keys << 'pop_10m_n_up'  if pop >= 10_000_000
             value_tag_keys << 'pop_1m_n_up'   if pop >=  1_000_000
           end
+=end
+
+
         end
-      end
+      end  # if value_numbers.size > 0
 
       rec = nil
       

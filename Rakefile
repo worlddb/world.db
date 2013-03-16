@@ -17,14 +17,14 @@ Hoe.spec 'worlddb' do
   
   self.author  = 'Gerald Bauer'
   self.email   = 'opensport@googlegroups.com'
-  
+
   self.extra_deps = [
-    ['textutils', '>= 0.5.0'],
+    ['textutils', '~> 0.5'], # e.g.  >= 0.5 && <= 1.0
     ['commander', '~> 4.1.3'],
     ['activerecord', '~> 3.2']  # NB: will include activesupport,etc.
     ### ['sqlite3',      '~> 1.3']  # NB: install on your own; remove dependency
   ]
-  
+
   self.licenses = ['Public Domain']
 
   self.spec_extras = {
@@ -71,7 +71,7 @@ namespace :worlddb do
   end
   
   task :import => :env do
-    WorldDb.read_setup( 'setups/sport.db.admin', '../world.db', skip_tags: true )  # populate world tables
+    WorldDb.read_setup( 'setups/europe.at', '../world.db', skip_tags: true )  # populate world tables
     WorldDb.stats
   end
 
