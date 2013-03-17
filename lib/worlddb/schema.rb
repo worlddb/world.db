@@ -59,6 +59,7 @@ create_table :regions do |t|
   t.string :code     # short two or three letter code e.g. NY, OAX, etc.
   t.string :abbr     # optional conventional abbrevation (e.g. Stmk., Gto., etc.)
   t.string :iso      # iso code
+  t.string :nuts     # nuts code (europe/eu only)
   t.string :synonyms  # comma separated list of synonyms
   t.references :country, :null => false
   t.integer :pop     # optional population count

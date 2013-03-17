@@ -121,6 +121,8 @@ class Reader
       load_regions_xxx( $1, 'abbr', name )
     elsif name =~ /\/([a-z]{2})\/regions\.iso/
       load_regions_xxx( $1, 'iso', name )
+    elsif name =~ /\/([a-z]{2})\/regions\.nuts/
+      load_regions_xxx( $1, 'nuts', name )
     elsif name =~ /\/([a-z]{2})\/regions/
       ## auto-add required country code (from folder structure)
       load_regions( $1, name )
