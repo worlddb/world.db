@@ -9,6 +9,10 @@ class Reader
 ## make models available in sportdb module by default with namespace
 #  e.g. lets you use City instead of Models::City
   include WorldDb::Models
+  
+
+## value helpers e.g. is_year?, is_taglist? etc.
+  include TextUtils::ValueHelper
 
   attr_reader :include_path
 
@@ -31,62 +35,25 @@ class Reader
   end
 
 
-  def load_setup( setup )
-    ary = load_fixture_setup( setup )
+  def load_setup( name )
+    path = "#{include_path}/#{name}.yml"
 
-    ### fix/todo:
-    #  use to setups - use comment to remove fixtures
+    logger.info "parsing data '#{name}' (#{path})..."
+
+    reader = FixtureReader.new( path )
 
     # too big for heroku free db plan (10,000 record limit)
     #  - sorry, can't load by default
     fixture_excludes = [
       'south-america/ve/cities'
     ]
-    
-    ary = ary - fixture_excludes
 
-    ary.each do |name|
-      load( name )
+    reader.each do |fixture_name|
+      next if fixture_excludes.include?( fixture_name )  # skip loading
+      
+      load( fixture_name )
     end
   end # method load_setup
-
-
-  ## fix/todo: rename ??
-  def load_fixture_setup( name )
-    
-   ## todo/fix: cleanup quick and dirty code
-    
-    path = "#{include_path}/#{name}.yml"
-
-    logger.info "parsing data '#{name}' (#{path})..."
-
-    text = File.read_utf8( path )
-    
-    hash = YAML.load( text )
-    
-    ### build up array for fixtures from hash
-    
-    ary = []
-    
-    hash.each do |key_wild, value_wild|
-      key   = key_wild.to_s.strip
-      
-      logger.debug "yaml key:#{key_wild.class.name} >>#{key}<<, value:#{value_wild.class.name} >>#{value_wild}<<"
-    
-      if value_wild.kind_of?( String ) # assume single fixture name
-        ary << value_wild
-      elsif value_wild.kind_of?( Array ) # assume array of fixture names as strings
-        ary = ary + value_wild
-      else
-        logger.error "unknow fixture type in setup (yaml key:#{key_wild.class.name} >>#{key}<<, value:#{value_wild.class.name} >>#{value_wild}<<); skipping"
-      end
-    end
-    
-    logger.debug "fixture setup:"
-    logger.debug ary.to_json
-    
-    ary
-  end # load_fixture_setup
 
 
   def load( name )
@@ -467,7 +434,7 @@ private
           value_popm = value_popm_str.gsub(/[ _]/, '').to_i
           attribs[ :popm ] = value_popm
           attribs[ :m ] = true   #  auto-mark city as m|metro too
-        elsif value =~ /^[A-Z]{2}$/ && clazz == City   ## assume region code e.g. TX for city
+        elsif is_region?( value ) && clazz == City   ## assume region code e.g. TX for city
           value_region = Region.find_by_key_and_country_id!( value.downcase, attribs[:country_id] )
           attribs[ :region_id ] = value_region.id
         elsif value =~ /^[A-Z]{2,3}$/  ## assume two or three-letter code
@@ -477,7 +444,7 @@ private
           value_numbers << value.gsub( 'km2', '').gsub( 'km²', '' ).gsub(/[ _]/, '').to_i
         elsif value =~ /^([0-9][0-9 _]+[0-9])|([0-9]{1,2})$/    ## numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
           value_numbers << value.gsub(/[ _]/, '').to_i
-        elsif (values.size==(index+1)) && value =~ /^[a-z0-9\|_ ]+$/   # tags must be last entry
+        elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
 
           logger.debug "   found tags: >>#{value}<<"
 
@@ -584,7 +551,7 @@ private
       value_cities.each do |city_title|
         
         city_attribs = {}
-        city_key = reader.title_to_key( city_title )
+        city_key = TextUtils.title_to_key( city_title )
         
         ## check if it exists
         ## todo/fix: add country_id for lookup?
