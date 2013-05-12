@@ -23,3 +23,5 @@ lib/worlddb/schema.rb
 lib/worlddb/stats.rb
 lib/worlddb/utils.rb
 lib/worlddb/version.rb
+test/helper.rb
+test/test_values.rb
