@@ -28,7 +28,8 @@ module WorldDb
       reader.each do |key, value|
         yield( key, value )
       end
-      Prop.create_from_fixture!( name, path )
+      
+      WorldDb::Models::Prop.create_from_fixture!( name, path )
     end
 
   end # class HashReaderPlus
