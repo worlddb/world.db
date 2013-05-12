@@ -26,6 +26,7 @@ require 'textutils'
 
 require 'worlddb/version'
 
+require 'worlddb/utils'
 require 'worlddb/models/prop'
 require 'worlddb/models/continent'
 require 'worlddb/models/country'
@@ -36,7 +37,6 @@ require 'worlddb/models/tagging'
 require 'worlddb/models/lang'
 require 'worlddb/models/usage'
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
-require 'worlddb/utils'
 require 'worlddb/reader'
 require 'worlddb/deleter'
 require 'worlddb/stats'

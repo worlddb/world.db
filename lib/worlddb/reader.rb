@@ -332,18 +332,6 @@ class Reader
     end
   end
 
-
-  def load_xxx( xxx, name )
-    reader = HashReaderPlus.new( name, include_path )
-
-    reader.each do |key, value|
-      country = Country.find_by_key!( key )
-      country.send( "#{xxx}=", value )
-      country.save!
-    end
-  end
-
-
 private
   def load_fixtures_for( clazz, name, more_values={} )  # load from file system
     path = "#{include_path}/#{name}.txt"

@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module WorldDb::Models
 
 class Region < ActiveRecord::Base
