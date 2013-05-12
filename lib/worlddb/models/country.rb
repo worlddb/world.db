@@ -3,6 +3,14 @@
 module WorldDb::Models
 
 class Country < ActiveRecord::Base
+
+  extend WorldDb::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
+
+  # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
+  #   self.create_or_update_from_values
+  extend TextUtils::ValueHelper  # e.g. is_year?, is_region?, is_address?, is_taglist? etc.
+
+
   self.table_name = 'countries'
 
   belongs_to :continent, :class_name => 'Continent', :foreign_key => 'continent_id'
@@ -94,6 +102,153 @@ class Country < ActiveRecord::Base
       Country.create!( attr )
     end # each country
   end
+
+
+  def self.create_or_update_from_values( new_attributes, values, opts={} )
+
+    ## opts e.g. :skip_tags true|false
+
+    ## fix: add/configure logger for ActiveRecord!!!
+    logger = LogKernel::Logger.root
+
+      value_numbers     = []
+      value_tag_keys    = []
+      value_cities      = []
+
+      ### check for "default" tags - that is, if present new_attributes[:tags] remove from hash
+      value_tag_keys += find_tags_in_hash!( new_attributes )
+
+
+      new_attributes[ :c ] = true   # assume country type by default (use supra,depend to change)
+      
+      ## check for optional values
+      values.each_with_index do |value,index|
+        if value =~ /^supra$/   ## supra(national)
+          new_attributes[ :c ] = false   # turn off default c|country flag; make it s|supra only
+          new_attributes[ :s ] = true
+          ## auto-add tag supra
+          value_tag_keys << 'supra'
+        elsif value =~ /^supra:/   ## supra:
+          value_country_key = value[6..-1]  ## cut off supra: prefix
+          value_country = Country.find_by_key!( value_country_key )
+          new_attributes[ :country_id ] = value_country.id
+        elsif value =~ /^country:/   ## country:
+          value_country_key = value[8..-1]  ## cut off country: prefix
+          value_country = Country.find_by_key!( value_country_key )
+          new_attributes[ :country_id ] = value_country.id
+          new_attributes[ :c ] = false # turn off default c|country flag; make it d|depend only
+          new_attributes[ :d ] = true
+          ## auto-add tag supra
+          value_tag_keys << 'territory'  # rename tag to dependency? why? why not?
+        elsif value =~ /^[A-Z]{2,3}$/  ## assume two or three-letter code
+          new_attributes[ :code ] = value
+        elsif value =~ /^([0-9][0-9 _]+[0-9]|[0-9]{1,2})(?:\s*(?:km2|km²)\s*)$/
+          ## allow numbers like 453 km²
+          value_numbers << value.gsub( 'km2', '').gsub( 'km²', '' ).gsub(/[ _]/, '').to_i
+        elsif value =~ /^([0-9][0-9 _]+[0-9])|([0-9]{1,2})$/    ## numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
+          value_numbers << value.gsub(/[ _]/, '').to_i
+        elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
+          logger.debug "   found tags: >>#{value}<<"
+          value_tag_keys += find_tags( value )
+        else
+          
+          ### assume it is the capital city - mark it for auto add
+          value_cities << value
+          next
+
+          # issue warning: unknown type for value
+          # logger.warn "unknown type for value >#{value}<"
+        end
+      end # each value
+
+      if value_numbers.size > 0
+          new_attributes[ :area ] = value_numbers[0]
+          new_attributes[ :pop  ] = value_numbers[1]
+      end
+
+=begin
+            # auto-add tags
+            area = value_numbers[0]
+            pop  = value_numbers[1]
+            
+            # categorize into brackets
+            if area >= 1_000_000
+              value_tag_keys << 'area_1_000_000_n_up'
+            elsif area >= 100_000
+              value_tag_keys << 'area_100_000_to_1_000_000'
+            elsif area >= 1000
+              value_tag_keys << 'area_1_000_to_100_000'
+            else
+              value_tag_keys << 'area_1_000_n_less' # microstate
+            end
+
+            # include all
+            value_tag_keys << 'area_100_000_n_up'  if area >= 100_000
+            value_tag_keys << 'area_1_000_n_up'    if area >=   1_000
+
+            
+            # categorize into brackets
+            if pop >= 100_000_000
+              value_tag_keys << 'pop_100m_n_up'
+            elsif pop >= 10_000_000
+              value_tag_keys << 'pop_10m_to_100m'
+            elsif pop >= 1_000_000
+              value_tag_keys << 'pop_1m_to_10m'
+            else
+              value_tag_keys << 'pop_1m_n_less'
+            end
+            
+            # include all
+            value_tag_keys << 'pop_10m_n_up'  if pop >= 10_000_000
+            value_tag_keys << 'pop_1m_n_up'   if pop >=  1_000_000
+=end
+
+      rec = Country.find_by_key( new_attributes[ :key ] )
+
+      if rec.present?
+        logger.debug "update Country #{rec.id}-#{rec.key}:"
+      else
+        logger.debug "create Country:"
+        rec = Country.new
+      end
+      
+      logger.debug new_attributes.to_json
+   
+      rec.update_attributes!( new_attributes )
+
+      #################
+      ## auto add capital cities
+
+      City.create_or_update_from_titles( value_cities, country_id: rec.id )
+
+      ##################
+      ## add taggings 
+
+      if value_tag_keys.size > 0
+        
+        if opts[:skip_tags].present?
+          logger.debug "   skipping add taggings (flag skip_tag)"
+        else
+          value_tag_keys.uniq!  # remove duplicates
+          logger.debug "   adding #{value_tag_keys.size} taggings: >>#{value_tag_keys.join('|')}<<..."
+
+          ### fix/todo: check tag_ids and only update diff (add/remove ids)
+
+          value_tag_keys.each do |key|
+            tag = Tag.find_by_key( key )
+            if tag.nil?  # create tag if it doesn't exit
+              logger.debug "   creating tag >#{key}<"
+              tag = Tag.create!( key: key )
+            end
+            rec.tags << tag
+          end
+        end
+      end
+
+    rec
+
+  end # method create_or_update_from_values
+
 
 end # class Country
 
