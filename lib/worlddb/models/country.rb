@@ -4,11 +4,11 @@ module WorldDb::Models
 
 class Country < ActiveRecord::Base
 
-  extend WorldDb::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
+  extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
-  extend TextUtils::ValueHelper  # e.g. is_year?, is_region?, is_address?, is_taglist? etc.
+  extend TextUtils::ValueHelper  # e.g. self.is_year?, self.is_region?, self.is_address?, is_taglist? etc.
 
 
   self.table_name = 'countries'
@@ -66,45 +66,28 @@ class Country < ActiveRecord::Base
 
 
   def self.create_from_ary!( countries )
-    countries.each do |values|
-      
+   countries.each do |values|
+      Country.create_from_values!( values )
+   end # each country
+  end
+
+
+  def self.create_from_values!( values )
+    ## fix: rename to create_or_update_from_values
+
       ## key & title required
-      attr = {
+      attribs = {
         :key   => values[0],
         :title => values[1],
         :code  => values[2]
       }
       
-      value_numbers = []
-      
-      ## check for optional values
-      values[3..-1].each do |value|
-        if value.is_a? Numeric
-          value_numbers << value
-        elsif value =~ /^motor:/  
-          value_motor = value[6..-1]  ## cut off region: motor
-          attr[ :motor ] = value_motor
-        elsif value =~ /^tags:/   
-          value_tags = value[5..-1]  ## cut off tags: prefix
-          # do nothing now
-        else
-          # issue warning: unknown type for value
-        end
-      end
-      
-      if value_numbers.size > 0
-        attr[ :area ] = value_numbers[0]  # NB: area for countries goes first
-        attr[ :pop  ] = value_numbers[1]
-      end
-      
-      
-      
-      Country.create!( attr )
-    end # each country
+      Country.create_or_update_from_values( attribs, values[3..-1] )
   end
 
 
   def self.create_or_update_from_values( new_attributes, values, opts={} )
+    ## fix: rename to create_or_update_from_attrs/attribs??
 
     ## opts e.g. :skip_tags true|false
 

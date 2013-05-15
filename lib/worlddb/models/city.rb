@@ -4,11 +4,11 @@ module WorldDb::Models
 
 class City < ActiveRecord::Base
   
-  extend WorldDb::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
+  extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
-  extend TextUtils::ValueHelper  # e.g. is_year?, is_region?, is_address?, is_taglist? etc.
+  extend TextUtils::ValueHelper  # e.g. self.is_year?, self.is_region?, self.is_address?, self.is_taglist? etc.
 
   
   self.table_name = 'cities'
@@ -70,90 +70,40 @@ class City < ActiveRecord::Base
   end
 
 
-  def self.create_from_ary!( cities, more_values={} )
+  def self.create_from_ary!( cities, more_attribs={} )
     cities.each do |values|
-      
-      ## key & title & country required
-      attr = {
-        key: values[0]
-      }
-      
-      ## title (split of optional synonyms)
-      # e.g. FC Bayern Muenchen|Bayern Muenchen|Bayern
-      titles = values[1].split('|')
-      
-      attr[ :title ]    =  titles[0]
-      ## add optional synonyms
-      attr[ :synonyms ] =  titles[1..-1].join('|')  if titles.size > 1
-      
-      attr = attr.merge( more_values )
-      
-      value_numbers = []
-      
-      ## check for optional values
-      values[2..-1].each do |value|
-        if value.is_a? Country
-          attr[ :country_id ] = value.id
-        elsif value.is_a? Numeric
-          value_numbers << value
-        elsif value =~ /^[A-Z_]{3}$/    ## assume its three letter code (e.g. NYC,VIE,etc.)
-          attr[ :code ] = value
-        elsif value =~ /^region:/   ## region:
-          value_region_key = value[7..-1]  ## cut off region: prefix
-          value_region = Region.find_by_key!( value_region_key )
-          attr[ :region_id ] = value_region.id
-        else
-          # issue warning: unknown type for value
-        end
-      end
-      
-      if value_numbers.size > 0
-        attr[ :pop  ] = value_numbers[0]
-        attr[ :area ] = value_numbers[1]
-      end
-
-      
-      City.create!( attr )
+      City.create_from_values!( values, more_attribs )
     end # each city
   end
 
-
-  def self.create_or_update_from_titles( titles, more_attributes = {} )  # ary of titles e.g. ['Wien', 'Graz'] etc.
-
-    # fix: add/configure logger for ActiveRecord!!!
-    logger = LogKernel::Logger.root
-
-    titles.each do |title|
-
-      new_attributes = {}
-      key = TextUtils.title_to_key( title )   # auto generate key from title
-
-      # check if it exists
-      # todo/fix: add country_id for lookup?
-      city = City.find_by_key( key )
-      if city.present?
-        logger.debug "update city #{city.id}-#{city.key}:"
-      else
-        logger.debug "create city:"
-        city = City.new
-        new_attributes[ :key ] = key
-      end
-        
-      new_attributes[ :title ] = title
-     
-      ## merge in passed in attribes (e.g. country_id etc.)
-      new_attributes.merge!( more_attributes )
+  ## find: rename to create_or_update_from_values
+  def self.create_from_values!( values, more_attribs={} )
+    ## key & title & country required
+    attribs = {
+      key: values[0]
+    }
       
-      logger.debug new_attributes.to_json
-   
-      city.update_attributes!( new_attributes )
+    ## title (split of optional synonyms)
+    # e.g. FC Bayern Muenchen|Bayern Muenchen|Bayern
+    titles = values[1].split('|')
       
-      ### todo/fix: add captial ref to country/region
-    end # each city
-  end  # method create_or_update_from_titles
+    attribs[ :title ]    =  titles[0]
+    ## add optional synonyms
+    attribs[ :synonyms ] =  titles[1..-1].join('|')  if titles.size > 1
+      
+    attribs = attribs.merge( more_attribs )
+      
+    ## check for optional values
+    City.create_or_update_from_values( attribs, values[2..-1] )
+  end
+
 
 
   def self.create_or_update_from_values( new_attributes, values, opts={} )
+  ## fix: rename to create_or_update_from_attrs/attribs/attributes ??
+  ##  create_or_update_from_values_v2 ?? or _ii (for step 2) ??
+  #   attribs -> key/value pairs e.g. hash
+  #   values  -> ary of string values/strings (key not yet known; might be starting of value e.g. city:wien)
 
     ## opts e.g. :skip_tags true|false
 
@@ -262,6 +212,41 @@ class City < ActiveRecord::Base
 
     rec
   end # method create_or_update_from_values
+
+  def self.create_or_update_from_titles( titles, more_attributes = {} )  # ary of titles e.g. ['Wien', 'Graz'] etc.
+
+    # fix: add/configure logger for ActiveRecord!!!
+    logger = LogKernel::Logger.root
+
+    titles.each do |title|
+
+      new_attributes = {}
+      key = TextUtils.title_to_key( title )   # auto generate key from title
+
+      # check if it exists
+      # todo/fix: add country_id for lookup?
+      city = City.find_by_key( key )
+      if city.present?
+        logger.debug "update city #{city.id}-#{city.key}:"
+      else
+        logger.debug "create city:"
+        city = City.new
+        new_attributes[ :key ] = key
+      end
+        
+      new_attributes[ :title ] = title
+     
+      ## merge in passed in attribes (e.g. country_id etc.)
+      new_attributes.merge!( more_attributes )
+      
+      logger.debug new_attributes.to_json
+   
+      city.update_attributes!( new_attributes )
+      
+      ### todo/fix: add captial ref to country/region
+    end # each city
+  end  # method create_or_update_from_titles
+
 
 end # class Cities
 

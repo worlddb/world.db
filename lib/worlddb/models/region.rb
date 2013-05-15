@@ -4,7 +4,7 @@ module WorldDb::Models
 
 class Region < ActiveRecord::Base
 
-  extend WorldDb::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
+  extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
@@ -33,32 +33,31 @@ class Region < ActiveRecord::Base
   end
 
 
-  def self.create_from_ary!( regions, more_values={} )
+  def self.create_from_ary!( regions, more_attribs={} )
     regions.each do |values|
-            
-      ## key & title & country required
-      attr = {
-        key:   values[0],
-        title: values[1]
-      }
-
-      attr = attr.merge( more_values )
-      
-      ## check for optional values
-      values[2..-1].each do |value|
-        if value.is_a? Country
-          attr[ :country_id ] = value.id
-        else
-          # issue warning: unknown type for value
-        end
-      end
-      
-      Region.create!( attr )
+      Region.create_from_values!( values, more_attribs )
     end # each region
+  end
+
+  def self.create_from_values!( values, more_attribs={} )
+    ## fix: rename to create_or_update_from_values
+
+    
+    ## key & title & country required
+    attribs = {
+      key:   values[0],
+      title: values[1]
+    }
+
+    attribs = attribs.merge( more_attribs )
+      
+    ## check for optional values
+    Region.create_or_update_from_values( attribs, values[2..-1] )
   end
 
 
   def self.create_or_update_from_values( new_attributes, values, opts={} )
+    ## fix: rename to create_or_update_from_attrs/attribs??
 
     ## opts e.g. :skip_tags true|false
 
