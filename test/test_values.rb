@@ -30,7 +30,7 @@ class TestValues < MiniTest::Unit::TestCase
       'un|fifa|uefa|eu|euro|schengen|central_europe|western_europe'
     ]
 
-    c = Country.create_or_update_from_values( new_attributes, values )
+    c = Country.create_or_update_from_attribs( new_attributes, values )
 
     c2 = Country.find_by_key!( new_attributes[:key] )
     assert( c.id == c2.id )
@@ -61,7 +61,7 @@ class TestValues < MiniTest::Unit::TestCase
       'eastern austria'
     ]
 
-    r = Region.create_or_update_from_values( new_attributes, values )
+    r = Region.create_or_update_from_attribs( new_attributes, values )
 
     r2 = Region.find_by_key!( new_attributes[:key] )
     assert( r.id == r2.id )
@@ -96,7 +96,7 @@ class TestValues < MiniTest::Unit::TestCase
       'm:1_724_000'
     ]
 
-    c = City.create_or_update_from_values( new_attributes, values )
+    c = City.create_or_update_from_attribs( new_attributes, values )
 
     c2 = City.find_by_key!( new_attributes[:key] )
     assert( c.id == c2.id )

@@ -3,40 +3,6 @@
 module WorldDb
 
 
-  ### fix: move to textutils
-  ##   PlusReaderWrapper find a better name than Plus?
-  #
-  #  todo: also add a ValuesReaderPlus and use it
-
-  class HashReaderPlus
-    include LogUtils::Logging
-
-    def initialize( name, include_path )
-       @name          = name
-       @include_path  = include_path
-    end
-
-    attr_reader :name
-    attr_reader :include_path
-
-    def each
-      path          = "#{include_path}/#{name}.yml"
-      reader        = HashReader.new( path )
-
-      logger.info "parsing data '#{name}' (#{path})..."
-
-      reader.each do |key, value|
-        yield( key, value )
-      end
-      
-      WorldDb::Models::Prop.create_from_fixture!( name, path )
-    end
-
-  end # class HashReaderPlus
-
-
-
-
 class Reader
 
   include LogUtils::Logging
@@ -133,10 +99,10 @@ class Reader
       # todo/fix: exit w/ error
     end
   end
-  
 
-  def load_countries( name, more_values={} )
-    load_fixtures_for( Country, name, more_values )
+
+  def load_countries( name, more_attribs={} )
+    load_fixtures_for( Country, name, more_attribs )
   end
 
 
@@ -152,7 +118,7 @@ class Reader
     country = Country.find_by_key!( country_key )
     logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-    reader = HashReaderPlus.new( name, include_path )
+    reader = HashReaderV2.new( name, include_path )
 
     reader.each do |key, value|
       region = Region.find_by_country_id_and_key!( country.id, key )
@@ -171,7 +137,7 @@ class Reader
 
 
   def load_continent_refs( name )
-    reader = HashReaderPlus.new( name, include_path )
+    reader = HashReaderV2.new( name, include_path )
 
     reader.each do |key, value|
       country = Country.find_by_key!( key )
@@ -182,12 +148,8 @@ class Reader
   end
 
 
-  def load_continent_defs( name, more_values={} )
-    path = "#{include_path}/#{name}.txt"
-
-    logger.info "parsing data '#{name}' (#{path})..."
-
-    reader = ValuesReader.new( path, more_values )
+  def load_continent_defs( name, more_attribs={} )
+    reader = ValuesReaderV2.new( name, include_path, more_attribs )
 
     reader.each_line do |attribs, values|
 
@@ -209,15 +171,12 @@ class Reader
       rec.update_attributes!( attribs )
 
     end # each lines
-    
-    Prop.create_from_fixture!( name, path )
-     
   end # load_continent_defs
 
 
   def load_langs( name )
-    
-    reader = HashReaderPlus.new( name, include_path )
+
+    reader = HashReaderV2.new( name, include_path )
 
     reader.each do |key, value|
 
@@ -248,14 +207,14 @@ class Reader
   end # method load_langs
 
 
-  def load_tags( name, more_values={} )
+  def load_tags( name, more_attribs={} )
     
-      reader = HashReaderPlus.new( name, include_path )
+      reader = HashReaderV2.new( name, include_path )
 
       grade = 1
     
-      if more_values[:grade].present?
-        grade = more_values[:grade].to_i
+      if more_attribs[:grade].present?
+        grade = more_attribs[:grade].to_i
       end
 
       reader.each do |key, value|
@@ -301,7 +260,7 @@ class Reader
 
 
   def load_usages( name )
-    reader = HashReaderPlus.new( name, include_path )
+    reader = HashReaderV2.new( name, include_path )
 
     reader.each do |key, value|
       logger.debug "   adding langs >>#{value}<<to country >>#{key}<<"
@@ -324,7 +283,7 @@ class Reader
 
 
   def load_xxx( xxx, name )
-    reader = HashReaderPlus.new( name, include_path )
+    reader = HashReaderV2.new( name, include_path )
 
     reader.each do |key, value|
       country = Country.find_by_key!( key )
@@ -334,20 +293,14 @@ class Reader
   end
 
 private
-  def load_fixtures_for( clazz, name, more_values={} )  # load from file system
-    path = "#{include_path}/#{name}.txt"
-
-    logger.info "parsing data '#{name}' (#{path})..."
-
-    reader = ValuesReader.new( path, more_values )
+  def load_fixtures_for( clazz, name, more_attribs={} )
+    reader = ValuesReaderV2.new( name, include_path, more_attribs )
     
-    reader.each_line do |new_attributes, values|
+    reader.each_line do |attribs, values|
       opts = { skip_tags: skip_tags? }
-      clazz.create_or_update_from_values( new_attributes, values, opts )
+      clazz.create_or_update_from_attribs( attribs, values, opts )
     end
-
-    Prop.create_from_fixture!( name, path )
   end
-  
+
 end # class Reader
 end # module WorldDb

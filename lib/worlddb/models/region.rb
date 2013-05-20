@@ -4,7 +4,7 @@ module WorldDb::Models
 
 class Region < ActiveRecord::Base
 
-  extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
+  extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_attribs!, etc.
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
@@ -33,31 +33,19 @@ class Region < ActiveRecord::Base
   end
 
 
-  def self.create_from_ary!( regions, more_attribs={} )
-    regions.each do |values|
-      Region.create_from_values!( values, more_attribs )
-    end # each region
-  end
 
-  def self.create_from_values!( values, more_attribs={} )
-    ## fix: rename to create_or_update_from_values
+  def self.create_or_update_from_values( values, more_attribs={} )
 
-    
     ## key & title & country required
-    attribs = {
-      key:   values[0],
-      title: values[1]
-    }
-
+    attribs, more_values = find_key_n_title( values )
     attribs = attribs.merge( more_attribs )
-      
+
     ## check for optional values
-    Region.create_or_update_from_values( attribs, values[2..-1] )
+    Region.create_or_update_from_attribs( attribs, more_values )
   end
 
 
-  def self.create_or_update_from_values( new_attributes, values, opts={} )
-    ## fix: rename to create_or_update_from_attrs/attribs??
+  def self.create_or_update_from_attribs( new_attributes, values, opts={} )
 
     ## opts e.g. :skip_tags true|false
 
@@ -69,7 +57,7 @@ class Region < ActiveRecord::Base
     value_cities      = []
 
     ### check for "default" tags - that is, if present new_attributes[:tags] remove from hash
-    value_tag_keys += find_tags_in_hash!( new_attributes )
+    value_tag_keys += find_tags_in_attribs!( new_attributes )
 
     ## check for optional values
     values.each_with_index do |value,index|

@@ -19,7 +19,7 @@ Hoe.spec 'worlddb' do
   self.email   = 'opensport@googlegroups.com'
 
   self.extra_deps = [
-    ['textutils', '~> 0.5'], # e.g.  >= 0.5 && <= 1.0
+    ['textutils', '~> 0.6'], # e.g.  >= 0.6 && <= 1.0
     ['commander', '~> 4.1.3'],
     ['activerecord', '~> 3.2']  # NB: will include activesupport,etc.
     ### ['sqlite3',      '~> 1.3']  # NB: install on your own; remove dependency

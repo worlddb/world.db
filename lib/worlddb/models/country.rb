@@ -4,7 +4,7 @@ module WorldDb::Models
 
 class Country < ActiveRecord::Base
 
-  extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_hash!, etc.
+  extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_attribs!, etc.
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
@@ -65,29 +65,18 @@ class Country < ActiveRecord::Base
   end
 
 
-  def self.create_from_ary!( countries )
-   countries.each do |values|
-      Country.create_from_values!( values )
-   end # each country
+  def self.create_or_update_from_values( values, more_attribs={} )
+
+      ## key & title
+      ## NB: three-letter code (.e.g AUT) required - enforce in values? why? why not?
+      attribs, more_values = find_key_n_title( values )
+      attribs = attribs.merge( more_attribs )
+
+      Country.create_or_update_from_attribs( attribs, more_values )
   end
 
 
-  def self.create_from_values!( values )
-    ## fix: rename to create_or_update_from_values
-
-      ## key & title required
-      attribs = {
-        :key   => values[0],
-        :title => values[1],
-        :code  => values[2]
-      }
-      
-      Country.create_or_update_from_values( attribs, values[3..-1] )
-  end
-
-
-  def self.create_or_update_from_values( new_attributes, values, opts={} )
-    ## fix: rename to create_or_update_from_attrs/attribs??
+  def self.create_or_update_from_attribs( new_attributes, values, opts={} )
 
     ## opts e.g. :skip_tags true|false
 
@@ -99,7 +88,7 @@ class Country < ActiveRecord::Base
       value_cities      = []
 
       ### check for "default" tags - that is, if present new_attributes[:tags] remove from hash
-      value_tag_keys += find_tags_in_hash!( new_attributes )
+      value_tag_keys += find_tags_in_attribs!( new_attributes )
 
 
       new_attributes[ :c ] = true   # assume country type by default (use supra,depend to change)
