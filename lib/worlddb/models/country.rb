@@ -92,33 +92,33 @@ class Country < ActiveRecord::Base
 
 
       new_attributes[ :c ] = true   # assume country type by default (use supra,depend to change)
-      
+
       ## check for optional values
       values.each_with_index do |value,index|
-        if value =~ /^supra$/   ## supra(national)
-          new_attributes[ :c ] = false   # turn off default c|country flag; make it s|supra only
-          new_attributes[ :s ] = true
-          ## auto-add tag supra
-          value_tag_keys << 'supra'
-        elsif value =~ /^supra:/   ## supra:
-          value_country_key = value[6..-1]  ## cut off supra: prefix
-          value_country = Country.find_by_key!( value_country_key )
-          new_attributes[ :country_id ] = value_country.id
-        elsif value =~ /^country:/   ## country:
-          value_country_key = value[8..-1]  ## cut off country: prefix
-          value_country = Country.find_by_key!( value_country_key )
-          new_attributes[ :country_id ] = value_country.id
-          new_attributes[ :c ] = false # turn off default c|country flag; make it d|depend only
-          new_attributes[ :d ] = true
-          ## auto-add tag supra
-          value_tag_keys << 'territory'  # rename tag to dependency? why? why not?
+        if match_supra_flag( value ) do |_|  # supra(national)
+             new_attributes[ :c ] = false   # turn off default c|country flag; make it s|supra only
+             new_attributes[ :s ] = true
+             ## auto-add tag supra
+             value_tag_keys << 'supra'
+           end
+        elsif match_supra( value ) do |country| # supra:
+                new_attributes[ :country_id ] = country.id
+              end
+        elsif match_country( value ) do |country| # country:
+                new_attributes[ :country_id ] = country.id
+                new_attributes[ :c ] = false # turn off default c|country flag; make it d|depend only
+                new_attributes[ :d ] = true
+                ## auto-add tag supra
+                value_tag_keys << 'territory'  # rename tag to dependency? why? why not?
+              end
+        elsif match_km_squared( value ) do |num|  # allow numbers like 453 km²
+                value_numbers << num
+              end
+        elsif match_number( value ) do |num|  # numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
+                value_numbers << num
+              end
         elsif value =~ /^[A-Z]{2,3}$/  ## assume two or three-letter code
           new_attributes[ :code ] = value
-        elsif value =~ /^([0-9][0-9 _]+[0-9]|[0-9]{1,2})(?:\s*(?:km2|km²)\s*)$/
-          ## allow numbers like 453 km²
-          value_numbers << value.gsub( 'km2', '').gsub( 'km²', '' ).gsub(/[ _]/, '').to_i
-        elsif value =~ /^([0-9][0-9 _]+[0-9])|([0-9]{1,2})$/    ## numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
-          value_numbers << value.gsub(/[ _]/, '').to_i
         elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
           logger.debug "   found tags: >>#{value}<<"
           value_tag_keys += find_tags( value )

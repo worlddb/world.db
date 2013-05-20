@@ -61,17 +61,17 @@ class Region < ActiveRecord::Base
 
     ## check for optional values
     values.each_with_index do |value,index|
-      if value =~ /^country:/   ## country:
-        value_country_key = value[8..-1]  ## cut off country: prefix
-        value_country = Country.find_by_key!( value_country_key )
-        new_attributes[ :country_id ] = value_country.id
+      if match_country( value ) do |country| # country:
+           new_attributes[ :country_id ] = country.id
+         end
+      elsif match_km_squared( value ) do |num| # allow numbers like 453 km²
+              value_numbers << num
+            end
+      elsif match_number( value ) do |num|  # numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
+              value_numbers << num
+            end
       elsif value =~ /^[A-Z]{2,3}$/  ## assume two or three-letter code
         new_attributes[ :code ] = value
-      elsif value =~ /^([0-9][0-9 _]+[0-9]|[0-9]{1,2})(?:\s*(?:km2|km²)\s*)$/
-        ## allow numbers like 453 km²
-        value_numbers << value.gsub( 'km2', '').gsub( 'km²', '' ).gsub(/[ _]/, '').to_i
-      elsif value =~ /^([0-9][0-9 _]+[0-9])|([0-9]{1,2})$/    ## numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
-        value_numbers << value.gsub(/[ _]/, '').to_i
       elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
         logger.debug "   found tags: >>#{value}<<"
         value_tag_keys += find_tags( value )
@@ -113,6 +113,7 @@ class Region < ActiveRecord::Base
                                             country_id: rec.country_id )
 
     ### todo/fix: add captial ref to country/region
+    ## todo/fix: use update_from_title and only allow one capital city
 
 
     ##################
