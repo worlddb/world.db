@@ -10,10 +10,13 @@ class Reader
 ## make models available in sportdb module by default with namespace
 #  e.g. lets you use City instead of Models::City
   include WorldDb::Models
-  
+
 
 ## value helpers e.g. is_year?, is_taglist? etc.
   include TextUtils::ValueHelper
+  
+  include WorldDb::Matcher  # e.g. match_cities_for_country, match_regions_for_country, etc.
+
 
   attr_reader :include_path
 
@@ -77,28 +80,35 @@ class Reader
        load_xxx( 'motor', name )
     elsif name =~ /^tag.*\.(\d)$/
        load_tags( name, :grade => $1.to_i )
-    elsif name =~ /^([a-z][a-z\-_]+[a-z])\/countries/     # e.g. africa/countries or america/countries
-      ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
-      ## auto-add continent (from folder structure) as tag
-      ## fix: allow dash/hyphen/minus in tag
-      load_countries( name, :tags => $1.tr('-', '_') )
-    elsif name =~ /\/([a-z]{2})\/cities/
-      ## auto-add required country code (from folder structure)
-      load_cities( $1, name )
-    elsif name =~ /\/([a-z]{2})\/regions\.abbr/
-      load_regions_xxx( $1, 'abbr', name )
-    elsif name =~ /\/([a-z]{2})\/regions\.iso/
-      load_regions_xxx( $1, 'iso', name )
-    elsif name =~ /\/([a-z]{2})\/regions\.nuts/
-      load_regions_xxx( $1, 'nuts', name )
-    elsif name =~ /\/([a-z]{2})\/regions/
-      ## auto-add required country code (from folder structure)
-      load_regions( $1, name )
+    elsif match_countries_for_continent( name ) do |continent|  # # e.g. africa/countries or america/countries
+            ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
+            ## auto-add continent (from folder structure) as tag
+            ## fix: allow dash/hyphen/minus in tag
+            load_countries( name, :tags => continent.tr('-', '_') )
+          end
+    elsif match_cities_for_country( name ) do |country_key|  #  name =~ /\/([a-z]{2})\/cities/
+            ## auto-add required country code (from folder structure)
+            load_cities( country_key, name )
+          end
+    elsif match_regions_abbr_for_country( name ) do |country_key|   # name =~ /\/([a-z]{2})\/regions\.abbr/
+            load_regions_xxx( country_key, 'abbr', name )
+          end
+    elsif match_regions_iso_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/regions\.iso/
+            load_regions_xxx( country_key, 'iso', name )
+          end
+    elsif match_regions_nuts_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/regions\.nuts/
+            load_regions_xxx( country_key, 'nuts', name )
+          end
+    elsif match_regions_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/regions/
+            ## auto-add required country code (from folder structure)
+            load_regions( country_key, name )
+          end
     else
       logger.error "unknown world.db fixture type >#{name}<"
       # todo/fix: exit w/ error
     end
   end
+
 
 
   def load_countries( name, more_attribs={} )

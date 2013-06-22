@@ -37,6 +37,7 @@ require 'worlddb/models/tagging'
 require 'worlddb/models/lang'
 require 'worlddb/models/usage'
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
+require 'worlddb/matcher'
 require 'worlddb/reader'
 require 'worlddb/deleter'
 require 'worlddb/stats'
