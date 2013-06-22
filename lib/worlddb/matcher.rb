@@ -73,8 +73,6 @@ module Matcher
     end
   end
 
-
+end # module Matcher
 
 end # module WorldDb
-
-
