@@ -36,14 +36,17 @@ require 'worlddb/models/tag'
 require 'worlddb/models/tagging'
 require 'worlddb/models/lang'
 require 'worlddb/models/usage'
+
+module WorldDb
+  Models = Model   # note: alias for Model - remove later -- DEPRECIATED!!
+end
+
+
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
 require 'worlddb/reader'
 require 'worlddb/deleter'
 require 'worlddb/stats'
-
-require 'worlddb/data/fixtures'
-
 
 
 module WorldDb
@@ -63,7 +66,7 @@ module WorldDb
   
   def self.create
     CreateDb.new.up
-    WorldDb::Models::Prop.create!( key: 'db.schema.world.version', value: VERSION )
+    WorldDb::Model::Prop.create!( key: 'db.schema.world.version', value: VERSION )
   end
 
 

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDb::Models
+module WorldDb::Model
 
   class Tag < ActiveRecord::Base
     
@@ -29,4 +29,5 @@ module WorldDb::Models
       
   end  # class Tag
   
-end # module WorldDb::Models
+end # module WorldDb::Model
+

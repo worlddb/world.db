@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDb::Models
+module WorldDb::Model
 
   class Continent < ActiveRecord::Base
     
@@ -10,4 +10,5 @@ module WorldDb::Models
     
   end  # class Continent
 
-end # module WorldDb::Models
+end # module WorldDb::Model
+

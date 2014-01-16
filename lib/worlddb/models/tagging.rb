@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDb::Models
+module WorldDb::Model
 
   class Tagging < ActiveRecord::Base
 
@@ -9,4 +9,5 @@ module WorldDb::Models
 
   end  # class Tagging
 
-end # module WorldDb::Models
+end # module WorldDb::Model
+

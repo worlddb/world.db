@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 
 def find_world_db_path_from_gemfile_gitref!

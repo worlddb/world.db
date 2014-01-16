@@ -33,11 +33,11 @@ class TestValues < MiniTest::Unit::TestCase
     c = Country.create_or_update_from_attribs( new_attributes, values )
 
     c2 = Country.find_by_key!( new_attributes[:key] )
-    assert( c.id == c2.id )
+    assert_equal c.id, c2.id
 
-    assert( c.title   == new_attributes[:title] )
-    assert( c.pop     == 8_414_638 )
-    assert( c.area    == 83_871 )
+    assert_equal c.title, new_attributes[:title]
+    assert_equal c.pop,   8_414_638
+    assert_equal c.area,  83_871
     ## todo: assert tag count; add supra:eu etc.
   end
 
@@ -64,10 +64,10 @@ class TestValues < MiniTest::Unit::TestCase
     r = Region.create_or_update_from_attribs( new_attributes, values )
 
     r2 = Region.find_by_key!( new_attributes[:key] )
-    assert( r.id == r2.id )
+    assert_equal r.id, r2.id
 
-    assert( r.title == new_attributes[:title] )
-    assert( r.area  == 415 )
+    assert_equal r.title, new_attributes[:title]
+    assert_equal r.area, 415
     ## todo: assert country_id & country.title for assoc
   end
 
@@ -99,14 +99,14 @@ class TestValues < MiniTest::Unit::TestCase
     c = City.create_or_update_from_attribs( new_attributes, values )
 
     c2 = City.find_by_key!( new_attributes[:key] )
-    assert( c.id == c2.id )
+    assert_equal c.id, c2.id
 
-    assert( c.title      == new_attributes[:title] )
-    assert( c.pop        == 1_731_236 )
-    assert( c.popm       == 1_724_000 )
-    assert( c.m          == true )
-    assert( c.region_id  == w.id  )
-    assert( c.country_id == at.id )
+    assert_equal c.title, new_attributes[:title]
+    assert_equal c.pop,   1_731_236
+    assert_equal c.popm,  1_724_000
+    assert_equal c.m,     true
+    assert_equal c.region_id,  w.id
+    assert_equal c.country_id, at.id
   end
 
 

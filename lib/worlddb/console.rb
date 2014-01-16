@@ -14,13 +14,13 @@ require 'yaml'
 
 ## shortcuts for models
 
-Tag        = WorldDb::Models::Tag
-Tagging    = WorldDb::Models::Tagging
-Continent  = WorldDb::Models::Continent
-Country    = WorldDb::Models::Country
-Region     = WorldDb::Models::Region
-City       = WorldDb::Models::City
-Prop       = WorldDb::Models::Prop
+Tag        = WorldDb::Model::Tag
+Tagging    = WorldDb::Model::Tagging
+Continent  = WorldDb::Model::Continent
+Country    = WorldDb::Model::Country
+Region     = WorldDb::Model::Region
+City       = WorldDb::Model::City
+Prop       = WorldDb::Model::Prop
 
 ## connect to db
 

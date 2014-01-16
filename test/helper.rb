@@ -24,9 +24,9 @@ require 'active_record'
 require 'worlddb'
 require 'logutils/db'   # NB: explict require required for LogDb (not automatic) 
 
-Country = WorldDb::Models::Country
-Region  = WorldDb::Models::Region
-City    = WorldDb::Models::City
+Country = WorldDb::Model::Country
+Region  = WorldDb::Model::Region
+City    = WorldDb::Model::City
 
 
 def setup_in_memory_db

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDb::Models
+module WorldDb::Model
 
 class City < ActiveRecord::Base
   
@@ -201,4 +201,4 @@ class City < ActiveRecord::Base
 
 end # class Cities
 
-end # module WorldDb::Models
+end # module WorldDb::Model

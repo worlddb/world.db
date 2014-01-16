@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module WorldDb::Models
+module WorldDb::Model
 
 class Country < ActiveRecord::Base
 
@@ -225,4 +225,4 @@ class Country < ActiveRecord::Base
 end # class Country
 
 
-end # module WorldDb::Models
+end # module WorldDb::Model

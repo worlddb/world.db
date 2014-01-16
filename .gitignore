@@ -17,19 +17,3 @@ tmp
 _yardoc
 doc/
 
-#############
-# ignore komodo project files
-
-*.kpf
-
-
-###########
-# ignore build folder for testing world.db etc.
-
-build
-build/
-
-##################
-# ignore dbs in root folder (e.g. world.db used for testing)
-
-*.db

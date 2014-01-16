@@ -7,7 +7,6 @@ lib/worlddb.rb
 lib/worlddb/cli/main.rb
 lib/worlddb/cli/opts.rb
 lib/worlddb/console.rb
-lib/worlddb/data/fixtures.rb
 lib/worlddb/deleter.rb
 lib/worlddb/matcher.rb
 lib/worlddb/models/city.rb
