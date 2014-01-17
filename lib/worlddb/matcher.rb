@@ -27,8 +27,10 @@ module Matcher
 
   def match_xxx_for_country_n_region( name, xxx ) # xxx e.g. beers|breweries
     # auto-add required country n region code (from folder structure)
-    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx}/  ||              # (1)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx}/  # (2)
+    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx}/  ||                # (1)
+       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx}/ || # (2)
+       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx}/         || # (3)
+       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx}/            # (4)
       
       #######
       # nb: country must start name (^) or coming after / e.g. europe/at-austria/...
@@ -37,6 +39,14 @@ module Matcher
       #                  ^at-austria!/w-wien/beers
       # (2)
       # new new style e.g.  /1--at-austria--central/1--w-wien--eastern/beers
+      #
+      # (3)
+      #  new new mixed style e.g.  /at-austria/1--w-wien--eastern/beers
+      #      "classic" country plus new new region
+      #
+      # (4)
+      #  new new mixed style e.g.  /1--at-austria--central/w-wien/beers
+      #      new new country plus "classic" region
 
       country_key = $1.dup
       region_key  = $2.dup

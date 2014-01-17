@@ -66,7 +66,11 @@ class TestFixtureMatchers < MiniTest::Unit::TestCase
       'at-austria/w-wien/beers',
       'at-austria!/w-wien/beers',
       '1--at-austria--central/1--w-wien--eastern/beers',
-      'europe/1--at-austria--central/1--w-wien--eastern/beers'
+      'europe/1--at-austria--central/1--w-wien--eastern/beers',
+      'at-austria/1--w-wien--eastern/beers',
+      'europe/at-austria!/1--w-wien--eastern/beers',
+      '1--at-austria--central/w-wien/beers',
+      'europe/1--at-austria--central/w-wien/beers'
     ]
 
     beers_at.each do |name|
