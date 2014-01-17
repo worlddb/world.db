@@ -33,7 +33,8 @@ world.db Command Line Tool in Ruby
       -v, --version        Display version information
       -t, --trace          Display backtrace when an error occurs
 
-## ## Usage Models
+
+## Usage Models
 
 
 TBD

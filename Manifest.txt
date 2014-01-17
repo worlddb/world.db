@@ -24,4 +24,5 @@ lib/worlddb/stats.rb
 lib/worlddb/utils.rb
 lib/worlddb/version.rb
 test/helper.rb
+test/test_fixture_matchers.rb
 test/test_values.rb
