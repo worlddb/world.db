@@ -50,6 +50,9 @@ module Matcher
 
   def match_cities_for_country( name, &blk )
     ## todo: check if there's a better (more ruby way) to pass along code block ??
+    ## e.g. try
+    ##   match_xxx_for_country( name, 'cities') { |country_key| yield(country_key) }
+
     match_xxx_for_country( name, 'cities', &blk )
   end
 
