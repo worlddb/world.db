@@ -6,20 +6,28 @@ module Matcher
 
   def match_xxx_for_country( name, xxx )  # xxx e.g. cities|regions|beers|breweries
     #      auto-add required country code (from folder structure)
-    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/#{xxx}/         ||    # (1)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/#{xxx}/ ||    # (2)
-       name =~ /(?:^|\/)([a-z]{2,3})\/#{xxx}/                      # (3)
+    #  note: always let match_xxx_for_country_n_region go first
+
+    # note: allow  /cities and /1--hokkaido--cities
+    xxx_pattern = "(?:#{xxx}|[0-9]+--[^\\/]+?--#{xxx})"    # note: double escape \\ required for backslash
+
+    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/#{xxx_pattern}/         ||    # (1)
+       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/#{xxx_pattern}/ ||    # (2)
+       name =~ /(?:^|\/)([a-z]{2,3})\/#{xxx_pattern}/                ||    # (3)
+       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--[^\/]+\/#{xxx_pattern}/    # (4)
 
       country_key = $1.dup
       yield( country_key )
       true # bingo - match found
       
       ######
-      # (1)  new style: e.g. /at-austria/beers or ^at-austria!/beers
+      # (1)  new style: e.g. /at-austria/beers or ^at-austria!/cities
       #
-      # (2)  new-new style e.g. /1--at-austria--central/beers
+      # (2)  new-new style e.g. /1--at-austria--central/cities
       #
-      # (3)  classic style: e.g. /at/beers (europe/at/beers)
+      # (3)  classic style: e.g. /at/beers (europe/at/cities)
+      #
+      # (4) new style w/ region w/o abbrev/code e.g. /ja-japon/1--hokkaido/cities
     else
       false # no match found
     end
@@ -27,25 +35,29 @@ module Matcher
 
   def match_xxx_for_country_n_region( name, xxx ) # xxx e.g. beers|breweries
     # auto-add required country n region code (from folder structure)
-    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx}/  ||                # (1)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx}/ || # (2)
-       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx}/         || # (3)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx}/            # (4)
-      
+
+    # note: allow  /cities and /1--hokkaido--cities
+    xxx_pattern = "(?:#{xxx}|[0-9]+--[^\\/]+?--#{xxx})"    # note: double escape \\ required for backslash
+
+    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/  ||                # (1)
+       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/ || # (2)
+       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/         || # (3)
+       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/            # (4)
+
       #######
       # nb: country must start name (^) or coming after / e.g. europe/at-austria/...
       # (1)
-      # new style: e.g.  /at-austria/w-wien/beers or
-      #                  ^at-austria!/w-wien/beers
+      # new style: e.g.  /at-austria/w-wien/cities or
+      #                  ^at-austria!/w-wien/cities
       # (2)
-      # new new style e.g.  /1--at-austria--central/1--w-wien--eastern/beers
+      # new new style e.g.  /1--at-austria--central/1--w-wien--eastern/cities
       #
       # (3)
-      #  new new mixed style e.g.  /at-austria/1--w-wien--eastern/beers
+      #  new new mixed style e.g.  /at-austria/1--w-wien--eastern/cities
       #      "classic" country plus new new region
       #
       # (4)
-      #  new new mixed style e.g.  /1--at-austria--central/w-wien/beers
+      #  new new mixed style e.g.  /1--at-austria--central/w-wien/cities
       #      new new country plus "classic" region
 
       country_key = $1.dup

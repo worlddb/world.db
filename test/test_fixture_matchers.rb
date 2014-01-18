@@ -14,7 +14,10 @@ class TestFixtureMatchers < MiniTest::Unit::TestCase
       'europe/at/cities',
       'europe/at-austria/cities',
       'at-austria/cities',
-      'at-austria!/cities'
+      'at-austria!/cities',
+      'at-austria!/1--niederoesterreich--eastern--cities',
+      'at-austria!/1--niederoesterreich--eastern/cities',   # region w/o code/abbrev
+      'at-austria!/1--niederoesterreich--eastern/1--waldviertel--cities'
     ]
 
     cities_at.each do |name|
@@ -33,7 +36,12 @@ class TestFixtureMatchers < MiniTest::Unit::TestCase
       'at-austria/beers',
       'at-austria!/beers',
       '1--at-austria--central/beers',
-      'europe/1--at-austria--central/beers'
+      '1--at-austria--central/1--niederoesterreich--eastern--beers',
+      'europe/1--at-austria--central/beers',
+      'europe/1--at-austria--central/1--niederosterreich--eastern--beers',
+      'at-austria!/1--niederoesterreich--eastern--beers',
+      'at-austria!/1--niederoesterreich--eastern/beers',    # region w/o code/abbrev
+      'at-austria!/1--niederoesterreich--eastern/1--waldviertel--beers'
     ]
 
     beers_at.each do |name|
@@ -64,13 +72,16 @@ class TestFixtureMatchers < MiniTest::Unit::TestCase
     beers_at = [
       'europe/at-austria/w-wien/beers',
       'at-austria/w-wien/beers',
+      'at-austria/w-wien/2--leopoldstadt--beers',
       'at-austria!/w-wien/beers',
       '1--at-austria--central/1--w-wien--eastern/beers',
+      '1--at-austria--central/1--w-wien--eastern/2--leopoldstadt--beers',
       'europe/1--at-austria--central/1--w-wien--eastern/beers',
       'at-austria/1--w-wien--eastern/beers',
       'europe/at-austria!/1--w-wien--eastern/beers',
       '1--at-austria--central/w-wien/beers',
-      'europe/1--at-austria--central/w-wien/beers'
+      'europe/1--at-austria--central/w-wien/beers',
+      'europe/1--at-austria--central/w-wien/2--leopoldstadt--beers'
     ]
 
     beers_at.each do |name|
