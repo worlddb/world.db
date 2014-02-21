@@ -1,6 +1,6 @@
 
 module WorldDb
-  VERSION = '1.8.2'  # sync version w/ sport.db - why? why not?
+  VERSION = '2.0.0'  # sync version w/ sport.db - why? why not?
 end
 
 ###########################################
