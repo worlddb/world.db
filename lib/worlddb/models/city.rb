@@ -1,6 +1,13 @@
 # encoding: utf-8
 
-module WorldDb::Model
+module WorldDb
+  module Model
+
+###
+##  Todo:
+##  use four classes instead of one ?
+#    e.g. Use class class Metro n class City n class District n class CityBase ?? - why? why not?
+
 
 class City < ActiveRecord::Base
   
@@ -13,45 +20,49 @@ class City < ActiveRecord::Base
 
   self.table_name = 'cities'
 
-  belongs_to :country, :class_name => 'Country', :foreign_key => 'country_id'
-  belongs_to :region,  :class_name => 'Region',  :foreign_key => 'region_id'
+  belongs_to :place,   class_name: 'Place',   foreign_key: 'place_id'
+  belongs_to :country, class_name: 'Country', foreign_key: 'country_id'
+  belongs_to :region,  class_name: 'Region',  foreign_key: 'region_id'
 
   ## self referencing hierachy within cities e.g. m|metro > c|city > d|district
 
   ## fix: use condition check for m|d|c flag?? why? why not? (NB: flags are NOT exclusive e.g. possible metro|city)
   
   ## (1) metro - level up
-  has_many   :cities,    :class_name => 'City', :foreign_key => 'city_id'
+  has_many   :cities,    class_name: 'City',  foreign_key: 'city_id'
 
   ## (2) city
-  belongs_to :metro,     :class_name => 'City', :foreign_key => 'city_id'   ## for now alias for parent - use parent?
-  has_many   :districts, :class_name => 'City', :foreign_key => 'city_id'   ## for now alias for cities - use cities?
+  belongs_to :metro,     class_name: 'City',  foreign_key: 'city_id'   ## for now alias for parent - use parent?
+  has_many   :districts, class_name: 'City',  foreign_key: 'city_id'   ## for now alias for cities - use cities?
 
   ## (3) district - level down
-  belongs_to :city,      :class_name => 'City', :foreign_key => 'city_id'  ## for now alias for parent - use parent?
+  belongs_to :city,      class_name: 'City',  foreign_key: 'city_id'  ## for now alias for parent - use parent?
+
+
+  #####################################################
+  # alias for name (remove! add depreciated api call)
+  def title()       name;              end
+  def title=(value) self.name = value; end
 
 
   ###
   #  NB: use is_  for flags to avoid conflict w/ assocs (e.g. metro?, city? etc.)
   
-  def is_metro?
-    m? == true
-  end
-  
-  def is_city?
-    c? == true
-  end
-  
-  def is_district?
-    d? == true
-  end
+  def is_metro?()    m? == true;  end
+  def is_city?()     c? == true;  end
+  def is_district?() d? == true;  end
 
-  
+
+
   has_many :taggings, :as => :taggable
   has_many :tags,  :through => :taggings
 
-  validates :key, :format => { :with => /^[a-z]{3,}$/, :message => 'expected three or more lowercase letters a-z' }
+  validates :key,  :format => { :with => /^[a-z]{3,}$/, :message => 'expected three or more lowercase letters a-z' }
   validates :code, :format => { :with => /^[A-Z_]{3}$/, :message => 'expected three uppercase letters A-Z (and _)' }, :allow_nil => true
+
+
+  ####################################
+  # Fix: use rails/ar 4 style scopes
 
   scope :by_key,    order( 'key asc' )    # order by key (a-z)
   scope :by_title,  order( 'title asc' )  # order by title (a-z)
@@ -201,4 +212,5 @@ class City < ActiveRecord::Base
 
 end # class Cities
 
-end # module WorldDb::Model
+  end # module Model
+end # module WorldDb
