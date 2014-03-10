@@ -18,29 +18,28 @@ require 'active_record'   ## todo: add sqlite3? etc.
 
 require 'logutils'
 require 'textutils'
+require 'tagutils'
 
 
 # our own code
 
-
-
-require 'worlddb/version'
+require 'worlddb/version'   # always goes first
 
 require 'worlddb/utils'
-require 'worlddb/models/prop'
+
+require 'worlddb/models/forward'
+
 require 'worlddb/models/continent'
 require 'worlddb/models/country'
 require 'worlddb/models/region'
 require 'worlddb/models/city'
-require 'worlddb/models/tag'
-require 'worlddb/models/tagging'
 require 'worlddb/models/lang'
 require 'worlddb/models/usage'
 
-module WorldDb
-  Models = Model   # note: alias for Model - remove later -- DEPRECIATED!!
-end
+require 'worlddb/models/confdb/prop'
 
+require 'worlddb/models/tagdb/tag'
+require 'worlddb/models/tagdb/tagging'
 
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
@@ -52,7 +51,7 @@ require 'worlddb/stats'
 module WorldDb
 
   def self.banner
-    "worlddb #{VERSION} on Ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE}) [#{RUBY_PLATFORM}]"
+    "worlddb/#{VERSION} on Ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE}) [#{RUBY_PLATFORM}]"
   end
 
   def self.root
@@ -63,10 +62,10 @@ module WorldDb
     require 'worlddb/cli/main'
     ## Runner.new.run(ARGV) - old code
   end
-  
+
   def self.create
     CreateDb.new.up
-    WorldDb::Model::Prop.create!( key: 'db.schema.world.version', value: VERSION )
+    ConfDb::Model::Prop.create!( key: 'db.schema.world.version', value: VERSION )
   end
 
 
@@ -94,7 +93,8 @@ module WorldDb
     Deleter.new.run
   end # method delete!
 
- 
+ ####
+ ## todo: remove stats ??? why? why not? better use .tables
   def self.stats
     stats = Stats.new
     stats.tables
@@ -106,10 +106,15 @@ module WorldDb
   end
 
   def self.props
+    ### fix: use ConfDb.props delegate or similar !!!
     Stats.new.props
   end
 
 end  # module WorldDb
+
+###########################################
+# fix: remove old alias for WorldDb ??
+WorldDB = WorldDb
 
 
 if __FILE__ == $0

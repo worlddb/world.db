@@ -38,12 +38,7 @@ class City < ActiveRecord::Base
   ## (3) district - level down
   belongs_to :city,      class_name: 'City',  foreign_key: 'city_id'  ## for now alias for parent - use parent?
 
-
-  #####################################################
-  # alias for name (remove! add depreciated api call)
-  def title()       name;              end
-  def title=(value) self.name = value; end
-
+  has_many_tags
 
   ###
   #  NB: use is_  for flags to avoid conflict w/ assocs (e.g. metro?, city? etc.)
@@ -53,22 +48,25 @@ class City < ActiveRecord::Base
   def is_district?() d? == true;  end
 
 
-
-  has_many :taggings, :as => :taggable
-  has_many :tags,  :through => :taggings
-
-  validates :key,  :format => { :with => /^[a-z]{3,}$/, :message => 'expected three or more lowercase letters a-z' }
-  validates :code, :format => { :with => /^[A-Z_]{3}$/, :message => 'expected three uppercase letters A-Z (and _)' }, :allow_nil => true
+  validates :key,  format: { with: /^[a-z]{3,}$/, message: 'expected three or more lowercase letters a-z' }
+  validates :code, format: { with: /^[A-Z_]{3}$/, message: 'expected three uppercase letters A-Z (and _)' }, :allow_nil => true
 
 
-  ####################################
-  # Fix: use rails/ar 4 style scopes
+  scope :by_key,   ->{ order( 'key asc' )  }  # order by key (a-z)
+  scope :by_name,  ->{ order( 'name asc' ) } # order by title (a-z)
+  scope :by_pop,   ->{ order( 'pop desc' ) }  # order by pop(ulation)
+  scope :by_popm,  ->{ order( 'popm desc' ) } # order by pop(ulation) metropolitan area
+  scope :by_area,  ->{ order( 'area desc' ) }  # order by area (in square km)
 
-  scope :by_key,    order( 'key asc' )    # order by key (a-z)
-  scope :by_title,  order( 'title asc' )  # order by title (a-z)
-  scope :by_pop,    order( 'pop desc' )   # order by pop(ulation)
-  scope :by_popm,   order( 'popm desc' )  # order by pop(ulation) metropolitan area
-  scope :by_area,   order( 'area desc' )  # order by area (in square km)
+
+  #####################################################
+  # alias for name (remove! add depreciated api call ???)
+  def title()       name;              end
+  def title=(value) self.name = value; end
+
+  scope :by_title, ->{ order( 'name asc' ) } # order by title (a-z)
+
+
 
   def title_w_synonyms
     return title if synonyms.blank?

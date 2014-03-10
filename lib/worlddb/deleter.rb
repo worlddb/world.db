@@ -11,15 +11,15 @@ module WorldDb
     def run
       # for now delete all tables
       
-      Tagging.delete_all
-      Tag.delete_all
+      ## Tagging.delete_all   # - use TagDb.delete!
+      ## Tag.delete_all
       City.delete_all
       Region.delete_all
       Country.delete_all
       Continent.delete_all
       Usage.delete_all
       Lang.delete_all
-      Prop.delete_all
+      #  Prop.delete_all    # - use ConfDb.delete!
     end
     
   end # class Deleter

@@ -1,6 +1,7 @@
 # encoding: utf-8
 
-module WorldDb::Model
+module WorldDb
+  module Model
 
 class Country < ActiveRecord::Base
 
@@ -13,47 +14,46 @@ class Country < ActiveRecord::Base
 
   self.table_name = 'countries'
 
-  belongs_to :continent, :class_name => 'Continent', :foreign_key => 'continent_id'
+  belongs_to :continent, class_name: 'Continent', foreign_key: 'continent_id'
   
   has_many :usages
   has_many :langs, :through => :usages # lang(uage)s through usages (that is, countries_langs) join table
 
-  has_many :regions, :class_name => 'Region', :foreign_key => 'country_id'
-  has_many :cities,  :class_name => 'City',   :foreign_key => 'country_id'
+  has_many :regions, class_name: 'Region', foreign_key: 'country_id'
+  has_many :cities,  class_name: 'City',   foreign_key: 'country_id'
   
   ## self referencing hierachy within countries e.g. EU > GB > EN
-  belongs_to :parent,    :class_name => 'Country', :foreign_key => 'country_id'
-  has_many   :countries, :class_name => 'Country', :foreign_key => 'country_id'
+  belongs_to :parent,    class_name: 'Country', foreign_key: 'country_id'
+  has_many   :countries, class_name: 'Country', foreign_key: 'country_id'
 
-  has_many :taggings, :as => :taggable
-  has_many :tags,     :through => :taggings
+  has_many_tags
 
-  validates :key, :format => { :with => /^[a-z]{2}$/, :message => 'expected two lowercase letters a-z' }
-  validates :code, :format => { :with => /^[A-Z_]{3}$/, :message => 'expected three uppercase letters A-Z (and _)' }
+  validates :key,  format: { with: /^[a-z]{2}$/,  message: 'expected two lowercase letters a-z' }
+  validates :code, format: { with: /^[A-Z_]{3}$/, message: 'expected three uppercase letters A-Z (and _)' }
 
-  scope :by_key,   order( 'key asc' )     # order by key (a-z)
-  scope :by_title, order( 'title asc' )   # order by title (a-z)
-  scope :by_code,  order( 'code asc' )    # order by code (a-z)
-  scope :by_pop,   order( 'pop desc' )    # order by pop(ulation)
-  scope :by_area,  order( 'area desc')    # order by area (in square km)
+
+  scope :by_key,   ->{ order( 'key asc' ) }    # order by key (a-z)
+  scope :by_name,  ->{ order( 'name asc' ) }   # order by name (a-z)
+  scope :by_code,  ->{ order( 'code asc' ) }   # order by code (a-z)
+  scope :by_pop,   ->{ order( 'pop desc' ) }   # order by pop(ulation)
+  scope :by_area,  ->{ order( 'area desc') }   # order by area (in square km)
+
  
   ###
   #  NB: use is_  for flags to avoid conflict w/ assocs 
   
-  def is_supra?  
-    s? == true
-  end
-  
-  def is_country?
-    c? == true
-  end
-  
-  def is_dependency?
-    d? == true
-  end
+  def is_supra?()      s? == true;  end
+  def is_country?()    c? == true;  end
+  def is_dependency?() d? == true;  end
 
- 
- 
+  #####################################################
+  # alias for name (remove! add depreciated api call ???)
+  def title()       name;              end
+  def title=(value) self.name = value; end
+
+  scope :by_title, ->{ order( 'name asc' ) }   # order by title (a-z)
+
+
   def title_w_synonyms
     return title if synonyms.blank?
     
@@ -224,5 +224,5 @@ class Country < ActiveRecord::Base
 
 end # class Country
 
-
-end # module WorldDb::Model
+  end # module Model
+end # module WorldDb

@@ -1,13 +1,17 @@
 # encoding: utf-8
 
-module WorldDb::Model
+module WorldDb
+  module Model
 
-  class Usage < ActiveRecord::Base
 
-    belongs_to :country
-    belongs_to :lang
+class Usage < ActiveRecord::Base
 
-  end  # class Usage
+  belongs_to :country
+  belongs_to :lang
 
-end # module WorldDb::Model
+end  # class Usage
+
+
+  end # module Model
+end # module WorldDb
 

@@ -1,4 +1,4 @@
-History.md
+HISTORY.md
 Manifest.txt
 README.md
 Rakefile
@@ -10,13 +10,14 @@ lib/worlddb/console.rb
 lib/worlddb/deleter.rb
 lib/worlddb/matcher.rb
 lib/worlddb/models/city.rb
+lib/worlddb/models/confdb/prop.rb
 lib/worlddb/models/continent.rb
 lib/worlddb/models/country.rb
+lib/worlddb/models/forward.rb
 lib/worlddb/models/lang.rb
-lib/worlddb/models/prop.rb
 lib/worlddb/models/region.rb
-lib/worlddb/models/tag.rb
-lib/worlddb/models/tagging.rb
+lib/worlddb/models/tagdb/tag.rb
+lib/worlddb/models/tagdb/tagging.rb
 lib/worlddb/models/usage.rb
 lib/worlddb/reader.rb
 lib/worlddb/schema.rb

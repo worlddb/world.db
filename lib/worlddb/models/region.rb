@@ -1,6 +1,8 @@
 # encoding: UTF-8
 
-module WorldDb::Model
+module WorldDb
+  module Model
+
 
 class Region < ActiveRecord::Base
 
@@ -11,15 +13,14 @@ class Region < ActiveRecord::Base
   extend TextUtils::ValueHelper  # e.g. is_year?, is_region?, is_address?, is_taglist? etc.
 
 
-  belongs_to :country, :class_name => 'Country', :foreign_key => 'country_id'
+  belongs_to :country, class_name: 'Country', foreign_key: 'country_id'
 
-  has_many :cities, :class_name => 'City', :foreign_key => 'region_id'
+  has_many :cities, class_name: 'City', foreign_key: 'region_id'
 
-  has_many :taggings, :as => :taggable
-  has_many :tags,     :through => :taggings
+  has_many_tags
 
-  validates :key, :format => { :with => /^[a-z]+$/, :message => 'expected one or more lowercase letters a-z' }
-  validates :code, :format => { :with => /^[A-Z_]{2,3}$/, :message => 'expected two or three uppercase letters A-Z (and _)' }, :allow_nil => true
+  validates :key,  format: { with: /^[a-z]+$/,      message: 'expected one or more lowercase letters a-z' }
+  validates :code, format: { with: /^[A-Z_]{2,3}$/, message: 'expected two or three uppercase letters A-Z (and _)' }, allow_nil: true
 
 
   def title_w_synonyms
@@ -150,4 +151,5 @@ class Region < ActiveRecord::Base
 
 end # class Region
 
-end # module WorldDb::Model
+  end # module Model
+end # module WorldDb

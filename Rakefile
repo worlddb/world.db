@@ -18,11 +18,18 @@ Hoe.spec 'worlddb' do
   self.email   = 'openmundi@googlegroups.com'
 
   self.extra_deps = [
-    ['textutils', '~> 0.6'], # e.g.  >= 0.6 && <= 1.0
-    ['commander', '~> 4.1.3'],
-    ['activerecord', '~> 3.2']  # NB: will include activesupport,etc.
+    ['textutils', '~> 0.6'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
+    ['tagutils' ],  ## will include logutils
+    ['commander', '~> 4.1.3'],   ### fix: change to gli
+    ['activerecord']  # NB: will include activesupport,etc.
     ### ['sqlite3',      '~> 1.3']  # NB: install on your own; remove dependency
   ]
+
+  # switch extension to .markdown for gihub formatting
+  #  -- NB: auto-changed when included in manifest
+  self.readme_file  = 'README.md'
+  self.history_file = 'HISTORY.md'
+
 
   self.licenses = ['Public Domain']
 

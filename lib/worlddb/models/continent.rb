@@ -1,14 +1,17 @@
 # encoding: utf-8
 
-module WorldDb::Model
+module WorldDb
+  module Model
 
-  class Continent < ActiveRecord::Base
-    
-    has_many :countries
+class Continent < ActiveRecord::Base
 
-    # NB: allow dots in keys e.g. concacaf.naf etc.    
-    
-  end  # class Continent
+  has_many :countries
 
-end # module WorldDb::Model
+  # NB: allow dots in keys e.g. concacaf.naf etc.    
+
+end  # class Continent
+
+
+  end # module Model
+end # module WorldDb
 

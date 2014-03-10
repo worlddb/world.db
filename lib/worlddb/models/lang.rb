@@ -1,17 +1,19 @@
 # encoding: utf-8
 
-module WorldDb::Model
+module WorldDb
+  module Model
 
-  class Lang < ActiveRecord::Base
+class Lang < ActiveRecord::Base
     
-    has_many :usages  # join table for countries_langs
+  has_many :usages  # join table for countries_langs
     
-    has_many :countries, :through => :usages
+  has_many :countries, :through => :usages
 
-    validates :key, :format => { :with => /^[a-z]{2}$/, :message => 'expected two lowercase letters a-z' }
+  validates :key, format: { with: /^[a-z]{2}$/, message: 'expected two lowercase letters a-z' }
 
-  end  # class Lang
+end  # class Lang
 
-end # module WorldDb::Model
+  end # module Model
+end # module WorldDb
 
 

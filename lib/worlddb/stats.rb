@@ -13,12 +13,15 @@ module WorldDb
       puts " #{'%5d' % City.where(m: true).where(c: false).count} metros"
       puts " #{'%5d' % City.where(c: true).count} cities (#{City.where(c: true).where(m: true).count} metros)"
       puts " #{'%5d' % City.where(d: true).count} districts"
-      puts " #{'%5d' % Tag.count} tags"
-      puts " #{'%5d' % Tagging.count} taggings"
+#      puts " #{'%5d' % Tag.count} tags"
+#      puts " #{'%5d' % Tagging.count} taggings"
       puts " #{'%5d' % Lang.count} langs"
       puts " #{'%5d' % Usage.count} usages"
     end
-    
+
+
+#
+# fix: move to ConfDb for (re)use !!!!!
     def props
       puts "Props:"
       Prop.order( 'created_at asc' ).all.each do |prop|

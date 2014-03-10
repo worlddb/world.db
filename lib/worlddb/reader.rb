@@ -20,13 +20,9 @@ class Reader
 
   attr_reader :include_path
 
-  def skip_tags?
-    @skip_tags == true
-  end
+  def skip_tags?()   @skip_tags == true;  end
+  def strict?()      @strict == true;     end
 
-  def strict?
-    @strict == true
-  end
 
   def initialize( include_path, opts = {} )
     
@@ -216,6 +212,17 @@ class Reader
 
   end # method load_langs
 
+
+  #########################
+  ###
+  ##
+  ## move to tagutils:
+  ##
+  ##  - rename to Tag.load_data ???? or use
+  ##    TagReader.new( include_path ).read( name, more_attribts )
+  ##      or TagLoader.load
+  ##
+  ##  add new readers folder!!!!
 
   def load_tags( name, more_attribs={} )
     
