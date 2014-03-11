@@ -49,6 +49,9 @@ def setup_in_memory_db
   ## build schema
 
   LogDb.create
+  ConfDb.create
+
+  TagDb.create
   WorldDb.create
 end
 

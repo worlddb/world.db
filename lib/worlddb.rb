@@ -19,6 +19,8 @@ require 'active_record'   ## todo: add sqlite3? etc.
 require 'logutils'
 require 'textutils'
 require 'tagutils'
+require 'props'
+require 'props/db'  # includes ConfDb (ConfDb::Model::Prop, etc.)
 
 
 # our own code
@@ -41,8 +43,18 @@ require 'worlddb/models/confdb/prop'
 require 'worlddb/models/tagdb/tag'
 require 'worlddb/models/tagdb/tagging'
 
+
+
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
+
+require 'worlddb/readers/base'
+require 'worlddb/readers/lang'
+require 'worlddb/readers/usage'
+require 'worlddb/readers/country'
+require 'worlddb/readers/region'
+require 'worlddb/readers/city'
+
 require 'worlddb/reader'
 require 'worlddb/deleter'
 require 'worlddb/stats'

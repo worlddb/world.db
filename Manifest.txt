@@ -20,6 +20,12 @@ lib/worlddb/models/tagdb/tag.rb
 lib/worlddb/models/tagdb/tagging.rb
 lib/worlddb/models/usage.rb
 lib/worlddb/reader.rb
+lib/worlddb/readers/base.rb
+lib/worlddb/readers/city.rb
+lib/worlddb/readers/country.rb
+lib/worlddb/readers/lang.rb
+lib/worlddb/readers/region.rb
+lib/worlddb/readers/usage.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
 lib/worlddb/utils.rb
