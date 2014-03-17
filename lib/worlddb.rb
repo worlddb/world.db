@@ -38,8 +38,6 @@ require 'worlddb/models/city'
 require 'worlddb/models/lang'
 require 'worlddb/models/usage'
 
-require 'worlddb/models/confdb/prop'
-
 require 'worlddb/models/tagdb/tag'
 require 'worlddb/models/tagdb/tagging'
 

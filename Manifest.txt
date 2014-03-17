@@ -10,7 +10,6 @@ lib/worlddb/console.rb
 lib/worlddb/deleter.rb
 lib/worlddb/matcher.rb
 lib/worlddb/models/city.rb
-lib/worlddb/models/confdb/prop.rb
 lib/worlddb/models/continent.rb
 lib/worlddb/models/country.rb
 lib/worlddb/models/forward.rb
