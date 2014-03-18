@@ -3,6 +3,9 @@
 module WorldDb
   module Model
 
+########
+# Country / Supra (e.g. European Union) / Territory (e.g. Puerto Rico) or Dependency (e.g. Dependent territory) 
+
 class Country < ActiveRecord::Base
 
   extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_attribs!, etc.
@@ -14,8 +17,9 @@ class Country < ActiveRecord::Base
 
   self.table_name = 'countries'
 
+  belongs_to :place,     class_name: 'Place',     foreign_key: 'place_id'
   belongs_to :continent, class_name: 'Continent', foreign_key: 'continent_id'
-  
+
   has_many :usages
   has_many :langs, :through => :usages # lang(uage)s through usages (that is, countries_langs) join table
 
@@ -38,20 +42,35 @@ class Country < ActiveRecord::Base
   scope :by_pop,   ->{ order( 'pop desc' ) }   # order by pop(ulation)
   scope :by_area,  ->{ order( 'area desc') }   # order by area (in square km)
 
- 
+  before_create :on_create
+  before_update :on_update
+
+  def on_create
+    place_rec = Place.create!( name: name, kind: place_kind )
+    self.place_id = place_rec.id 
+  end
+
+  def on_update
+    ## fix/todo: check - if name or kind changed - only update if changed ?? why? why not??
+    place.update_attributes!( name: name, kind: place_kind )
+  end
+
+  def place_kind   # use place_kind_of_code ??
+    if is_supra?
+      'SUPR'
+    elsif is_dependency?
+      'TERR'
+    else
+      'CNTY'
+    end
+  end
+
   ###
   #  NB: use is_  for flags to avoid conflict w/ assocs 
   
   def is_supra?()      s? == true;  end
   def is_country?()    c? == true;  end
   def is_dependency?() d? == true;  end
-
-  #####################################################
-  # alias for name (remove! add depreciated api call ???)
-  def title()       name;              end
-  def title=(value) self.name = value; end
-
-  scope :by_title, ->{ order( 'name asc' ) }   # order by title (a-z)
 
 
   def title_w_synonyms
@@ -174,6 +193,7 @@ class Country < ActiveRecord::Base
             value_tag_keys << 'pop_10m_n_up'  if pop >= 10_000_000
             value_tag_keys << 'pop_1m_n_up'   if pop >=  1_000_000
 =end
+
 
       rec = Country.find_by_key( new_attributes[ :key ] )
 

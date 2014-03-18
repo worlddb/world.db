@@ -10,10 +10,14 @@ lib/worlddb/console.rb
 lib/worlddb/deleter.rb
 lib/worlddb/matcher.rb
 lib/worlddb/models/city.rb
+lib/worlddb/models/city_comp.rb
 lib/worlddb/models/continent.rb
 lib/worlddb/models/country.rb
+lib/worlddb/models/country_comp.rb
 lib/worlddb/models/forward.rb
 lib/worlddb/models/lang.rb
+lib/worlddb/models/name.rb
+lib/worlddb/models/place.rb
 lib/worlddb/models/region.rb
 lib/worlddb/models/tagdb/tag.rb
 lib/worlddb/models/tagdb/tagging.rb
@@ -32,3 +36,6 @@ lib/worlddb/version.rb
 test/helper.rb
 test/test_fixture_matchers.rb
 test/test_values.rb
+test/test_values_city.rb
+test/test_values_country.rb
+test/test_values_region.rb

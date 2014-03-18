@@ -31,10 +31,14 @@ require 'worlddb/utils'
 
 require 'worlddb/models/forward'
 
+require 'worlddb/models/name'
+require 'worlddb/models/place'
 require 'worlddb/models/continent'
 require 'worlddb/models/country'
+require 'worlddb/models/country_comp'
 require 'worlddb/models/region'
 require 'worlddb/models/city'
+require 'worlddb/models/city_comp'
 require 'worlddb/models/lang'
 require 'worlddb/models/usage'
 

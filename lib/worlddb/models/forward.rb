@@ -14,6 +14,9 @@ Prop      = ConfDb::Model::Prop
 Tagging   = TagDb::Model::Tagging
 Tag       = TagDb::Model::Tag
 
+
+class Name < ActiveRecord::Base ; end
+class Place < ActiveRecord::Base ; end
 class Continent < ActiveRecord::Base ; end
 class Country < ActiveRecord::Base ; end
 class Region < ActiveRecord::Base ; end
@@ -35,7 +38,9 @@ module TagDb
 
 # add alias? why? why not? # is there a better way?
 #  - just include WorldDb::Models  - why? why not?
-  
+
+Name      = WorldDb::Model::Name
+Place     = WorldDb::Model::Place
 Continent = WorldDb::Model::Continent
 Country   = WorldDb::Model::Country
 Region    = WorldDb::Model::Region

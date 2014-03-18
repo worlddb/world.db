@@ -7,7 +7,11 @@ module WorldDb
 ##  Todo:
 ##  use four classes instead of one ?
 #    e.g. Use class class Metro n class City n class District n class CityBase ?? - why? why not?
-
+#
+#  find a better name for CityBase ??
+#     Locality ??
+#      or CityCore or CityStd or CityAll or CityGeneric
+#      or CityLike or CityTable or CityTbl or ???
 
 class City < ActiveRecord::Base
   
@@ -47,6 +51,34 @@ class City < ActiveRecord::Base
   def is_city?()     c? == true;  end
   def is_district?() d? == true;  end
 
+  before_create :on_create
+  before_update :on_update
+
+  def on_create
+    place_rec = Place.create!( name: name, kind: place_kind )
+    self.place_id = place_rec.id 
+  end
+
+  def on_update
+    ## fix/todo: check - if name or kind changed - only update if changed ?? why? why not??
+    place.update_attributes!( name: name, kind: place_kind )
+  end
+
+  def place_kind   # use place_kind_of_code ??
+    ### fix/todo: make sure city records won't overlap (e.g. using metro n city flag at the same time; use separate records)
+#//////////////////////////////////
+#// fix: add nested record syntax e.g. city w/ metro population
+#//  use (metro: 4444)  e.g. must start with (<nested_type>: props) !!! or similar
+#//
+    if is_metro?
+      'METR'
+    elsif is_district?
+      'DIST'
+    else
+      'CITY'
+    end
+  end
+
 
   validates :key,  format: { with: /^[a-z]{3,}$/, message: 'expected three or more lowercase letters a-z' }
   validates :code, format: { with: /^[A-Z_]{3}$/, message: 'expected three uppercase letters A-Z (and _)' }, :allow_nil => true
@@ -57,15 +89,6 @@ class City < ActiveRecord::Base
   scope :by_pop,   ->{ order( 'pop desc' ) }  # order by pop(ulation)
   scope :by_popm,  ->{ order( 'popm desc' ) } # order by pop(ulation) metropolitan area
   scope :by_area,  ->{ order( 'area desc' ) }  # order by area (in square km)
-
-
-  #####################################################
-  # alias for name (remove! add depreciated api call ???)
-  def title()       name;              end
-  def title=(value) self.name = value; end
-
-  scope :by_title, ->{ order( 'name asc' ) } # order by title (a-z)
-
 
 
   def title_w_synonyms

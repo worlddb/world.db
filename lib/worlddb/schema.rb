@@ -8,16 +8,41 @@ def up
 
 create_table :places do |t|
   t.string  :name,   null: false
-  t.float   :lat   # optional for now (latitude)
-  t.float   :lng   # optional for now (longtitude)
+  t.string  :kind,   null: false  # --  kind/feature (note: type reserved for activerecord sti)
+  #####
+  # continent:
+  #  CONT - continent (use CNTI or CENT why??)
+  # country:
+  #  SUPR - supra (e.g. European Union)
+  #  CNTY - country
+  #  TERR - terr
+  # region:
+  #  ADM1 - e.g. region/state/province
+  #  ADM2 - e.g. county/district/
+  #  ADM3 - e.g. 
+  # city:
+  #  METR - metro
+  #  CITY - city/town/
+  #  DIST - district/
+  #
+  #  add new table for zones (e.g. informal regions e.g. tourism, wine regions, etc.) ??
+  #   why? why not??
 
-  ## todo: add kind/type/feature ??
+
+  t.float   :lat   # optional for now (latitude)
+  t.float   :lng   # optional for now (longitude)
+
   ## todo: add parent for hierachy ?? or keep it in country/region/city etc. table ??
 
   ## timestamp at last
   t.timestamps
 end
 
+
+#############
+# todo: use many-to-many assoc w/ join table  for name and place ???
+#  why? why not?
+#    - wien -> city n region n metro ?  collect more samples of names used more than once
 
 ### alternative names for places
 create_table :names do |t|
