@@ -32,6 +32,9 @@ Country   = WorldDb::Model::Country
 Region    = WorldDb::Model::Region
 City      = WorldDb::Model::City
 
+Lang      = WorldDb::Model::Lang
+Usage     = WorldDb::Model::Usage
+
 
 def setup_in_memory_db
   # Database Setup & Config

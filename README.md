@@ -11,7 +11,7 @@ world.db Command Line Tool in Ruby
 
 ## Usage Command Line
 
-    world.db command line tool, version 1.8.0
+    world.db command line tool, version 2.0.0
     
     Commands:
       create               Create DB schema
@@ -34,10 +34,70 @@ world.db Command Line Tool in Ruby
       -t, --trace          Display backtrace when an error occurs
 
 
+
 ## Usage Models
 
+`Country` Model - Example:
 
-TBD
+    at = Country.find_by! key: 'at'
+    at.name
+    # => 'Austria'
+    at.pop
+    # => 8_414_638
+    at.area
+    # => 83_871
+    
+    at.regions.count
+    # => 9
+    at.regions
+    # => [ 'Wien', 'Niederösterreich', 'Oberösterreich', ... ]
+
+    at.cities.by_pop
+    # => [ 'Wien', 'Graz', 'Linz', 'Salzburg', ... ]
+
+
+'City' Model - Example:
+
+    c = City.find_by! key: 'wien'
+    c.name
+    # => 'Wien'
+    c.country.name
+    # => 'Austria'
+    c.country.continent.name
+    # => 'Europe'
+
+    la = City.find_by! key: 'losangeles'
+    la.name
+    # => 'Los Angeles'
+    la.region.name
+    # => 'California'
+    la.region.key
+    # => 'ca'
+    la.country.name
+    # => 'United States'
+    la.country.key
+    # => 'us'
+    la.country.continent.name
+    # => 'North America'
+
+
+'Tag' Model - Example:
+
+    euro = Tag.find_by! key: 'euro'
+    euro.countries.count
+    # => 17
+    euro.countries
+    # => ['Austria, 'Belgium', 'Cyprus', ... ]
+    
+    flanders = Tag.find_by! key: 'flanders'
+    flanders.regions.count
+    # => 5
+    flanders.regions
+    # => ['Antwerpen', 'Brabant Wallon', 'Limburg', 'Oost-Vlaanderen', ... ]
+    flanders.regions.first.country.name
+    # => 'Belgium'
+
+and so on.
 
 
 ## Install

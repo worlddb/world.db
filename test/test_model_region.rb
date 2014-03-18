@@ -13,14 +13,14 @@ class TestModelRegion < MiniTest::Unit::TestCase
   def test_load_values
 
     at = Country.create!( key: 'at',
-                          title: 'Austria',
+                          name: 'Austria',
                           code: 'AUT',
                           pop: 8_414_638,
                           area: 83_871 )
 
     new_attributes = {
       key:        'w',
-      title:      'Wien',
+      name:       'Wien',
       synonyms:   '',
       country_id: at.id
     }
@@ -35,9 +35,15 @@ class TestModelRegion < MiniTest::Unit::TestCase
     r2 = Region.find_by_key!( new_attributes[:key] )
     assert_equal r.id, r2.id
 
-    assert_equal r.title, new_attributes[:title]
-    assert_equal r.area, 415
-    ## todo: assert country_id & country.title for assoc
+    assert_equal new_attributes[:name],  r.name 
+    assert_equal 415,                    r.area 
+    assert_equal at.id,                  r.country_id
+
+    ### test place
+    assert_equal  new_attributes[:name], r.place.name
+
+    ## test assocs
+    assert_equal  'Austria', r.country.name
   end
 
 end # class TestModelRegion

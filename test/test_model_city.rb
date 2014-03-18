@@ -13,18 +13,18 @@ class TestModelCity < MiniTest::Unit::TestCase
   def test_load_values
 
     at = Country.create!( key: 'at',
-                          title: 'Austria',
+                          name: 'Austria',
                           code: 'AUT',
-                          pop: 8_414_638,
+                          pop:  8_414_638,
                           area: 83_871 )
 
     w = Region.create!( key: 'w',
-                        title: 'Wien',
+                        name: 'Wien',
                         country_id: at.id )
 
     new_attributes = {
       key:        'wien',
-      title:      'Wien',
+      name:       'Wien',
       synonyms:   '',
       country_id: at.id
     }
@@ -38,16 +38,23 @@ class TestModelCity < MiniTest::Unit::TestCase
     c = City.create_or_update_from_attribs( new_attributes, values )
 
     c2 = City.find_by_key!( new_attributes[:key] )
-    assert_equal c.id, c2.id
+    assert_equal c2.id, c.id
 
-    assert_equal c.title, new_attributes[:title]
-    assert_equal c.pop,   1_731_236
-    assert_equal c.popm,  1_724_000
-    assert_equal c.m,     true
-    assert_equal c.region_id,  w.id
-    assert_equal c.country_id, at.id
+    assert_equal new_attributes[:name], c.name
+    assert_equal 1_731_236, c.pop
+    assert_equal 1_724_000, c.popm
+    assert_equal true,      c.m 
+    assert_equal w.id,      c.region_id
+    assert_equal at.id,     c.country_id
+    
+    ### test place
+    assert_equal  new_attributes[:name], c.place.name
+
+    ## test assocs
+    assert_equal  'Wien',    c.region.name
+    assert_equal  'Austria', c.region.country.name
+    assert_equal  'Austria', c.country.name
   end
 
 
 end # class TestModelCity
-

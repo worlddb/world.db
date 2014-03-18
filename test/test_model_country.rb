@@ -13,7 +13,7 @@ class TestModelCountry < MiniTest::Unit::TestCase
 
     new_attributes = {
       key:      'at',
-      title:    'Austria',
+      name:     'Austria',
       synonyms: ''
     }
 
@@ -29,10 +29,13 @@ class TestModelCountry < MiniTest::Unit::TestCase
     c2 = Country.find_by_key!( new_attributes[:key] )
     assert_equal c.id, c2.id
 
-    assert_equal c.title, new_attributes[:title]
-    assert_equal c.pop,   8_414_638
-    assert_equal c.area,  83_871
+    assert_equal new_attributes[:name], c.name
+    assert_equal 8_414_638,             c.pop
+    assert_equal 83_871,                c.area
     ## todo: assert tag count; add supra:eu etc.
+
+    ### test place
+    assert_equal  new_attributes[:name], c.place.name
   end
 
 
