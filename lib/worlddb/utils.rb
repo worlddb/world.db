@@ -1,5 +1,8 @@
 # encoding: utf-8
 
+######
+# fix:
+#  move to textutils ???
 
 class Time
   

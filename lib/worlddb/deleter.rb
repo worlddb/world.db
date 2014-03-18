@@ -13,6 +13,8 @@ module WorldDb
       
       ## Tagging.delete_all   # - use TagDb.delete!
       ## Tag.delete_all
+      Name.delete_all
+      Place.delete_all
       City.delete_all
       Region.delete_all
       Country.delete_all

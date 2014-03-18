@@ -3,14 +3,14 @@
 
 require 'helper'
 
-class TestValuesCity < MiniTest::Unit::TestCase
+class TestModelCity < MiniTest::Unit::TestCase
 
   def setup
     #  delete all countries, regions, cities in in-memory only db
     WorldDb.delete!
   end
 
-  def test_load_city_values
+  def test_load_values
 
     at = Country.create!( key: 'at',
                           title: 'Austria',
@@ -49,5 +49,5 @@ class TestValuesCity < MiniTest::Unit::TestCase
   end
 
 
-end # class TestValuesCity
+end # class TestModelCity
 

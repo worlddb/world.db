@@ -157,7 +157,7 @@ end
 
 create_table :langs do |t|  # langs == languages (e.g. en/English, de/Deutsch, etc.)
   t.string :key,   null: false
-  t.string :name, null: false
+  t.string :name,  null: false
   t.timestamps
 end
 

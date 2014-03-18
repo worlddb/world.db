@@ -40,10 +40,6 @@ class Region < ActiveRecord::Base
   end
 
 
-  #####################################################
-  # alias for name (remove! add depreciated api call ???)
-  def title()       name;              end
-  def title=(value) self.name = value; end
 
   def title_w_synonyms
     return title if synonyms.blank?
