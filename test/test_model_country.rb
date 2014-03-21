@@ -14,7 +14,7 @@ class TestModelCountry < MiniTest::Unit::TestCase
     new_attributes = {
       key:      'at',
       name:     'Austria',
-      synonyms: ''
+      alt_names: ''
     }
 
     values = [

@@ -33,15 +33,26 @@ module Matcher
     end
   end
 
-  def match_xxx_for_country_n_region( name, xxx ) # xxx e.g. beers|breweries
+
+  def match_xxx_for_country_n_region( name, xxx ) # xxx e.g. wine|wineries
+
     # auto-add required country n region code (from folder structure)
 
-    # note: allow  /cities and /1--hokkaido--cities
-    xxx_pattern = "(?:#{xxx}|[0-9]+--[^\\/]+?--#{xxx})"    # note: double escape \\ required for backslash
+    ## -- allow opt_folders after long regions (e.g. additional subregion/zone)
+    ## -- allow anything (prefixes) before -- for xxx
+    #       e.g.  at-austria!/1--n-niederoesterreich--eastern/wagram--wines
+    #             at-austria!/1--n-niederoesterreich--eastern/wagram--wagram--wines
+
+    # note: allow  /cities and /1--hokkaido--cities and /hokkaido--cities too
+    xxx_pattern = "(?:#{xxx}|[^\\/]+--#{xxx})"    # note: double escape \\ required for backslash
+    
+    ## allow optional folders -- TODO: add restriction ?? e.g. must be 4+ alphas ???
+    opt_folders_pattern = "(?:\/[^\/]+)*"
+    ## note: for now only (style #2) n (style #3)  that is long region allow opt folders
 
     if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/  ||                # (1)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/ || # (2)
-       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/         || # (3)
+       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+#{opt_folders_pattern}\/#{xxx_pattern}/ || # (2)
+       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+#{opt_folders_pattern}\/#{xxx_pattern}/         || # (3)
        name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/            # (4)
 
       #######

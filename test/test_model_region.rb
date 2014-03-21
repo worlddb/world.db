@@ -21,7 +21,7 @@ class TestModelRegion < MiniTest::Unit::TestCase
     new_attributes = {
       key:        'w',
       name:       'Wien',
-      synonyms:   '',
+      alt_names:  '',
       country_id: at.id
     }
 
