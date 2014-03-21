@@ -73,15 +73,19 @@ class Country < ActiveRecord::Base
   def is_dependency?() d? == true;  end
 
 
-  def title_w_synonyms
-    return title if synonyms.blank?
+  def all_names( opts={} )
+    ### fix:
+    ## allow to passing in sep or separator e.g. | or other
+
+    return name if alt_names.blank?
     
     buf = ''
-    buf << title
+    buf << name
     buf << ' | '
-    buf << synonyms.split('|').join(' | ')
+    buf << alt_names.split('|').join(' | ')
     buf
   end
+
 
 
   def self.create_or_update_from_values( values, more_attribs={} )

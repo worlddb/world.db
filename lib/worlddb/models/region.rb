@@ -40,14 +40,16 @@ class Region < ActiveRecord::Base
   end
 
 
+  def all_names( opts={} )
+    ### fix:
+    ## allow to passing in sep or separator e.g. | or other
 
-  def title_w_synonyms
-    return title if synonyms.blank?
+    return name if alt_names.blank?
     
     buf = ''
-    buf << title
+    buf << name
     buf << ' | '
-    buf << synonyms.split('|').join(' | ')
+    buf << alt_names.split('|').join(' | ')
     buf
   end
 

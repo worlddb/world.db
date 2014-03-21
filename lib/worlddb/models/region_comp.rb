@@ -9,12 +9,16 @@ module WorldDb
 
 class Region
   
-  #####################################################
-  # alias for name (remove! add depreciated api call ???)
   def title()       name;              end
   def title=(value) self.name = value; end
 
   scope :by_title, ->{ order( 'name asc' ) } # order by title (a-z)
+
+  def synonyms()       alt_names;      end
+  def synonyms=(value) self.alt_names = value; end
+
+  def title_w_synonyms( opts={} )  all_names( opts );  end    # depreciated: use all_names instead
+
 
 end # class Region
 

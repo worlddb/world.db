@@ -71,7 +71,7 @@ class City < ActiveRecord::Base
 #//  use (metro: 4444)  e.g. must start with (<nested_type>: props) !!! or similar
 #//
     if is_metro?
-      'METR'
+      'MTRO'
     elsif is_district?
       'DIST'
     else
@@ -91,13 +91,16 @@ class City < ActiveRecord::Base
   scope :by_area,  ->{ order( 'area desc' ) }  # order by area (in square km)
 
 
-  def title_w_synonyms
-    return title if synonyms.blank?
+  def all_names( opts={} )
+    ### fix:
+    ## allow to passing in sep or separator e.g. | or other
+
+    return name if alt_names.blank?
     
     buf = ''
-    buf << title
+    buf << name
     buf << ' | '
-    buf << synonyms.split('|').join(' | ')
+    buf << alt_names.split('|').join(' | ')
     buf
   end
 

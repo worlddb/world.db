@@ -21,7 +21,7 @@ create_table :places do |t|
   #  ADM2 - e.g. county/district/
   #  ADM3 - e.g. 
   # city:
-  #  METR - metro
+  #  MTRO - metro
   #  CITY - city/town/
   #  DIST - district/
   #
@@ -61,10 +61,10 @@ end
 
 
 create_table :continents do |t|
-  t.string     :name,   null: false
-  t.string     :key,    null: false
-  t.references :place,  null: false
-  t.string     :synonyms  # comma separated list of synonyms
+  t.string     :name,     null: false
+  t.string     :key,      null: false
+  t.references :place,    null: false
+  t.string     :alt_names  # comma separated list of alternate names (synonyms)
 
   ## timestamp at last
   t.timestamps
@@ -78,7 +78,7 @@ create_table :countries do |t|
   t.string     :key,    null: false
   t.references :place,  null: false
   t.string     :code,   null: false  # short three letter code (FIFA country code e.g. ITA)
-  t.string     :synonyms  # comma separated list of synonyms
+  t.string     :alt_names  # comma separated list of alternate names (synonyms)
   t.integer    :pop,    null: false    # population count
   t.integer    :area,   null: false    #  area in square km (sq. km)
   t.references :continent
@@ -118,7 +118,7 @@ create_table :regions do |t|
   t.string :abbr     # optional conventional abbrevation (e.g. Stmk., Gto., etc.)
   t.string :iso      # iso code
   t.string :nuts     # nuts code (europe/eu only)
-  t.string :synonyms  # comma separated list of synonyms
+  t.string     :alt_names  # comma separated list of alternate names (synonyms)
   t.references :country,  null: false
   t.integer :pop     # optional population count
   t.integer :area    # optional area in square km (sq. km)
@@ -132,8 +132,8 @@ create_table :cities do |t|
   t.string     :name,   null: false
   t.string     :key,    null: false
   t.references :place,  null: false
-  t.string :code     # short three letter code (ITAT/airport code e.g. NYC or VIE)
-  t.string :synonyms  # comma separated list of synonyms
+  t.string     :code     # short three letter code (ITAT/airport code e.g. NYC or VIE)
+  t.string     :alt_names  # comma separated list of alternate names (synonyms)
   t.references :country,  null: false
   t.references :region    # optional for now
   t.references :city  # optional parent (e.g. metro for city, or city for district)

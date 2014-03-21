@@ -10,6 +10,24 @@ class Continent < ActiveRecord::Base
 
   # NB: allow dots in keys e.g. concacaf.naf etc.    
 
+  before_create :on_create
+  before_update :on_update
+
+  def on_create
+    place_rec = Place.create!( name: name, kind: place_kind )
+    self.place_id = place_rec.id 
+  end
+
+  def on_update
+    ## fix/todo: check - if name or kind changed - only update if changed ?? why? why not??
+    place.update_attributes!( name: name, kind: place_kind )
+  end
+
+  def place_kind   # use place_kind_of_code ??
+    'CONT'
+  end
+
+
 end  # class Continent
 
 
