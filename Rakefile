@@ -1,9 +1,6 @@
 require 'hoe'
 require './lib/worlddb/version.rb'
 
-## NB: plugin (hoe-manifest) not required; just used for future testing/development
-### Hoe::plugin :manifest   # more options for manifests (in the future; not yet)
-
 
 Hoe.spec 'worlddb' do
   
@@ -18,9 +15,13 @@ Hoe.spec 'worlddb' do
   self.email   = 'openmundi@googlegroups.com'
 
   self.extra_deps = [
-    ['textutils', '~> 0.6'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
-    ['tagutils' ],  ## will include logutils
-    ['commander', '~> 4.1.3'],   ### fix: change to gli
+    ['props'],         # settings / prop(ertie)s / env / INI
+    ['logutils'],     # logging
+    ['textutils', '>= 0.8.7'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
+    ['tagutils'],     # tags n categories for activerecord
+
+     ## 3rd party
+    ['gli', '>= 2.9'],
     ['activerecord']  # NB: will include activesupport,etc.
     ### ['sqlite3',      '~> 1.3']  # NB: install on your own; remove dependency
   ]
