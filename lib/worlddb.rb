@@ -27,8 +27,6 @@ require 'props/db'  # includes ConfDb (ConfDb::Model::Prop, etc.)
 
 require 'worlddb/version'   # always goes first
 
-require 'worlddb/utils'
-
 require 'worlddb/models/forward'
 
 require 'worlddb/models/name'
