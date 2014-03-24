@@ -5,33 +5,94 @@ world.db Command Line Tool in Ruby
 * home  :: [github.com/geraldb/world.db.ruby](https://github.com/geraldb/world.db.ruby)
 * bugs  :: [github.com/geraldb/world.db.ruby/issues](https://github.com/geraldb/world.db.ruby/issues)
 * gem   :: [rubygems.org/gems/worlddb](https://rubygems.org/gems/worlddb)
-* rdoc  :: [rubydoc.info/gems/wrolddb](http://rubydoc.info/gems/worlddb)
+* rdoc  :: [rubydoc.info/gems/worlddb](http://rubydoc.info/gems/worlddb)
 * forum :: [groups.google.com/group/openmundi](https://groups.google.com/group/openmundi)
 
 
 ## Usage Command Line
 
-    world.db command line tool, version 2.0.0
-    
-    Commands:
-      create               Create DB schema
-      help                 Display global or [command] help documentation.
-      load                 Load fixtures
-      logs                 Show logs
-      props                Show props
-      setup                Create DB schema 'n' load all data
-      stats                Show stats
-      test                 Debug/test command suite
-    
-    Global Options:
-      -i, --include PATH   Data path (default is .)
-      -d, --dbpath PATH    Database path (default is .)
-      -n, --dbname NAME    Database name (datault is world.db)
-      -q, --quiet          Only show warnings, errors and fatal messages
-      -w, --verbose        Show debug messages
-      -h, --help           Display help documentation
-      -v, --version        Display version information
-      -t, --trace          Display backtrace when an error occurs
+The worlddb gem lets you load plain text fixtures into your database
+(and also includes schema n models for easy reuse). 
+
+~~~
+SYNOPSIS
+    worlddb [global options] command [command options] [arguments...]
+
+VERSION
+    2.0
+
+GLOBAL OPTIONS
+    -d, --dbpath=PATH - Database path (default: .)
+    -n, --dbname=NAME - Database name (default: world.db)
+    --verbose         - (Debug) Show debug messages
+    --version         - Show version
+
+COMMANDS
+    create        - Create DB schema
+    setup, s      - Create DB schema 'n' load all world data
+    update, up, u - Update all world data
+    load, l       - Load world fixtures
+    logs          - Show logs
+    props         - Show props
+    stats         - Show stats
+    test          - (Debug) Test command suite
+    help          - Shows a list of commands or help for one command
+~~~
+
+
+### `setup` Command
+
+~~~
+NAME
+    setup - Create DB schema 'n' load all world data
+
+SYNOPSIS
+    worlddb [global options] setup [command options] NAME
+
+COMMAND OPTIONS
+    -i, --include=PATH  - World data path (default: .)
+
+EXAMPLES
+    worlddb setup --include ./world.db
+    worlddb setup us --include ./world.db
+~~~
+
+
+### `update` Command
+
+~~~
+NAME
+    update - Update all world data
+
+SYNOPSIS
+    worlddb [global options] update [command options] NAME
+
+COMMAND OPTIONS
+    --delete           - Delete all world data records
+    -i, --include=PATH - World data path (default: .)
+
+EXAMPLES
+    worlddb update --include ./world.db
+    worlddb update --include ./world.db --delete
+~~~
+
+
+### `load` Command
+
+~~~
+NAME
+    load - Load world fixtures
+
+SYNOPSIS
+    worlddb [global options] load [command options] NAME
+
+COMMAND OPTIONS
+    --delete           - Delete all world data records
+    -i, --include=PATH - World data path (default: .)
+
+EXAMPLES
+    worlddb load --include ./world.db europe/countries
+~~~
 
 
 
@@ -53,10 +114,10 @@ world.db Command Line Tool in Ruby
     # => [ 'Wien', 'Niederösterreich', 'Oberösterreich', ... ]
 
     at.cities.by_pop
-    # => [ 'Wien', 'Graz', 'Linz', 'Salzburg', ... ]
+    # => [ 'Wien', 'Graz', 'Linz', 'Salzburg', 'Innsbruck' ... ]
 
 
-'City' Model - Example:
+`City` Model - Example:
 
     c = City.find_by! key: 'wien'
     c.name
@@ -81,7 +142,7 @@ world.db Command Line Tool in Ruby
     # => 'North America'
 
 
-'Tag' Model - Example:
+`Tag` Model - Example:
 
     euro = Tag.find_by! key: 'euro'
     euro.countries.count
@@ -93,7 +154,7 @@ world.db Command Line Tool in Ruby
     flanders.regions.count
     # => 5
     flanders.regions
-    # => ['Antwerpen', 'Brabant Wallon', 'Limburg', 'Oost-Vlaanderen', ... ]
+    # => ['Antwerpen', 'Brabant Wallon', 'Limburg', 'Oost-Vlaanderen', 'West-Vlaanderen']
     flanders.regions.first.country.name
     # => 'Belgium'
 
