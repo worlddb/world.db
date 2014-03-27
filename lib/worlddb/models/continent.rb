@@ -16,11 +16,16 @@ class Continent < ActiveRecord::Base
   def on_create
     place_rec = Place.create!( name: name, kind: place_kind )
     self.place_id = place_rec.id 
+
+    self.slug = key.gsub( ' ', '_' )   if slug.blank?
   end
 
   def on_update
     ## fix/todo: check - if name or kind changed - only update if changed ?? why? why not??
     place.update_attributes!( name: name, kind: place_kind )
+    
+    ## check if name changed -- possible?
+    ## update slug too??
   end
 
   def place_kind   # use place_kind_of_code ??

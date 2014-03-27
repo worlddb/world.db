@@ -62,6 +62,7 @@ end
 
 create_table :continents do |t|
   t.string     :name,     null: false
+  t.string     :slug,     null: false   # auto-generate default
   t.string     :key,      null: false
   t.references :place,    null: false
   t.string     :alt_names  # comma separated list of alternate names (synonyms)
@@ -75,6 +76,7 @@ add_index :continents, :key, unique: true
 
 create_table :countries do |t|
   t.string     :name,   null: false
+  t.string     :slug,   null: false   # auto-generate default
   t.string     :key,    null: false
   t.references :place,  null: false
   t.string     :code,   null: false  # short three letter code (FIFA country code e.g. ITA)
