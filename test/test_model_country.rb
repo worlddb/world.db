@@ -9,6 +9,16 @@ class TestModelCountry < MiniTest::Unit::TestCase
     WorldDb.delete!
   end
 
+  def test_to_path
+    eu = Continent.create!( key: 'eu', name: 'Europe' )
+    assert_equal 'europe', eu.slug
+    
+    at = Country.create!( key: 'at', name: 'Austria', code: 'AUT', area: 83_871, pop: 8_414_638, continent: eu )
+    assert_equal 'austria', at.slug
+    
+    assert_equal 'europe/at-austria', at.to_path
+  end
+
   def test_load_values
 
     new_attributes = {

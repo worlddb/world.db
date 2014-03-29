@@ -17,7 +17,7 @@ Hoe.spec 'worlddb' do
   self.extra_deps = [
     ['props'],         # settings / prop(ertie)s / env / INI
     ['logutils'],     # logging
-    ['textutils', '>= 0.9.1'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
+    ['textutils', '>= 0.9.2'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
     ['tagutils'],     # tags n categories for activerecord
 
      ## 3rd party

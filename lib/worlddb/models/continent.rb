@@ -17,7 +17,7 @@ class Continent < ActiveRecord::Base
     place_rec = Place.create!( name: name, kind: place_kind )
     self.place_id = place_rec.id 
 
-    self.slug = key.gsub( ' ', '_' )   if slug.blank?
+    self.slug = TextUtils.slugify( name )  if slug.blank?
   end
 
   def on_update

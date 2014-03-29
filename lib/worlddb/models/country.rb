@@ -45,14 +45,20 @@ class Country < ActiveRecord::Base
   before_create :on_create
   before_update :on_update
 
+
   def on_create
     place_rec = Place.create!( name: name, kind: place_kind )
-    self.place_id = place_rec.id 
+    self.place_id = place_rec.id
+    
+    self.slug = TextUtils.slugify( name )  if slug.blank?
   end
-
+  
   def on_update
     ## fix/todo: check - if name or kind changed - only update if changed ?? why? why not??
     place.update_attributes!( name: name, kind: place_kind )
+
+    ## check if name changed -- possible?
+    ## update slug too??
   end
 
   def place_kind   # use place_kind_of_code ??
@@ -86,6 +92,11 @@ class Country < ActiveRecord::Base
     buf
   end
 
+
+  def to_path( opts={} )
+    # e.g. europe/at-austria
+    "#{continent.slug}/#{key}-#{slug}"
+  end
 
 
   def self.create_or_update_from_values( values, more_attribs={} )
