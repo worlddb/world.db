@@ -13,6 +13,7 @@ module WorldDb
       
       ## Tagging.delete_all   # - use TagDb.delete!
       ## Tag.delete_all
+
       Name.delete_all
       Place.delete_all
       City.delete_all
@@ -21,9 +22,10 @@ module WorldDb
       Continent.delete_all
       Usage.delete_all
       Lang.delete_all
+
       #  Prop.delete_all    # - use ConfDb.delete!
     end
-    
+
   end # class Deleter
 
 end # module WorldDb

@@ -9,11 +9,10 @@ class Lang < ActiveRecord::Base
     
   has_many :countries, :through => :usages
 
-  validates :key, format: { with: /^[a-z]{2}$/, message: 'expected two lowercase letters a-z' }
+  validates :key, format: { with: /#{LANG_KEY_PATTERN}/, message: LANG_KEY_PATTERN_MESSAGE }
 
 end  # class Lang
 
   end # module Model
 end # module WorldDb
-
 

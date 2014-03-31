@@ -1,10 +1,11 @@
 
 module WorldDb
 
-class CreateDb < ActiveRecord::Migration
+class CreateDb 
 
 def up
 
+ActiveRecord::Schema.define do
 
 create_table :places do |t|
   t.string  :name,   null: false
@@ -173,12 +174,10 @@ create_table :usages do |t|  # join table for countries_langs
   t.timestamps
 end
 
+end # block Schema.define
 
 end # method up
 
-def down
-  raise ActiveRecord::IrreversibleMigration
-end
 
 end # class CreateDb
 

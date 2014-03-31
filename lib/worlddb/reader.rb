@@ -35,22 +35,14 @@ class Reader
 
 
   def load_setup( name )
-    path = "#{include_path}/#{name}.yml"
+    path = "#{include_path}/#{name}.txt"
 
     logger.info "parsing data '#{name}' (#{path})..."
 
     reader = FixtureReader.new( path )
 
-    # too big for heroku free db plan (10,000 record limit)
-    #  - sorry, can't load by default
-    fixture_excludes = [
-      'south-america/ve/cities'
-    ]
-
-    reader.each do |fixture_name|
-      next if fixture_excludes.include?( fixture_name )  # skip loading
-      
-      load( fixture_name )
+    reader.each do |fixture|
+      load( fixture )
     end
   end # method load_setup
 

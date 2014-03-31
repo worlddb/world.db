@@ -32,8 +32,8 @@ class Country < ActiveRecord::Base
 
   has_many_tags
 
-  validates :key,  format: { with: /^[a-z]{2}$/,  message: 'expected two lowercase letters a-z' }
-  validates :code, format: { with: /^[A-Z_]{3}$/, message: 'expected three uppercase letters A-Z (and _)' }
+  validates :key,  format: { with: /#{COUNTRY_KEY_PATTERN}/,  message: COUNTRY_KEY_PATTERN_MESSAGE }
+  validates :code, format: { with: /#{COUNTRY_CODE_PATTERN}/, message: COUNTRY_CODE_PATTERN_MESSAGE }
 
 
   scope :by_key,   ->{ order( 'key asc' ) }    # order by key (a-z)
@@ -49,10 +49,16 @@ class Country < ActiveRecord::Base
   def on_create
     place_rec = Place.create!( name: name, kind: place_kind )
     self.place_id = place_rec.id
-    
-    self.slug = TextUtils.slugify( name )  if slug.blank?
+
+    if slug.blank?
+      ## todo: change and to n  (if en/english) ?? - why? why not?
+      ##  remove subtitles/subnames e.g. () -- why? why not?
+
+      ## remove translations []  e.g. México [Mexico] -> México etc.
+      self.slug = TextUtils.slugify( name.gsub( /\[[^\]]+\]/, '' ) )
+    end
   end
-  
+
   def on_update
     ## fix/todo: check - if name or kind changed - only update if changed ?? why? why not??
     place.update_attributes!( name: name, kind: place_kind )
@@ -151,7 +157,7 @@ class Country < ActiveRecord::Base
         elsif match_number( value ) do |num|  # numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
                 value_numbers << num
               end
-        elsif value =~ /^[A-Z]{2,3}$/  ## assume two or three-letter code
+        elsif value =~ /#{COUNTRY_CODE_PATTERN}/  ## three letter code 
           new_attributes[ :code ] = value
         elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
           logger.debug "   found tags: >>#{value}<<"

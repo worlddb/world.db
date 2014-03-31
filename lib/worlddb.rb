@@ -27,6 +27,7 @@ require 'props/db'  # includes ConfDb (ConfDb::Model::Prop, etc.)
 
 require 'worlddb/version'   # always goes first
 
+require 'worlddb/patterns'  # regex patterns (constants)
 require 'worlddb/models/forward'
 
 require 'worlddb/models/name'
@@ -61,6 +62,7 @@ require 'worlddb/readers/city'
 require 'worlddb/reader'
 require 'worlddb/deleter'
 require 'worlddb/stats'
+require 'worlddb/stats_comp'
 
 
 module WorldDb

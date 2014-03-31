@@ -25,6 +25,7 @@ lib/worlddb/models/region_comp.rb
 lib/worlddb/models/tagdb/tag.rb
 lib/worlddb/models/tagdb/tagging.rb
 lib/worlddb/models/usage.rb
+lib/worlddb/patterns.rb
 lib/worlddb/reader.rb
 lib/worlddb/readers/base.rb
 lib/worlddb/readers/city.rb
@@ -34,6 +35,7 @@ lib/worlddb/readers/region.rb
 lib/worlddb/readers/usage.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
+lib/worlddb/stats_comp.rb
 lib/worlddb/version.rb
 test/helper.rb
 test/test_fixture_matchers.rb

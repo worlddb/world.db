@@ -19,8 +19,9 @@ class Region < ActiveRecord::Base
 
   has_many_tags
 
-  validates :key,  format: { with: /^[a-z]+$/,      message: 'expected one or more lowercase letters a-z' }
-  validates :code, format: { with: /^[A-Z_]{2,3}$/, message: 'expected two or three uppercase letters A-Z (and _)' }, allow_nil: true
+  validates :key,  format: { with: /#{REGION_KEY_PATTERN}/,  message: REGION_KEY_PATTERN_MESSAGE }
+  validates :code, format: { with: /#{REGION_CODE_PATTERN}/, message: REGION_CODE_PATTERN_MESSAGE }, allow_nil: true
+
 
   before_create :on_create
   before_update :on_update
@@ -91,7 +92,7 @@ class Region < ActiveRecord::Base
       elsif match_number( value ) do |num|  # numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
               value_numbers << num
             end
-      elsif value =~ /^[A-Z]{2,3}$/  ## assume two or three-letter code
+      elsif value =~ /#{REGION_CODE_PATTERN}/  ## assume two or three-letter code
         new_attributes[ :code ] = value
       elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
         logger.debug "   found tags: >>#{value}<<"
