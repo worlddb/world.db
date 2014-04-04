@@ -33,6 +33,7 @@ class TestFixtureMatchers < MiniTest::Unit::TestCase
     beers_at = [
       'europe/at/beers',
       'europe/at-austria/beers',
+      'europe/at-austria--beers',
       'at-austria/beers',
       'at-austria!/beers',
       '1--at-austria--central/beers',
@@ -48,7 +49,7 @@ class TestFixtureMatchers < MiniTest::Unit::TestCase
       found = match_xxx_for_country( name, 'beers' ) do |country_key|
         assert_equal country_key, 'at'
       end
-      assert found
+      assert found, "no match found for '#{name}'"
     end
 
     breweries_at = [

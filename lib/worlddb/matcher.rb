@@ -11,10 +11,14 @@ module Matcher
     # note: allow  /cities and /1--hokkaido--cities
     xxx_pattern = "(?:#{xxx}|[0-9]+--[^\\/]+?--#{xxx})"    # note: double escape \\ required for backslash
 
+    ##
+    ## todo: add $-anchor at the end of pattern - why? why not?? (will include .txt or .yaml??)
+
     if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/#{xxx_pattern}/         ||    # (1)
        name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/#{xxx_pattern}/ ||    # (2)
        name =~ /(?:^|\/)([a-z]{2,3})\/#{xxx_pattern}/                ||    # (3)
-       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--[^\/]+\/#{xxx_pattern}/    # (4)
+       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--[^\/]+\/#{xxx_pattern}/ ||   # (4)
+       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+--#{xxx}/    # (5)
 
       country_key = $1.dup
       yield( country_key )
@@ -28,6 +32,9 @@ module Matcher
       # (3)  classic style: e.g. /at/beers (europe/at/cities)
       #
       # (4) new style w/ region w/o abbrev/code e.g. /ja-japon/1--hokkaido/cities
+      #
+      # (5)  compact style (country part of filename):
+      #   e.g. /at-austria--cities or /europe/at-austria--cities
     else
       false # no match found
     end
