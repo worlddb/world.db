@@ -26,28 +26,28 @@ module WorldDb
 # move to notes  regex|patterns on  geraldb.github.io ??
 #
 
-  COUNTRY_KEY_PATTERN = '^[a-z]{2,3}$'    # allow two AND three letter keys e.g. at, mx, eng, sco, etc.
+  COUNTRY_KEY_PATTERN = '\A[a-z]{2,3}\z'    # allow two AND three letter keys e.g. at, mx, eng, sco, etc.
   COUNTRY_KEY_PATTERN_MESSAGE = "expected two or three lowercase letters a-z /#{COUNTRY_KEY_PATTERN}/"
 
-  COUNTRY_CODE_PATTERN = '^[A-Z_]{3}$'
+  COUNTRY_CODE_PATTERN = '\A[A-Z_]{3}\z'
   COUNTRY_CODE_PATTERN_MESSAGE = "expected three uppercase letters A-Z (and _) /#{COUNTRY_CODE_PATTERN}/"
 
 
-  REGION_KEY_PATTERN = '^[a-z]+$'
+  REGION_KEY_PATTERN = '\A[a-z]+\z'
   REGION_KEY_PATTERN_MESSAGE = "expected one or more lowercase letters a-z /#{REGION_KEY_PATTERN}/"
 
-  REGION_CODE_PATTERN = '^[A-Z_]{2,3}$'
+  REGION_CODE_PATTERN = '\A[A-Z_]{2,3}\z'
   REGION_CODE_PATTERN_MESSAGE = "expected two or three uppercase letters A-Z (and _) /#{REGION_CODE_PATTERN}/"
 
 
-  CITY_KEY_PATTERN = '^[a-z]{3,}$'
+  CITY_KEY_PATTERN = '\A[a-z]{3,}\z'
   CITY_KEY_PATTERN_MESSAGE = "expected three or more lowercase letters a-z' /#{CITY_KEY_PATTERN}/"
   
-  CITY_CODE_PATTERN = '^[A-Z_]{3}$'
+  CITY_CODE_PATTERN = '\A[A-Z_]{3}\z'
   CITY_CODE_PATTERN_MESSAGE = "expected three uppercase letters A-Z (and _)' /#{CITY_CODE_PATTERN}/"
 
 
-  LANG_KEY_PATTERN = '^[a-z]{2}$'
+  LANG_KEY_PATTERN = '\A[a-z]{2}\z'
   LANG_KEY_PATTERN_MESSAGE = "expected two lowercase letters a-z' /#{LANG_KEY_PATTERN}/"
 
 end # module WorldDb
