@@ -2,8 +2,8 @@
 
 world.db Command Line Tool in Ruby
 
-* home  :: [github.com/geraldb/world.db.ruby](https://github.com/geraldb/world.db.ruby)
-* bugs  :: [github.com/geraldb/world.db.ruby/issues](https://github.com/geraldb/world.db.ruby/issues)
+* home  :: [github.com/worlddb/world.db.ruby](https://github.com/worlddb/world.db.ruby)
+* bugs  :: [github.com/worlddb/world.db.ruby/issues](https://github.com/worlddb/world.db.ruby/issues)
 * gem   :: [rubygems.org/gems/worlddb](https://rubygems.org/gems/worlddb)
 * rdoc  :: [rubydoc.info/gems/worlddb](http://rubydoc.info/gems/worlddb)
 * forum :: [groups.google.com/group/openmundi](https://groups.google.com/group/openmundi)

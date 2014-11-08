@@ -5,12 +5,13 @@
 
 # core and stlibs
 
-require 'yaml'
 require 'pp'
 require 'logger'
 require 'optparse'
 require 'fileutils'
 require 'erb'
+require 'json'
+require 'yaml'
 
 # 3rd party gems / libs
 
@@ -67,14 +68,6 @@ require 'worlddb/stats_comp'
 
 module WorldDb
 
-  def self.banner
-    "worlddb/#{VERSION} on Ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE}) [#{RUBY_PLATFORM}]"
-  end
-
-  def self.root
-    "#{File.expand_path( File.dirname(File.dirname(__FILE__)) )}"
-  end
-
   def self.main
     require 'worlddb/cli/main'
     ## Runner.new.run(ARGV) - old code
@@ -129,14 +122,9 @@ module WorldDb
 
 end  # module WorldDb
 
-###########################################
-# fix: remove old alias for WorldDb ??
-WorldDB = WorldDb
-
 
 if __FILE__ == $0
   WorldDb.main
 else
-  # say hello
-  puts WorldDb.banner
+  puts WorldDb.banner    # say hello
 end

@@ -5,19 +5,19 @@ require './lib/worlddb/version.rb'
 Hoe.spec 'worlddb' do
   
   self.version = WorldDb::VERSION
-  
+
   self.summary = "worlddb - world.db command line tool"
   self.description = summary
 
-  self.urls    = ['https://github.com/geraldb/world.db.ruby']
-  
+  self.urls    = ['https://github.com/worlddb/world.db.ruby']
+
   self.author  = 'Gerald Bauer'
   self.email   = 'openmundi@googlegroups.com'
 
   self.extra_deps = [
     ['props'],         # settings / prop(ertie)s / env / INI
     ['logutils'],     # logging
-    ['textutils', '>= 0.9.4'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
+    ['textutils', '>= 0.9.9'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
     ['tagutils'],     # tags n categories for activerecord
 
      ## 3rd party
