@@ -17,6 +17,8 @@ require 'yaml'
 
 # 3rd party gems / libs
 
+require 'zip'
+
 require 'active_record'   ## todo: add sqlite3? etc.
 
 require 'logutils'
@@ -93,6 +95,12 @@ module WorldDb
   def self.read_setup( setup, include_path, opts={} )
     reader = Reader.new( include_path, opts )
     reader.load_setup( setup )
+  end
+
+  def self.read_setup_from_zip( zip_name, setup, include_path, opts={} ) ## todo/check - use a better (shorter) name ??
+    reader = ZipReader.new( zip_name, include_path, opts )
+    reader.load_setup( setup )
+    reader.close
   end
 
   def self.read_all( include_path, opts={} )  # load all builtins (using plain text reader); helper for convenience

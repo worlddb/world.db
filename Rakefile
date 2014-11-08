@@ -22,6 +22,7 @@ Hoe.spec 'worlddb' do
 
      ## 3rd party
     ['gli', '>= 2.9'],
+    ['rubyzip'],       ## todo: pull in via textutils ??
     ['activerecord']  # NB: will include activesupport,etc.
     ### ['sqlite3',      '~> 1.3']  # NB: install on your own; remove dependency
   ]

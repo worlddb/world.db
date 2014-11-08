@@ -70,10 +70,10 @@ class Reader < ReaderBase
   end
 
 
-  def create_tag_reader( name )
-    ## fix: change to new from_file() style
-    TagDb::TagReader.new( @include_path )
-  end
+#  def create_tag_reader( name )
+#    ## fix: change to new from_file() style
+#    TagDb::TagReader.new( @include_path )
+#  end
 
 
 end # class Reader
