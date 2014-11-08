@@ -55,7 +55,6 @@ require 'worlddb/models/tagdb/tagging'
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
 
-require 'worlddb/readers/base'
 require 'worlddb/readers/lang'
 require 'worlddb/readers/usage'
 require 'worlddb/readers/country'

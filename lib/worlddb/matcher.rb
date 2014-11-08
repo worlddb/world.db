@@ -97,20 +97,31 @@ module Matcher
   end
 
   def match_regions_for_country( name, &blk )
-    ## todo: check if there's a better (more ruby way) to pass along code block ??
-    match_xxx_for_country( name, 'regions', &blk )
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states', &blk )
+    found = match_xxx_for_country( name, 'regions', &blk ) unless found
+    found
   end
 
-  def match_regions_abbr_for_country( name, &blk )
-    match_xxx_for_country( name, 'regions\.abbr', &blk )  # NB: . gets escaped for regex, that is, \.
+  def match_regions_abbr_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states\.abbr', &blk )
+    found = match_xxx_for_country( name, 'regions\.abbr', &blk ) unless found
+    found
   end
 
   def match_regions_iso_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    match_xxx_for_country( name, 'regions\.iso', &blk )
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states\.iso', &blk )
+    found = match_xxx_for_country( name, 'regions\.iso', &blk ) unless found
+    found 
   end
 
   def match_regions_nuts_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    match_xxx_for_country( name, 'regions\.nuts', &blk )
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states\.nuts', &blk )
+    found = match_xxx_for_country( name, 'regions\.nuts', &blk ) unless found
+    found
   end
 
 

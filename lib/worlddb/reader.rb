@@ -3,7 +3,7 @@
 module WorldDb
 
 
-class Reader
+class ReaderBase
 
   include LogUtils::Logging
 
@@ -16,17 +16,11 @@ class Reader
   include TextUtils::ValueHelper
   
 
-
-  attr_reader :include_path
-
   def skip_tags?()   @skip_tags == true;  end
   def strict?()      @strict == true;     end
 
 
-  def initialize( include_path, opts = {} )
-    
-    @include_path = include_path
-    
+  def initialize( opts={} )
     ## option: do NOT generate/add any tags for countries/regions/cities
     @skip_tags =  opts[:skip_tags].present? ? true : false
     ## option: for now issue warning on update, that is, if key/record (country,region,city) already exists
@@ -35,11 +29,7 @@ class Reader
 
 
   def load_setup( name )
-    path = "#{include_path}/#{name}.txt"
-
-    logger.info "parsing data '#{name}' (#{path})..."
-
-    reader = FixtureReader.new( path )
+    reader = create_fixture_reader( name )
 
     reader.each do |fixture|
       load( fixture )
@@ -56,11 +46,13 @@ class Reader
     elsif name =~ /^lang/
        ## todo: pass along opts too
        ## use match_usage( name ) - why? why not?? ???
-       LangReader.new( include_path ).read( name )
+       r = create_lang_reader( name )
+       r.read()
     elsif name =~ /\/lang/
        ## todo: pass along opts too
        ## use match_usage( name ) - why? why not?? ???
-       UsageReader.new( include_path ).read( name )
+       r = create_usage_reader( name )
+       r.read()
     elsif name =~ /\/fifa/
        load_xxx( 'fifa', name )
     elsif name =~ /\/iso3/
@@ -72,22 +64,26 @@ class Reader
     elsif name =~ /^tag.*\.\d$/
        ## todo: pass along opts too
        ## use match_tags( name ) - why? why not?? ???
-       TagDb::TagReader.new( include_path ).read( name )
+       
+       ### fix: use read() only, that is, w/o name
+       r = create_tag_reader( name )
+       r.read( name )
     elsif match_countries_for_continent( name ) do |continent|  # # e.g. africa/countries or america/countries
             ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
             ## auto-add continent (from folder structure) as tag
             ## fix: allow dash/hyphen/minus in tag
 
-            r = CountryReader.new( include_path )
-            r.read( name, tags: continent.tr('-', '_') )
+            ### todo/fix: add opts - how??
+            r = create_country_reader( name, tags: continent.tr('-', '_') )
+            r.read()
           end
     elsif match_cities_for_country( name ) do |country_key|  #  name =~ /\/([a-z]{2})\/cities/
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
             logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-            r = CityReader.new( include_path )
-            r.read( name, country_id: country.id )
+            r = create_city_reader( name, country_id: country.id )
+            r.read()
           end
     elsif match_regions_abbr_for_country( name ) do |country_key|   # name =~ /\/([a-z]{2})\/regions\.abbr/
             load_regions_xxx( country_key, 'abbr', name )
@@ -177,5 +173,5 @@ class Reader
     end
   end
 
-end # class Reader
+end # class ReaderBase
 end # module WorldDb

@@ -2,10 +2,43 @@
 
 module WorldDb
 
-class CountryReader < BaseReader
+class CountryReader
 
-  def read( name, more_attribs={} )
-    reader = ValuesReaderV2.new( name, include_path, more_attribs )
+  include LogUtils::Logging
+
+## make models available by default with namespace
+#  e.g. lets you use Usage instead of Model::Usage
+  include Models
+
+## value helpers e.g. is_year?, is_taglist? etc.
+  include TextUtils::ValueHelper
+
+
+  def self.from_zip()
+    ## to be done
+  end
+
+  def self.from_file( path, more_attribs={} )
+    self.from_string( text, more_attribs )
+  end
+
+  def self.from_string( text, more_attribs={} )
+    CountryReader.new( text, more_attribs )
+  end
+
+
+  def skip_tags?()   @skip_tags == true;  end
+  def strict?()      @strict == true;     end
+
+  def initialize( text, more_attribs={} )
+    ## todo/fix: how to add opts={} ???
+
+    @text         = text
+    @more_attribs = more_attribs
+  end
+
+  def read()
+    reader = ValuesReader.from_string( @text, @more_attribs )
 
     reader.each_line do |attribs, values|
       opts = { skip_tags: skip_tags? }

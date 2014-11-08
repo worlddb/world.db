@@ -2,10 +2,45 @@
 
 module WorldDb
 
-class LangReader < BaseReader
+class LangReader
 
-  def read( name ) 
-    reader = HashReaderV2.new( name, include_path )
+  include LogUtils::Logging
+
+## make models available by default with namespace
+#  e.g. lets you use Usage instead of Model::Usage
+  include Models
+
+## value helpers e.g. is_year?, is_taglist? etc.
+  include TextUtils::ValueHelper
+
+
+  def self.from_zip()
+    ## to be done
+  end
+
+  def self.from_file( path, opts={} )
+    self.from_string( text, opts )
+  end
+
+  def self.from_string( text, opts={} )
+    LangReader.new( text, opts )
+  end
+
+
+  def skip_tags?()   @skip_tags == true;  end
+  def strict?()      @strict == true;     end
+
+  def initialize( text, opts={} )
+    @text = text
+
+    ## option: do NOT generate/add any tags for countries/regions/cities
+    @skip_tags =  opts[:skip_tags].present? ? true : false
+    ## option: for now issue warning on update, that is, if key/record (country,region,city) already exists
+    @strict    =  opts[:strict].present? ? true : false
+  end
+
+  def read()
+    reader = HashReader.from_string( @text )
 
     reader.each do |key, value|
 
