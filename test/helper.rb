@@ -6,18 +6,6 @@
 # require 'minitest/unit'
 require 'minitest/autorun'
 
-# include MiniTest::Unit  # lets us use TestCase instead of MiniTest::Unit::TestCase
-
-
-# ruby stdlibs
-
-require 'json'
-require 'uri'
-require 'pp'
-
-# ruby gems
-
-require 'active_record'
 
 # our own code
 

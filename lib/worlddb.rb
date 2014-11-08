@@ -9,9 +9,11 @@ require 'pp'
 require 'logger'
 require 'optparse'
 require 'fileutils'
+require 'uri'
 require 'erb'
 require 'json'
 require 'yaml'
+
 
 # 3rd party gems / libs
 

@@ -2,7 +2,7 @@
 
 require 'helper'
 
-class TestModelCountry < MiniTest::Unit::TestCase
+class TestModelCountry < MiniTest::Test
 
   def setup
     #  delete all countries, regions, cities in in-memory only db
