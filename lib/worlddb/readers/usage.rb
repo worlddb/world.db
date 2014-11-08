@@ -19,6 +19,9 @@ class UsageReader
   end
 
   def self.from_file( path, opts={} )
+    ## note: assume/enfore utf-8 encoding (with or without BOM - byte order mark)
+    ## - see textutils/utils.rb
+    text = File.read_utf8( path )
     self.from_string( text, opts )
   end
 

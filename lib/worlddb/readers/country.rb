@@ -19,7 +19,10 @@ class CountryReader
   end
 
   def self.from_file( path, more_attribs={} )
-    self.from_string( text, more_attribs )
+    ## note: assume/enfore utf-8 encoding (with or without BOM - byte order mark)
+    ## - see textutils/utils.rb
+    text = File.read_utf8( path )
+    self.from_string( text, more_attribs )    
   end
 
   def self.from_string( text, more_attribs={} )

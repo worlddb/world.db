@@ -10,6 +10,7 @@ class Reader < ReaderBase
     @include_path = include_path
   end
 
+
   def create_fixture_reader( name )
     path = "#{@include_path}/#{name}.txt"
     logger.info "parsing data (setup) '#{name}' (#{path})..."
@@ -18,24 +19,54 @@ class Reader < ReaderBase
   end
 
   def create_lang_reader( name )
-    path = "#{@include_path}/#{name}.txt"   ## hash reader - use .yml??
+    path = "#{@include_path}/#{name}.yml"   ## hash reader - use .yml??
     logger.info "parsing data (lang) '#{name}' (#{path})..."
 
     LangReader.from_file( path )
   end
 
   def create_usage_reader( name )
-    path = "#{@include_path}/#{name}.txt"   ## hash reader - use .yml??
+    path = "#{@include_path}/#{name}.yml"   ## hash reader - use .yml??
     logger.info "parsing data (usage) '#{name}' (#{path})..."
 
     UsageReader.from_file( path )
   end
+
 
   def create_country_reader( name, more_attribs={} )
     path = "#{@include_path}/#{name}.txt"
     logger.info "parsing data (country) '#{name}' (#{path})..."
 
     CountryReader.from_file( path, more_attribs )
+  end
+
+  def create_region_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{name}.txt"
+    logger.info "parsing data (region) '#{name}' (#{path})..."
+
+    RegionReader.from_file( path, more_attribs )
+  end
+
+  def create_city_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{name}.txt"
+    logger.info "parsing data (city) '#{name}' (#{path})..."
+
+    CityReader.from_file( path, more_attribs )
+  end
+
+
+  def create_hash_reader( name )
+    path = "#{@include_path}/#{name}.yml"
+    logger.info "parsing data (hash) '#{name}' (#{path})..."
+
+    HashReader.from_file( path )
+  end
+
+  def create_values_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{name}.txt"
+    logger.info "parsing data (values) '#{name}' (#{path})..."
+
+    ValuesReader.from_file( path, more_attribs )
   end
 
 
@@ -45,7 +76,5 @@ class Reader < ReaderBase
   end
 
 
-
 end # class Reader
 end # module WorldDb
-

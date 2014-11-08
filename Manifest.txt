@@ -27,6 +27,8 @@ lib/worlddb/models/tagdb/tagging.rb
 lib/worlddb/models/usage.rb
 lib/worlddb/patterns.rb
 lib/worlddb/reader.rb
+lib/worlddb/reader_file.rb
+lib/worlddb/reader_zip.rb
 lib/worlddb/readers/city.rb
 lib/worlddb/readers/country.rb
 lib/worlddb/readers/lang.rb

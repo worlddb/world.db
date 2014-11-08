@@ -62,6 +62,8 @@ require 'worlddb/readers/region'
 require 'worlddb/readers/city'
 
 require 'worlddb/reader'
+require 'worlddb/reader_file'
+require 'worlddb/reader_zip'
 require 'worlddb/deleter'
 require 'worlddb/stats'
 require 'worlddb/stats_comp'

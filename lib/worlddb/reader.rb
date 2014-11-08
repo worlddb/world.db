@@ -14,7 +14,7 @@ class ReaderBase
 
 ## value helpers e.g. is_year?, is_taglist? etc.
   include TextUtils::ValueHelper
-  
+
 
   def skip_tags?()   @skip_tags == true;  end
   def strict?()      @strict == true;     end
@@ -65,9 +65,10 @@ class ReaderBase
        ## todo: pass along opts too
        ## use match_tags( name ) - why? why not?? ???
        
+       ######## FIX: add back again
        ### fix: use read() only, that is, w/o name
-       r = create_tag_reader( name )
-       r.read( name )
+       ## r = create_tag_reader( name )
+       ## r.read()
     elsif match_countries_for_continent( name ) do |continent|  # # e.g. africa/countries or america/countries
             ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
             ## auto-add continent (from folder structure) as tag
@@ -99,8 +100,8 @@ class ReaderBase
             country = Country.find_by_key!( country_key )
             logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-            r = RegionReader.new( include_path )
-            r.read( name, country_id: country.id )
+            r = create_region_reader( name, country_id: country.id )
+            r.read()
           end
     else
       logger.error "unknown world.db fixture type >#{name}<"
@@ -114,7 +115,7 @@ class ReaderBase
     country = Country.find_by_key!( country_key )
     logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-    reader = HashReaderV2.new( name, include_path )
+    reader = create_hash_reader( name )
 
     reader.each do |key, value|
       region = Region.find_by_country_id_and_key!( country.id, key )
@@ -126,7 +127,7 @@ class ReaderBase
 
   ### use ContinentRefReader
   def load_continent_refs( name )
-    reader = HashReaderV2.new( name, include_path )
+    reader = create_hash_reader( name )
 
     reader.each do |key, value|
       country = Country.find_by_key!( key )
@@ -138,7 +139,7 @@ class ReaderBase
 
   ### use ContinentDef Reader
   def load_continent_defs( name, more_attribs={} )
-    reader = ValuesReaderV2.new( name, include_path, more_attribs )
+    reader = create_values_reader( name, more_attribs )
 
     reader.each_line do |attribs, values|
 
@@ -164,7 +165,7 @@ class ReaderBase
 
   ### use CountryAttr Reader
   def load_xxx( xxx, name )
-    reader = HashReaderV2.new( name, include_path )
+    reader = create_hash_reader( name )
 
     reader.each do |key, value|
       country = Country.find_by_key!( key )

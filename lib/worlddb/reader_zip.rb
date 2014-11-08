@@ -2,10 +2,9 @@
 
 module WorldDb
 
-
-## class ZipReader
-
+class ZipReader
 
 
-## end # class ZipReader
+
+end # class ZipReader
 end # module WorldDb
