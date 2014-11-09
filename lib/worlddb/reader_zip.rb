@@ -57,7 +57,7 @@ class ZipReader < ReaderBase
     @zip_prefix = path[ 0...(path.size-(name.size+4)) ]
     logger.debug "  zip entry prefix >>#{@zip_prefix}<<"
 
-    logger.info "parsing data in zip '#{name}' (#{path})..."
+    logger.info "parsing data (setup) in zip '#{name}' (#{path})..."
 
     FixtureReader.from_zip( @zip_file, path )
   end
@@ -65,14 +65,14 @@ class ZipReader < ReaderBase
 
   def create_lang_reader( name )
     path = name_to_zip_entry_path( name, '.yml' )  ## hash reader - use .yml??
-    logger.info "parsing data (lang) '#{name}' (#{path})..."
+    logger.info "parsing data (lang) in zip '#{name}' (#{path})..."
 
     LangReader.from_zip( @zip_file, path )
   end
 
   def create_usage_reader( name )
     path = name_to_zip_entry_path( name, '.yml' )  ## hash reader - use .yml??
-    logger.info "parsing data (usage) '#{name}' (#{path})..."
+    logger.info "parsing data (usage) in zip '#{name}' (#{path})..."
 
     UsageReader.from_zip( @zip_file, path )
   end
@@ -80,21 +80,21 @@ class ZipReader < ReaderBase
 
   def create_country_reader( name, more_attribs={} )
     path = name_to_zip_entry_path( name )
-    logger.info "parsing data (country) '#{name}' (#{path})..."
+    logger.info "parsing data (country) in zip '#{name}' (#{path})..."
 
     CountryReader.from_zip( @zip_file, path, more_attribs )
   end
 
   def create_region_reader( name, more_attribs={} )
     path = name_to_zip_entry_path( name )
-    logger.info "parsing data (region) '#{name}' (#{path})..."
+    logger.info "parsing data (region) in zip '#{name}' (#{path})..."
 
     RegionReader.from_zip( @zip_file, path, more_attribs )
   end
 
   def create_city_reader( name, more_attribs={} )
     path = name_to_zip_entry_path( name )
-    logger.info "parsing data (city) '#{name}' (#{path})..."
+    logger.info "parsing data (city) in zip '#{name}' (#{path})..."
 
     CityReader.from_zip( @zip_file, path, more_attribs )
   end
@@ -102,14 +102,14 @@ class ZipReader < ReaderBase
 
   def create_hash_reader( name )
     path = name_to_zip_entry_path( name, '.yml' )  ## hash reader - use .yml??
-    logger.info "parsing data (hash) '#{name}' (#{path})..."
+    logger.info "parsing data (hash) in zip '#{name}' (#{path})..."
 
     HashReader.from_zip( @zip_file, path )
   end
 
   def create_values_reader( name, more_attribs={} )
     path = name_to_zip_entry_path( name )
-    logger.info "parsing data (values) '#{name}' (#{path})..."
+    logger.info "parsing data (values) in zip '#{name}' (#{path})..."
 
     ValuesReader.from_zip( @zip_file, path, more_attribs )
   end
