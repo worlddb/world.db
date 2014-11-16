@@ -166,13 +166,54 @@ class ReaderBase
     reader = create_line_reader( name )
 
     reader.each_line do |line|
-      ## country = Country.find_by_key!( key )
-      ## country.send( "#{xxx}=", value )
-      ## country.save!
-      
+
       values = line.split(',')
+
+      logger.debug '[>' + values.join( '<|>' ) + '<]'
+
+      if name =~ /iso/
+        # special case for iso
+        #  country ref, alpha2, alpha3, num
+        country_name = values[0].strip
+      else
+        #  code, country ref
+        country_name = values[1].strip
+      end
+
+      ## try to find country
+      cty = Country.find_by_name( country_name )
+      if cty.nil?
+        ## retry: remove all () enclosed
+        cty = Country.find_by_name( country_name.gsub( /\([^)]+\)/, '' ).strip )
+      end
       
-      puts '[>' + values.join( '<|>' ) + '<]'
+      if cty.nil?
+        logger.warn "no country match found for >#{country_name}<; skipping line; in [#{name}]"
+        next
+      end
+
+      if name =~ /\/fifa/
+        cty.fifa = values[0].strip
+      elsif name =~ /\/fips/
+        cty.fips = values[0].strip
+      elsif name =~ /\/internet/
+        # NOTE: remove (optional) leading . e.g. .at becomes at
+        cty.net  = values[0].sub( /^\s*\./,'' ).strip  
+      elsif name =~ /\/ioc/
+        cty.ioc = values[0].strip
+      elsif name =~ /\/motor/
+        cty.motor = values[0].strip
+      elsif name =~ /\/iso/
+        cty.alpha2 = values[1].strip
+        cty.alpha3 = values[2].strip
+        # NOTE: num is a string!!! use (rename to) num_str - why? why not?
+        cty.num    = values[3].strip
+      else
+        logger.warn "warn: unknown country code type; skipping line; in [#{name}]"
+        next
+      end
+
+      cty.save!
     end
 
   end

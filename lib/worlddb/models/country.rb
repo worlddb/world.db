@@ -42,6 +42,15 @@ class Country < ActiveRecord::Base
   scope :by_pop,   ->{ order( 'pop desc' ) }   # order by pop(ulation)
   scope :by_area,  ->{ order( 'area desc') }   # order by area (in square km)
 
+  scope :by_num,      ->{ order( 'num asc' ) }   # order by numeric country code
+  scope :by_alpha2,   ->{ order( 'alpha2 asc' ) }
+  scope :by_alpha3,   ->{ order( 'alpha2 asc' ) }
+  scope :by_fifa,     ->{ order( 'fifa asc' ) }   # football
+  scope :by_ioc,      ->{ order( 'ioc asc' ) }    # olympics
+  scope :by_motor,    ->{ order( 'motor asc' ) }  # designated signs; motor vehicle license plate
+  scope :by_net,      ->{ order( 'net asc' ) }    # internet cc top level domain; ccTLD
+
+
   before_create :on_create
   before_update :on_update
 

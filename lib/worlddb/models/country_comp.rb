@@ -15,6 +15,12 @@ class Country
 
   scope :by_title, ->{ order( 'name asc' ) }   # order by title (a-z)
 
+  def iso2()       alpha2;              end
+  def iso2=(value) self.alpha2 = value; end
+
+  def iso3()       alpha3;              end
+  def iso3=(value) self.alpha3 = value; end
+
 
   def synonyms()       alt_names;      end
   def synonyms=(value) self.alt_names = value; end

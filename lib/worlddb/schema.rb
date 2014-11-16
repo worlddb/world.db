@@ -92,12 +92,16 @@ create_table :countries do |t|
   t.boolean :c,  null: false, default: false   # country flag (is this needed?)
   t.boolean :d,  null: false, default: false   # dependency flag
 
-  # extras
-  t.string  :motor      # optional auto motor (vehicle) licene plate
-  t.string  :iso2       # optional iso two letter country code
-  t.string  :iso3       # optional iso three letter country code
+  # extras - country codes
+  t.string  :motor      # optional  motor (vehicle) licene plate code (bumper sticker)
+  t.string  :alpha2       # optional iso two letter country code
+  t.string  :alpha3       # optional iso three letter country code
+  t.string  :num        #  optional iso numeric country code - NOTE: same numeric code as string!!! e.g. 043 etc.
   t.string  :fifa       # optional fifa country code
+  t.string  :ioc
+  t.string  :fips
   t.string  :net        # optional internet top level domain (tld)
+
   t.string  :wikipedia  # optional wikipedia page name -- en.wikipedia.org/wiki/<name>
 
   ## timestamp at last
