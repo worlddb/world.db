@@ -69,6 +69,12 @@ class Reader < ReaderBase
     ValuesReader.from_file( path, more_attribs )
   end
 
+  def create_line_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{name}.txt"
+    logger.info "parsing data (line) '#{name}' (#{path})..."
+
+    LineReader.from_file( path, more_attribs )
+  end
 
 #  def create_tag_reader( name )
 #    ## fix: change to new from_file() style

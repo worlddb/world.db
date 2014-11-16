@@ -114,6 +114,12 @@ class ZipReader < ReaderBase
     ValuesReader.from_zip( @zip_file, path, more_attribs )
   end
 
+  def create_line_reader( name, more_attribs={} )
+    path = name_to_zip_entry_path( name )
+    logger.info "parsing data (line) in zip '#{name}' (#{path})..."
+
+    LineReader.from_zip( @zip_file, path, more_attribs )
+  end
 
 #  def create_tag_reader( name )
 #    ## fix: change to new from_file() style

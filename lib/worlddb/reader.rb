@@ -53,14 +53,13 @@ class ReaderBase
        ## use match_usage( name ) - why? why not?? ???
        r = create_usage_reader( name )
        r.read()
-    elsif name =~ /\/fifa/
-       load_xxx( 'fifa', name )
-    elsif name =~ /\/iso3/
-       load_xxx( 'iso3', name )
-    elsif name =~ /\/internet/
-       load_xxx( 'net', name )
-    elsif name =~ /\/motor/
-       load_xxx( 'motor', name )
+    elsif name =~ /\/fifa/     ||
+          name =~ /\/fips/     ||
+          name =~ /\/internet/ ||
+          name =~ /\/ioc/      ||
+          name =~ /\/iso/      ||
+          name =~ /\/motor/
+       load_codes( name )
     elsif name =~ /^tag.*\.\d$/
        ## todo: pass along opts too
        ## use match_tags( name ) - why? why not?? ???
@@ -163,16 +162,21 @@ class ReaderBase
     end # each lines
   end # load_continent_defs
 
-  ### use CountryAttr Reader
-  def load_xxx( xxx, name )
-    reader = create_hash_reader( name )
+  def load_codes( name )
+    reader = create_line_reader( name )
 
-    reader.each do |key, value|
-      country = Country.find_by_key!( key )
-      country.send( "#{xxx}=", value )
-      country.save!
+    reader.each_line do |line|
+      ## country = Country.find_by_key!( key )
+      ## country.send( "#{xxx}=", value )
+      ## country.save!
+      
+      values = line.split(',')
+      
+      puts '[>' + values.join( '<|>' ) + '<]'
     end
+
   end
+
 
 end # class ReaderBase
 end # module WorldDb
