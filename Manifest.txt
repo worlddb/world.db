@@ -14,6 +14,7 @@ lib/worlddb/models/city_comp.rb
 lib/worlddb/models/continent.rb
 lib/worlddb/models/continent_comp.rb
 lib/worlddb/models/country.rb
+lib/worlddb/models/country_code.rb
 lib/worlddb/models/country_comp.rb
 lib/worlddb/models/forward.rb
 lib/worlddb/models/lang.rb

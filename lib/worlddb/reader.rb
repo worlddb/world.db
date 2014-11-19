@@ -170,7 +170,7 @@ class ReaderBase
 
       values = line.split(',')
 
-      logger.debug '[>' + values.join( '<|>' ) + '<]'
+      ## logger.debug '[>' + values.join( '<|>' ) + '<]'
 
       if name =~ /iso/
         # special case for iso
@@ -182,7 +182,7 @@ class ReaderBase
       end
 
       ## try to find country
-      cty = find_country( country_name )
+      cty = Country.search_by_name( country_name )
 
       if cty.nil?
         logger.warn "no country match found for >#{country_name}<; skipping line; in [#{name}]"
@@ -217,44 +217,7 @@ class ReaderBase
 
 ####
 # helper methods
-##
-## todo: move to country model !!!!!!
-##   find a good name Country.find  not really possible
-##   superfind ??  use search!!! search_by_name()  Country.search() or lookup?
-##
 ## todo: also add City.search_by_name etc. !!!
-
-  def find_country( country_name )
-
-    name = country_name.strip
-
-    ## 1) first try 1:1 (exact) match
-    cty = Country.find_by_name( name )   # NOTE: assume AR escapes quotes in name ??
-    if cty.nil?
-      ## 2) retry: remove all () enclosed
-      name = name.gsub( /\([^)]+\)/, '' ).strip
-      cty = Country.find_by_name( name )
-
-      ### NOTE: escape ' for sql like clause
-      ##   for now use '' for escapes, that is, double quotes
-      ##  check - working for postgresql n sqlite?? 
-      name_esc = name.gsub( /'/, "''" )
-
-      ## 3) retry: use SQL like match
-      ##    % is used to match *zero* or more occurrences of any characters
-      ##  todo: check if it matches zero too
-      if cty.nil?
-        cty = Country.where( "name LIKE '%#{name_esc}%'" ).first
-      end
-
-      ## 4) retry: use SQL like match for alternative names match
-      if cty.nil?
-        cty = Country.where( "alt_names LIKE '%#{name_esc}%'" ).first
-      end
-    end
-    cty  # return cty (country); nil if not found
-  end # method find_country
-
 
 
 end # class ReaderBase

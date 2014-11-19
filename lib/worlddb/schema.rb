@@ -75,6 +75,15 @@ end
 add_index :continents, :key, unique: true
 
 
+create_table :country_codes do |t|
+  t.string     :name, null: false
+  t.string     :kind, null: false   # e.g. ALPHA2,NUM,FIFA,IOC,FIPS,NET,etc.
+  t.references :country, null: false
+end
+
+add_index :country_codes, [:name, :kind], unique: true
+
+
 create_table :countries do |t|
   t.string     :name,   null: false
   t.string     :slug,   null: false   # auto-generate default
@@ -82,6 +91,7 @@ create_table :countries do |t|
   t.references :place,  null: false
   t.string     :code,   null: false  # short three letter code (FIFA country code e.g. ITA)
   t.string     :alt_names  # comma separated list of alternate names (synonyms)
+  t.string     :hist_names # comma separated list of historic names (no longer in use)
   t.integer    :pop,    null: false    # population count
   t.integer    :area,   null: false    #  area in square km (sq. km)
   t.references :continent
@@ -91,6 +101,10 @@ create_table :countries do |t|
   t.boolean :s,  null: false, default: false   # supra(national) flag e.g. eu
   t.boolean :c,  null: false, default: false   # country flag (is this needed?)
   t.boolean :d,  null: false, default: false   # dependency flag
+
+  t.boolean :m,  null: false, default: false   # misc(ellaneous) flag
+  # misc use for territories w/ shared or disputed claims
+  #   e.g. Antartica/Western Sahara/Paracel Islands/Spratly Islands/etc.
 
   # extras - country codes
   t.string  :motor      # optional  motor (vehicle) licene plate code (bumper sticker)

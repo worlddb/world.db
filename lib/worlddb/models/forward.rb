@@ -25,6 +25,8 @@ class City < ActiveRecord::Base ; end
 class Lang < ActiveRecord::Base ; end
 class Usage < ActiveRecord::Base ; end
 
+class CountryCode < ActiveRecord::Base ; end
+
   end
 
   # note: convenience alias for Model
@@ -39,15 +41,17 @@ module TagDb
 # add alias? why? why not? # is there a better way?
 #  - just include WorldDb::Models  - why? why not?
 
-Name      = WorldDb::Model::Name
-Place     = WorldDb::Model::Place
-Continent = WorldDb::Model::Continent
-Country   = WorldDb::Model::Country
-Region    = WorldDb::Model::Region
-City      = WorldDb::Model::City
+Name        = WorldDb::Model::Name
+Place       = WorldDb::Model::Place
+Continent   = WorldDb::Model::Continent
+Country     = WorldDb::Model::Country
+Region      = WorldDb::Model::Region
+City        = WorldDb::Model::City
 
-Lang      = WorldDb::Model::Lang
-Usage     = WorldDb::Model::Usage
+Lang        = WorldDb::Model::Lang
+Usage       = WorldDb::Model::Usage
+
+CountryCode = WorldDb::Model::CountryCode
 
   end
 end

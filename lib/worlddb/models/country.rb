@@ -81,10 +81,15 @@ class Country < ActiveRecord::Base
       'SUPR'
     elsif is_dependency?
       'TERR'
+    elsif is_misc?  ## misc(ellaneous) country or dependent territory
+      # todo: use different marker?
+      # territory w/ shared or disputes claims e.g Antartica/Western Sahara/Paracel Islands pg Spratly Islands/etc. 
+      'MISC'
     else
       'CNTY'
     end
   end
+
 
   ###
   #  NB: use is_  for flags to avoid conflict w/ assocs 
@@ -92,6 +97,7 @@ class Country < ActiveRecord::Base
   def is_supra?()      s? == true;  end
   def is_country?()    c? == true;  end
   def is_dependency?() d? == true;  end
+  def is_misc?()       m? == true;  end
 
 
   def all_names( opts={} )
@@ -111,6 +117,50 @@ class Country < ActiveRecord::Base
   def to_path( opts={} )
     # e.g. europe/at-austria
     "#{continent.slug}/#{key}-#{slug}"
+  end
+
+
+  def self.search_by_name( q )    ## todo/check: just use search (rename)? why? why not?
+
+    ## fix: add/configure logger for ActiveRecord!!!
+    ## logger = LogKernel::Logger.root
+
+    name = q.strip
+
+    ## 1) first try 1:1 (exact) match
+    cty = Country.find_by_name( name )   # NOTE: assume AR escapes quotes in name ??
+    if cty.nil?
+      ## 2) retry: a) remove all (..) enclosed
+      ##           b) remove all extra spaces (e.g. Cocos (Keeling) Islands => Cocos__Islands => Cocos_Islands)
+      name = name.gsub( /\([^)]+\)/, '' ).strip
+      name = name.gsub( /[ \t]{2,}/, ' ' )
+      cty = Country.find_by_name( name )
+
+      ### NOTE: escape ' for sql like clause
+      ##   for now use '' for escapes, that is, double quotes
+      ##  check - working for postgresql n sqlite?? 
+      name_esc = name.gsub( /'/, "''" )
+
+      ## 3) retry: use SQL like match
+      ##    % is used to match *zero* or more occurrences of any characters
+      ##  todo: check if it matches zero too
+      if cty.nil?
+        cty = Country.where( "name LIKE '%#{name_esc}%'" ).first
+      end
+
+      ## 4) retry: use SQL like match for alternative names match
+      if cty.nil?
+        cty = Country.where( "alt_names LIKE '%#{name_esc}%'" ).first
+      end
+
+      ## 5) retry: use SQL like match for historic names match (e.g. Burma for Myanmar etc.)
+      ##  todo/check: make it optional (pass in opts hash to configure) - why? why not???
+      if cty.nil?
+        cty = Country.where( "hist_names LIKE '%#{name_esc}%'" ).first
+      end
+    end
+
+    cty  # return cty (country); nil if not found
   end
 
 
