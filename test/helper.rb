@@ -24,31 +24,6 @@ Lang      = WorldDb::Model::Lang
 Usage     = WorldDb::Model::Usage
 
 
-def setup_in_memory_db
-  # Database Setup & Config
 
-  db_config = {
-    adapter:  'sqlite3',
-    database: ':memory:'
-  }
+WorldDb.setup_in_memory_db
 
-  pp db_config
-
-  ActiveRecord::Base.logger = Logger.new( STDOUT )
-  ## ActiveRecord::Base.colorize_logging = false  - no longer exists - check new api/config setting?
-
-  ## NB: every connect will create a new empty in memory db
-  ActiveRecord::Base.establish_connection( db_config )
-
-
-  ## build schema
-
-  LogDb.create
-  ConfDb.create
-
-  TagDb.create
-  WorldDb.create
-end
-
-
-setup_in_memory_db()

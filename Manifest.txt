@@ -37,7 +37,6 @@ lib/worlddb/readers/region.rb
 lib/worlddb/readers/usage.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
-lib/worlddb/stats_comp.rb
 lib/worlddb/version.rb
 test/helper.rb
 test/test_fixture_matchers.rb

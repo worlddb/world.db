@@ -17,7 +17,7 @@ require 'yaml'
 
 # 3rd party gems / libs
 
-require 'zip'
+require 'zip'       ## rubyzip gem
 
 require 'active_record'   ## todo: add sqlite3? etc.
 
@@ -69,7 +69,6 @@ require 'worlddb/reader_file'
 require 'worlddb/reader_zip'
 require 'worlddb/deleter'
 require 'worlddb/stats'
-require 'worlddb/stats_comp'
 
 
 module WorldDb
@@ -82,6 +81,13 @@ module WorldDb
   def self.create
     CreateDb.new.up
     ConfDb::Model::Prop.create!( key: 'db.schema.world.version', value: VERSION )
+  end
+
+  def self.create_all
+    LogDb.create    # add logs table
+    ConfDb.create   # add props table
+    TagDb.create    # add tags, taggings table
+    WorldDb.create
   end
 
 
@@ -115,22 +121,81 @@ module WorldDb
     Deleter.new.run
   end # method delete!
 
+  def self.delete_all!( opts={} )
+    LogDb.delete!
+    ConfDb.delete!
+    TagDb.delete!
+    WorldDb.delete!
+  end
+
+
  ####
  ## todo: remove stats ??? why? why not? better use .tables
   def self.stats
-    stats = Stats.new
-    stats.tables
-    ### stats.props
+    Stats.new.tables
   end
 
   def self.tables
     Stats.new.tables
   end
 
-  def self.props
-    ### fix: use ConfDb.props delegate or similar !!!
-    Stats.new.props
+
+  def self.connect( db_config={} )
+
+    if db_config.empty?
+      puts "ENV['DATBASE_URL'] - >#{ENV['DATABASE_URL']}<"
+
+      ### change default to ./sport.db ?? why? why not?
+      db = URI.parse( ENV['DATABASE_URL'] || 'sqlite3:///world.db' )
+
+      if db.scheme == 'postgres'
+        config = {
+          adapter: 'postgresql',
+          host: db.host,
+          port: db.port,
+          username: db.user,
+          password: db.password,
+          database: db.path[1..-1],
+          encoding: 'utf8'
+        }
+      else # assume sqlite3
+       config = {
+         adapter: db.scheme, # sqlite3
+         database: db.path[1..-1] # world.db (NB: cut off leading /, thus 1..-1)
+      }
+      end
+    else
+      config = db_config  # use passed in config hash
+    end
+
+    ## todo/check: use if defined?( JRUBY_VERSION ) instead ??
+    if RUBY_PLATFORM =~ /java/ && config[:adapter] == 'sqlite3' 
+      # quick hack for JRuby sqlite3 support via jdbc
+      puts "jruby quick hack - adding jdbc libs for jruby sqlite3 database support"
+      require 'jdbc/sqlite3'
+      require 'active_record/connection_adapters/jdbc_adapter'
+      require 'active_record/connection_adapters/jdbcsqlite3_adapter'
+    end
+
+    puts "Connecting to db using settings: "
+    pp config
+    ActiveRecord::Base.establish_connection( config )
+    # ActiveRecord::Base.logger = Logger.new( STDOUT )
   end
+
+
+  def self.setup_in_memory_db
+
+    # Database Setup & Config
+    ActiveRecord::Base.logger = Logger.new( STDOUT )
+    ## ActiveRecord::Base.colorize_logging = false  - no longer exists - check new api/config setting?
+
+    self.connect( adapter:  'sqlite3',
+                  database: ':memory:' )
+
+    ## build schema
+    WorldDb.create_all
+  end # setup_in_memory_db (using SQLite :memory:)
 
 end  # module WorldDb
 

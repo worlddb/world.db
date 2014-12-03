@@ -64,17 +64,10 @@ def connect_to_db( options )
 
   puts "working directory: #{Dir.pwd}"
 
-  db_config = {
-    :adapter  => 'sqlite3',
-    :database => "#{options.db_path}/#{options.db_name}"
-  }
+  WorldDb.connect( adapter:  'sqlite3',
+                   database: "#{options.db_path}/#{options.db_name}" )
 
-  puts "Connecting to db using settings: "
-  pp db_config
-
-  ActiveRecord::Base.establish_connection( db_config )
-  
-  LogDb.setup  # turn on logging to db
+  LogDb.setup  # turn on logging to db (that is, log to logs table in db)
 end
 
 
@@ -84,10 +77,7 @@ command [:create] do |c|
     
     connect_to_db( opts )
     
-    LogDb.create
-    ConfDb.create
-    TagDb.create
-    WorldDb.create
+    WorldDb.create_all
 
     puts 'Done.'
   end # action
@@ -110,10 +100,7 @@ command [:setup,:s] do |c|
     ## todo: document optional setup profile arg (defaults to all)
     setup = args[0] || 'all'
     
-    LogDb.create
-    ConfDb.create
-    TagDb.create
-    WorldDb.create
+    WorldDb.create_all
 
     WorldDb.read_setup( "setups/#{setup}", opts.data_path )
 
@@ -202,7 +189,7 @@ command :props do |c|
     connect_to_db( opts )
     
     ### fix: use ConfDb.dump or similar  (for reuse) !!!
-    WorldDb.props
+    ## WorldDb.props
 
     puts 'Done.'
   end

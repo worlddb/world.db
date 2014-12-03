@@ -3,7 +3,7 @@
 module WorldDb
 
   class Stats
-    include WorldDb::Models
+    include Models
 
     def tables
       puts "Stats:"
