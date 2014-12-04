@@ -3,8 +3,8 @@ module WorldDb
 
   # sync version w/ sport.db n friends - why? why not?
   MAJOR = 2 ## todo: namespace inside version or something - why? why not??
-  MINOR = 0
-  PATCH = 9
+  MINOR = 1
+  PATCH = 0
   VERSION = [MAJOR,MINOR,PATCH].join('.')
 
   def self.version
@@ -12,7 +12,7 @@ module WorldDb
   end
 
   def self.banner
-    "worlddb/#{VERSION} on Ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE}) [#{RUBY_PLATFORM}]"
+    "worlddb-models/#{VERSION} on Ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE}) [#{RUBY_PLATFORM}]"
   end
 
   def self.root

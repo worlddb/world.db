@@ -1,13 +1,8 @@
-###
-# NB: for local testing run like:
-#
-# 1.9.x: ruby -Ilib lib/worlddb.rb
+# encoding: UTF-8
 
 # core and stlibs
 
 require 'pp'
-require 'logger'
-require 'optparse'
 require 'fileutils'
 require 'uri'
 require 'erb'
@@ -19,13 +14,19 @@ require 'yaml'
 
 require 'zip'       ## rubyzip gem
 
+require 'props'           # see github.com/rubylibs/props
+require 'logutils'        # see github.com/rubylibs/logutils
+require 'textutils'       # see github.com/rubylibs/textutils
+
+
 require 'active_record'   ## todo: add sqlite3? etc.
 
-require 'logutils'
-require 'textutils'
+## add more activerecords addons/utils
 require 'tagutils'
-require 'props'
-require 'props/db'  # includes ConfDb (ConfDb::Model::Prop, etc.)
+require 'activerecord/utils'
+require 'props/activerecord'      # includes ConfDb (ConfDb::Model::Prop, etc.)
+require 'logutils/activerecord'   # includes LogDb (LogDb::Model::Log, etc.)
+
 
 
 # our own code
@@ -72,11 +73,6 @@ require 'worlddb/stats'
 
 
 module WorldDb
-
-  def self.main
-    require 'worlddb/cli/main'
-    ## Runner.new.run(ARGV) - old code
-  end
 
   def self.create
     CreateDb.new.up
@@ -200,8 +196,5 @@ module WorldDb
 end  # module WorldDb
 
 
-if __FILE__ == $0
-  WorldDb.main
-else
-  puts WorldDb.banner    # say hello
-end
+# say hello
+puts WorldDb.banner    if $DEBUG || (defined?($RUBYLIBS_DEBUG) && $RUBYLIBS_DEBUG)

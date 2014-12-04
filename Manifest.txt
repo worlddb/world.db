@@ -2,13 +2,9 @@ HISTORY.md
 Manifest.txt
 README.md
 Rakefile
-bin/worlddb
-lib/worlddb.rb
-lib/worlddb/cli/main.rb
-lib/worlddb/cli/opts.rb
-lib/worlddb/console.rb
 lib/worlddb/deleter.rb
 lib/worlddb/matcher.rb
+lib/worlddb/models.rb
 lib/worlddb/models/city.rb
 lib/worlddb/models/city_comp.rb
 lib/worlddb/models/continent.rb

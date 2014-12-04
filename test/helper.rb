@@ -2,15 +2,12 @@
 ## $:.unshift(File.dirname(__FILE__))
 
 ## minitest setup
-
-# require 'minitest/unit'
 require 'minitest/autorun'
 
 
 # our own code
 
-require 'worlddb'
-require 'logutils/db'   # NB: explict require required for LogDb (not automatic) 
+require 'worlddb/models'
 
 
 Name      = WorldDb::Model::Name
