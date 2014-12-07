@@ -1,9 +1,10 @@
+# encoding: utf-8
 
 module WorldDb
 
   # sync version w/ sport.db n friends - why? why not?
   MAJOR = 2 ## todo: namespace inside version or something - why? why not??
-  MINOR = 1
+  MINOR = 2
   PATCH = 0
   VERSION = [MAJOR,MINOR,PATCH].join('.')
 

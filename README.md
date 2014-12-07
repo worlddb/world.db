@@ -1,6 +1,6 @@
 # worlddb-models
 
-worlddb-models gem - world.db schema & models for easy (re)use
+worlddb-models gem - world.db schema 'n' models for easy (re)use
 
 * home  :: [github.com/worlddb/world.db.models](https://github.com/worlddb/world.db.models)
 * bugs  :: [github.com/worlddb/world.db.models/issues](https://github.com/worlddb/world.db.models/issues)

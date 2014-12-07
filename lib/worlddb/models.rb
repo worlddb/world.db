@@ -1,4 +1,5 @@
-# encoding: UTF-8
+# encoding: utf-8
+
 
 # core and stlibs
 
@@ -8,6 +9,8 @@ require 'uri'
 require 'erb'
 require 'json'
 require 'yaml'
+
+require 'logger'    # Note: use for ActiveRecord::Base.logger -- remove/replace later w/ LogUtils::Logger ???
 
 
 # 3rd party gems / libs
@@ -39,16 +42,16 @@ require 'worlddb/models/forward'
 require 'worlddb/models/name'
 require 'worlddb/models/place'
 require 'worlddb/models/continent'
-require 'worlddb/models/continent_comp'
+require 'worlddb/models/continent_compat'    # todo: move to compat gem
 require 'worlddb/models/country'
-require 'worlddb/models/country_comp'
+require 'worlddb/models/country_compat'      # todo: move to compat gem
 require 'worlddb/models/country_code'
 require 'worlddb/models/region'
-require 'worlddb/models/region_comp'
+require 'worlddb/models/region_compat'       # todo: move to compat gem
 require 'worlddb/models/city'
-require 'worlddb/models/city_comp'
+require 'worlddb/models/city_compat'         # todo: move to compat gem
 require 'worlddb/models/lang'
-require 'worlddb/models/lang_comp'
+require 'worlddb/models/lang_compat'         # todo: move to compat gem 
 require 'worlddb/models/usage'
 
 require 'worlddb/models/tagdb/tag'
@@ -125,20 +128,14 @@ module WorldDb
   end
 
 
- ####
- ## todo: remove stats ??? why? why not? better use .tables
-  def self.stats
-    Stats.new.tables
-  end
-
   def self.tables
     Stats.new.tables
   end
 
 
-  def self.connect( db_config={} )
+  def self.connect( config={} )
 
-    if db_config.empty?
+    if config.empty?
       puts "ENV['DATBASE_URL'] - >#{ENV['DATABASE_URL']}<"
 
       ### change default to ./sport.db ?? why? why not?
@@ -160,8 +157,6 @@ module WorldDb
          database: db.path[1..-1] # world.db (NB: cut off leading /, thus 1..-1)
       }
       end
-    else
-      config = db_config  # use passed in config hash
     end
 
     ## todo/check: use if defined?( JRUBY_VERSION ) instead ??

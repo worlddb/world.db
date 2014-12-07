@@ -3,10 +3,10 @@ require './lib/worlddb/version.rb'
 
 
 Hoe.spec 'worlddb-models' do
-  
+
   self.version = WorldDb::VERSION
 
-  self.summary = "worlddb -  world.db schema & models for easy (re)use"
+  self.summary = "worlddb -  world.db schema 'n' models for easy (re)use"
   self.description = summary
 
   self.urls    = ['https://github.com/worlddb/world.db.models']
@@ -15,14 +15,14 @@ Hoe.spec 'worlddb-models' do
   self.email   = 'openmundi@googlegroups.com'
 
   self.extra_deps = [
-    ['props'],         # settings / prop(ertie)s / env / INI
-    ['logutils'],     # logging
-    ['textutils', '>= 0.9.9'], # e.g.  >= 0.6 && <= 1.0  ## will include logutils, props
+    ['props',     '>= 1.1.2'],         # settings / prop(ertie)s / env / INI
+    ['logutils',  '>= 0.6.1'],     # logging
+    ['textutils', '>= 0.10.0'], 
 
-    ['tagutils'],     # tags n categories for activerecord
-    ['activerecord-utils'],
-    ['props-activerecord'],
-    ['logutils-activerecord'],
+    ['tagutils',              '>= 0.3.0'],  # tags n categories for activerecord
+    ['activerecord-utils',    '>= 0.2.0'],
+    ['props-activerecord',    '>= 0.1.0'],
+    ['logutils-activerecord', '>= 0.2.0'],
 
      ## 3rd party
     ['rubyzip'],       ## todo: pull in via textutils ??
