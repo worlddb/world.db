@@ -9,7 +9,9 @@ worlddb-models gem - world.db schema 'n' models for easy (re)use
 * forum :: [groups.google.com/group/openmundi](https://groups.google.com/group/openmundi)
 
 
-## Class Model Diagrams
+## Usage Models
+
+Class Model Diagrams
 
 ![](worlddb-models.png)
 
@@ -17,8 +19,6 @@ Everything is a place.
 
 ![](worlddb-models-place.png)
 
-
-## Usage Models
 
 `Country` Model - Example:
 
