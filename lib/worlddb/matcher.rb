@@ -4,6 +4,18 @@ module WorldDb
 
 module Matcher
 
+  WORLD_COUNTRY_CODE_PATTERN    = '([a-z]{2,3})'
+  WORLD_COUNTRY_CLASSIC_PATTERN = "#{WORLD_COUNTRY_CODE_PATTERN}-[^\\/]+"          ## note: if you use "" need to double escape backslash!!!
+  WORLD_COUNTRY_MODERN_PATTERN  = "[0-9]+--#{WORLD_COUNTRY_CODE_PATTERN}-[^\\/]+"  ## note: if you use "" need to double escape backslash!!!
+
+  WORLD_REGION_CODE_PATTERN     = '([a-z]{1,3})'
+  WORLD_REGION_CLASSIC_PATTERN  = "#{WORLD_REGION_CODE_PATTERN}-[^\\/]+"
+  WORLD_REGION_MODERN_PATTERN   = "[0-9]+--#{WORLD_REGION_CODE_PATTERN}-[^\\/]+"
+
+    ## allow optional folders -- TODO: add restriction ?? e.g. must be 4+ alphas ???
+  WORLD_OPT_FOLDERS_PATTERN      = "(?:\\/[^\\/]+)*"     ## check: use double \\ or just \ ??
+
+
   def match_xxx_for_country( name, xxx )  # xxx e.g. cities|regions|beers|breweries
     #      auto-add required country code (from folder structure)
     #  note: always let match_xxx_for_country_n_region go first
@@ -14,16 +26,16 @@ module Matcher
     ##
     ## todo: add $-anchor at the end of pattern - why? why not?? (will include .txt or .yaml??)
 
-    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/#{xxx_pattern}/         ||    # (1)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/#{xxx_pattern}/ ||    # (2)
-       name =~ /(?:^|\/)([a-z]{2,3})\/#{xxx_pattern}/                ||    # (3)
-       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--[^\/]+\/#{xxx_pattern}/ ||   # (4)
-       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+--#{xxx}/    # (5)
+    if name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/#{xxx_pattern}/   ||    # (1)
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_MODERN_PATTERN}\/#{xxx_pattern}/    ||    # (2)
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_CODE_PATTERN}\/#{xxx_pattern}/      ||    # (3)
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/[0-9]+--[^\/]+\/#{xxx_pattern}/ ||   # (4)
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_CODE_PATTERN}-[^\/]+--#{xxx}/    # (5)
 
       country_key = $1.dup
       yield( country_key )
       true # bingo - match found
-      
+
       ######
       # (1)  new style: e.g. /at-austria/beers or ^at-austria!/cities
       #
@@ -51,16 +63,16 @@ module Matcher
     #             at-austria!/1--n-niederoesterreich--eastern/wagram--wagram--wines
 
     # note: allow  /cities and /1--hokkaido--cities and /hokkaido--cities too
-    xxx_pattern = "(?:#{xxx}|[^\\/]+--#{xxx})"    # note: double escape \\ required for backslash
-    
-    ## allow optional folders -- TODO: add restriction ?? e.g. must be 4+ alphas ???
-    opt_folders_pattern = "(?:\/[^\/]+)*"
+    # note: allow anything before xxx for now  -- use/require dash (--) why, why not??
+    oldoldold_xxx_pattern = "(?:#{xxx}|[^\\/]+--#{xxx})"
+    xxx_pattern           = "(?:#{xxx}|[^\\/]+#{xxx})"   # note: double escape \\ required for backslash
+
     ## note: for now only (style #2) n (style #3)  that is long region allow opt folders
 
-    if name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/  ||                # (1)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+#{opt_folders_pattern}\/#{xxx_pattern}/ || # (2)
-       name =~ /(?:^|\/)([a-z]{2,3})-[^\/]+\/[0-9]+--([a-z]{1,3})-[^\/]+#{opt_folders_pattern}\/#{xxx_pattern}/         || # (3)
-       name =~ /(?:^|\/)[0-9]+--([a-z]{2,3})-[^\/]+\/([a-z]{1,3})-[^\/]+\/#{xxx_pattern}/            # (4)
+    if name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/#{WORLD_REGION_CLASSIC_PATTERN}#{WORLD_OPT_FOLDERS_PATTERN}\/#{xxx_pattern}/  ||                # (1)
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_MODERN_PATTERN}\/#{WORLD_REGION_MODERN_PATTERN}#{WORLD_OPT_FOLDERS_PATTERN}\/#{xxx_pattern}/   || # (2)
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/#{WORLD_REGION_MODERN_PATTERN}#{WORLD_OPT_FOLDERS_PATTERN}\/#{xxx_pattern}/  || # (3)
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_MODERN_PATTERN}\/#{WORLD_REGION_CLASSIC_PATTERN}\/#{xxx_pattern}/            # (4)
 
       #######
       # nb: country must start name (^) or coming after / e.g. europe/at-austria/...
