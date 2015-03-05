@@ -36,6 +36,7 @@ lib/worlddb/stats.rb
 lib/worlddb/version.rb
 test/helper.rb
 test/test_fixture_matchers.rb
+test/test_fixture_matchers_ii.rb
 test/test_model_city.rb
 test/test_model_comp.rb
 test/test_model_country.rb
