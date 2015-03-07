@@ -1,0 +1,51 @@
+###
+# Oberbayern > Bayern
+#
+# Verwaltungssitz: München
+#
+# Größte Städte: München (1.4m), Ingolstadt (128_300), Rosenheim (61_800),
+#                Freising (45_600), Dachau (44_000), Germering (38_400)
+#
+# Der Regierungsbezirk Oberbayern umfasst
+#
+#  3 kreisfreie Städte - München, Ingolstadt Rosenheim
+#  20 Landkreise
+
+
+m,  München (Kreisefreie Stadt)   ## use (Stadt) ???
+in, Ingolstadt
+ro, Rosenheim (Kreisefreie Stadt)    ## use (Stadt) ???
+
+
+aoe, Altötting
+Bad Tölz-Wolfratshausen,  Bad Tölz,  1_111 km²
+  ## Kfz-Kennzeichen: TÖL, WOR  - what to use ??
+
+bgl, Berchtesgadener Land
+dah, Dachau
+ebe, Ebersberg
+ei,  Eichstätt
+ed,  Erding,    Erding,     870 km²
+fs,  Freising,  Freising,   802 km²
+ffb, Fürstenfeldbruck
+gap, Garmisch-Partenkirchen
+ll,  Landsberg am Lech
+mb,  Miesbach
+mue, Mühldorf am Inn
+
+München (Landkreis), München,  667 km²     ### todo - use different key - see kreisfrei stadt muenchen
+  ## Kfz-Kennzeichen: M, AIB, WOR - what to use ??
+
+Neuburg-Schrobenhausen
+  ## Kfz-Kennzeichen: ND, SOB  - what to use ??
+  
+paf, Pfaffenhofen an der Ilm
+
+Rosenheim  (Landkreis)  ### todo - use different key - see kreisfrei stadt rosenheim
+   ## Kfz-Kennzeichen: RO, AIB, WS - what to use ??
+
+sta, Starnberg   ## kfz-kennzeichen: STA, WOR
+ts,  Traunstein
+Weilheim-Schongau
+   ## Kfz-Kennzeichen: WM, SOG  - what to use ??
+

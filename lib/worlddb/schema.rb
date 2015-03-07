@@ -156,6 +156,8 @@ create_table :regions do |t|
 
   t.references :country,  null: false
   t.references :region    ## parent region (optional for now - may be null for top level e.g. state/province)
+  t.integer    :level,    null: false, default: 1  # default assumes 1 e.g. state/province/etc.
+  ### change to l (instead of level)!!!! - shorter, why, why not???
 
   ## flags (use single int named flags - why? why not?  
   ### fix: use a generic kind string type flag!!!!!!

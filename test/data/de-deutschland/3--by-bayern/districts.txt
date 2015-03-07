@@ -1,0 +1,13 @@
+########################################
+#  Bayern
+#
+#  7 Regierungsbezirke  (administrative districts or governmental districts - use unit/division?)
+
+ob,   Oberbayern,    München,     17_530 km²      # 091 OB
+nb,   Niederbayern,  Landshut,    10_329 km²      # 092 NB
+opf,  Oberpfalz,     Regensburg,   9_690 km²      # 093 OPf
+ofr,  Oberfranken,   Bayreuth,     7_231 km²      # 094 Ofr.
+mfr,  Mittelfranken, Ansbach,      7_245 km²      # 095 Mfr.
+ufr,  Unterfranken,  Würzburg,     8_531 km²      # 096 Ufr.
+schw, Schwaben,      Augsburg,     9_993 km²      # 097 Schw.
+

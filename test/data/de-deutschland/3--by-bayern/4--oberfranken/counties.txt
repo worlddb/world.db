@@ -1,0 +1,42 @@
+################################################
+# Der Regierungsbezirk Oberfranken umfasst
+#
+#    4 kreisfreie Städte und
+#        Bamberg
+#        Bayreuth
+#        Coburg
+#        Hof
+#    9 Landkreise
+#        Landkreis Bamberg
+#        Landkreis Bayreuth
+#        Landkreis Coburg
+#        Landkreis Forchheim
+#        Landkreis Hof
+#        Landkreis Kronach
+#        Landkreis Kulmbach
+#        Landkreis Lichtenfels
+#        Landkreis Wunsiedel im Fichtelgebirge
+
+
+# 4 kreisfreie Städte und
+
+Bamberg (Kreisfreie Stadt)
+Bayreuth (Kreisfreie Stadt)
+Coburg (Kreisfreie Stadt)
+Hof (Kreisfreie Stadt)
+
+
+# 9 Landkreise
+## how to deal w/ same name?? (same keys)
+##  - use bambergland, bayreuthland etc. for key ??
+
+Bamberg-Landkreis   ## (Landkreis)
+Bayreuth-Landkreis  ## (Landkreis)
+Coburg-Landkreis    ## (Landkreis)
+Hof-Landkreis       ## (Landkreis)
+
+Forchheim (Landkreis)
+Kronach (Landkreis)
+Kulmbach (Landkreis)
+Lichtenfels (Landkreis)
+Wunsiedel im Fichtelgebirge (Landkreis)

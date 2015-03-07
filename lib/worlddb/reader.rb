@@ -94,12 +94,41 @@ class ReaderBase
     elsif match_regions_nuts_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/regions\.nuts/
             load_regions_xxx( country_key, 'nuts', name )
           end
+    elsif match_adm3_for_country( name ) do |country_key,region_key,adm2_name|
+            ## auto-add required country code (from folder structure)
+            country = Country.find_by_key!( country_key )
+            logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+            region  = Region.find_by_key_and_country_id!( region_key, country.id )
+            logger.debug "Region (Adm1) #{region.key} >#{region.title}<"
+            ### todo: move find adm2 to model for (re)use !!!
+            adm2    = Region.where( "lower(name) = ? AND country_id = ?",
+                                     adm2_name, country.id ).first   ## check - first needed? returns ary??
+            if adm2.nil?
+              puts "*** error/warn: fix - skipping adm3 - adm2 '#{adm2_name}' not found"
+              next
+            end
+            logger.debug "Region (Adm2) #{adm2.key} >#{adm2.title}<"
+
+            r = create_region_reader( name, country_id: country.id, region_id: adm2.id, level:3, c:true )
+            r.read()
+          end
+    elsif match_adm2_for_country( name ) do |country_key,region_key|
+            ## auto-add required country code (from folder structure)
+            country = Country.find_by_key!( country_key )
+            logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+            region  = Region.find_by_key_and_country_id!( region_key, country.id )
+            logger.debug "Region (Adm1) #{region.key} >#{region.title}<"
+
+            r = create_region_reader( name, country_id: country.id, region_id: region.id, level:2, d:true )
+            r.read()
+          end
+    ### fix: change to match_adm1_for_country()
     elsif match_regions_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/regions/
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
             logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-            r = create_region_reader( name, country_id: country.id )
+            r = create_region_reader( name, country_id: country.id, region_id: nil, level:1, s:true )
             r.read()
           end
     else
