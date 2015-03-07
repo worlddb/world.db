@@ -98,6 +98,7 @@ create_table :countries do |t|
   t.references :country    # for supra(nationals) n depend(encies)
 
   ## flags (use single int named flags - why? why not?  
+  ### fix: use a generic kind string type flag!!!!!!
   t.boolean :s,  null: false, default: false   # supra(national) flag e.g. eu
   t.boolean :c,  null: false, default: false   # country flag (is this needed?)
   t.boolean :d,  null: false, default: false   # dependency flag
@@ -127,8 +128,20 @@ add_index :countries, :key,  unique: true
 add_index :countries, :code, unique: true
 
 
+## kind of regions/states but not hierachical (used for tourist/colloquial zones etc.)
+#    uses many-to-many join tables w/ cities n regions
+#
+#  examples:
+#    Salzkammergut (part of Salzburg and Oberoesterreich)
+#  others
+#   Oberfranken -> Fichtelgebierge/Fraenkische Schweiz/etc.
+create_table :zones do |t|
+  # to be done
+end
+
+
 ######
-# NB: rename to adms/admins ??
+# NB: rename to adms/admins ?? or use states ???
 #
 # used for state/provice/land/regioni/etc.
 create_table :regions do |t|
@@ -140,14 +153,32 @@ create_table :regions do |t|
   t.string :iso      # iso code
   t.string :nuts     # nuts code (europe/eu only)
   t.string     :alt_names  # comma separated list of alternate names (synonyms)
+
   t.references :country,  null: false
+  t.references :region    ## parent region (optional for now - may be null for top level e.g. state/province)
+
+  ## flags (use single int named flags - why? why not?  
+  ### fix: use a generic kind string type flag!!!!!!
+  t.boolean :s,  null: false, default: false   # state flag (use adm1? or a1)
+  t.boolean :d,  null: false, default: false   # governmental district falg (use adm2? or a2)  - check is Oberfranken/Oberbayern admin2 in Bayern (DE) ?? - note: might be optional (than adm3 becomes adm2)
+  t.boolean :c,  null: false, default: false   # county (or bezirk etc.) (use adm3? or a3?)
+
+
   t.integer :pop     # optional population count
   t.integer :area    # optional area in square km (sq. km)
   t.timestamps
 end
 
+### fix: add kind to unique ???
 add_index :regions, [:key, :country_id], unique: true
 
+
+
+create_table :city_rels do |t|   ## city relationships (w/ regions) -- part of region/zone
+  t.references :city,   null: false
+  t.references :region  ## optional ?? either region or zone ?? use polymorphic assoc or use node w/ kind for place?
+  t.references :zone    ## tourist zone e.g. fraenkische schweiz, wachau, steigerwald, etc. - use own join table???
+end
 
 create_table :cities do |t|
   t.string     :name,   null: false
@@ -166,6 +197,7 @@ create_table :cities do |t|
   ## t.float   :lng   # optional for now  --  FIX: remove?? moved to places
 
   ## flags (use single int named flags - why? why not?    
+  ### fix: use a generic kind string type flag!!!!!!
   t.boolean :m,  null: false, default: false   # metro flag
   t.boolean :c,  null: false, default: false   # city flag (is this needed?)
   t.boolean :d,  null: false, default: false   # district flag

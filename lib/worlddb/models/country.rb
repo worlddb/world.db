@@ -29,6 +29,9 @@ class Country < ActiveRecord::Base
   ## self referencing hierachy within countries e.g. EU > GB > EN
   belongs_to :parent,    class_name: 'Country', foreign_key: 'country_id'
   has_many   :countries, class_name: 'Country', foreign_key: 'country_id'
+  ### recursive self-reference - use node??
+  ## has_many :nodes, class_name: 'Region', foregin_key: 'region_id'
+
 
   has_many_tags
 

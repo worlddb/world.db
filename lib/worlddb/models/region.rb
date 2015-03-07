@@ -22,6 +22,11 @@ class Region < ActiveRecord::Base
   validates :key,  format: { with: /#{REGION_KEY_PATTERN}/,  message: REGION_KEY_PATTERN_MESSAGE }
   validates :code, format: { with: /#{REGION_CODE_PATTERN}/, message: REGION_CODE_PATTERN_MESSAGE }, allow_nil: true
 
+  ### recursive self-reference - use "generic" node??
+  ## has_many :nodes, class_name: 'Region', foregin_key: 'region_id'
+  belongs_to :parent,  class_name: 'Region', foreign_key: 'region_id'
+  has_many   :regions, class_name: 'Region', foreign_key: 'region_id'  ## subregions
+
 
   before_create :on_create
   before_update :on_update
@@ -36,8 +41,18 @@ class Region < ActiveRecord::Base
     place.update_attributes!( name: name, kind: place_kind )
   end
 
+  def is_district?()  d? == true; end
+  def is_county?()    c? == true; end
+
   def place_kind   # use place_kind_of_code ??
-    'ADM1'
+    ### fix: use "generic" level counter - make it a database field (default/top level is 1)
+    if is_district?
+      'ADM2'
+    elsif is_county?
+      'ADM3'
+    else
+      'ADM1'
+    end
   end
 
 
