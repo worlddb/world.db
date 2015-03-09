@@ -1,0 +1,20 @@
+##  Burgenland (B)
+#
+## 2 Statutarstädte  - Eisenstadt, Rust
+## 7 Bezirke
+##
+##  13 Städte
+##  171 Gemeinden
+##  328 Ortschaften
+
+
+e,    Eisenstadt,          Eisenstadt,         43 km²
+eu,   Eisenstadt-Umgebung, Eisenstadt,        453 km²
+gs,   Güssing,             Güssing,           485 km²
+je,   Jennersdorf,         Jennersdorf,       253 km²
+ma,   Mattersburg,         Mattersburg,       238 km²
+nd,   Neusiedl am See,     Neusiedl am See,  1039 km²
+op,   Oberpullendorf,      Oberpullendorf,    701 km²    ## also known as =>  Mittelburgenland
+ow,   Oberwart,            Oberwart,          733 km²
+eii,  Rust,                Rust,               20 km²    ## also uses E  - what to do for key??
+

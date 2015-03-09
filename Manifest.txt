@@ -34,6 +34,11 @@ lib/worlddb/readers/usage.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
 lib/worlddb/version.rb
+test/data/at-austria/1--b-burgenland/counties.txt
+test/data/at-austria/2--n-niederoesterreich/counties.txt
+test/data/at-austria/3--w-wien/counties.txt
+test/data/at-austria/setups/adm.txt
+test/data/at-austria/states.txt
 test/data/de-deutschland/3--by-bayern/1--oberbayern/counties.txt
 test/data/de-deutschland/3--by-bayern/4--oberfranken/counties.txt
 test/data/de-deutschland/3--by-bayern/districts.txt

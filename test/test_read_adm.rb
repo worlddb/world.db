@@ -14,6 +14,22 @@ class TestReadAdm < MiniTest::Test
     WorldDb.delete!
   end
 
+  def test_at
+    at = Country.create!( key: 'at',
+                          name: 'Austria',
+                          code: 'AUT',
+                          pop: 0,
+                          area: 0 )
+
+    reader = WorldDb::Reader.new( "#{WorldDb.root}/test/data/at-austria" )
+    reader.load_setup( 'setups/adm' )
+
+    ###
+    ## todo/fix: shorten level to l -- why, why not???
+    assert_equal 9, at.regions.where(level:1).count
+  end
+
+
   def test_de
     de = Country.create!( key: 'de',
                           name: 'Germany',

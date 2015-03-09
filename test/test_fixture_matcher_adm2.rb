@@ -37,6 +37,17 @@ class TestFixtureMatcherAdm2 < MiniTest::Test
   end # method test_at
 
 
+  def test_at_more
+    b = [ 'at-austria!/1--b-burgenland/counties' ]
+    n = [ 'at-austria!/2--n-niederoesterreich/counties' ]
+    w = [ 'at-austria!/3--w-wien/counties' ]
+
+    assert_match_adm2_for_country( b, 'at', 'b' )
+    assert_match_adm2_for_country( n, 'at', 'n' )
+    assert_match_adm2_for_country( w, 'at', 'w' )
+  end
+
+
 private
   def assert_match_adm2_for_country( ary, expected_country_key, expected_region_key )
     ary.each do |name|

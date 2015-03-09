@@ -1,0 +1,39 @@
+###
+# use district.txt for name - why, why not??
+#   move to wien.db - why, why not ??
+#
+#  include command \, -- why, why not?? change to - or something ?
+#  use ; as separator - why, why not??
+
+
+## fix: cannot handle comma in title for autokey
+##  e.g.  Wien 1.\, Innere Stadt
+##          becomes
+##        wien1,innerestadt
+
+
+Innere Stadt (Wien 1.)  ### fix/use: Wien 1.\, Innere Stadt
+Leopoldstadt (Wien 2.)  ### fix/use: Wien 2.\, Leopoldstadt
+Landstraße (Wien 3.)    ### fix/use: Wien 3.\, Landstraße
+
+### fix/use: Wien 4.\, Wieden
+### fix/use: Wien 5.\, Margareten
+### fix/use: Wien 6.\, Mariahilf
+### fix/use: Wien 7.\, Neubau
+### fix/use: Wien 8.\, Josefstadt
+### fix/use: Wien 9.\, Alsergrund
+### fix/use: Wien 10.\, Favoriten
+### fix/use: Wien 11.\, Simmering
+### fix/use: Wien 12.\, Meidling
+### fix/use: Wien 13.\, Hietzing
+### fix/use: Wien 14.\, Penzing
+### fix/use: Wien 15.\, Rudolfsheim-Fünfhaus
+### fix/use: Wien 16.\, Ottakring
+### fix/use: Wien 17.\, Hernals
+### fix/use: Wien 18.\, Währing
+### fix/use: Wien 19.\, Döbling
+### fix/use: Wien 20.\, Brigittenau
+### fix/use: Wien 21.\, Floridsdorf
+### fix/use: Wien 22.\, Donaustadt
+### fix/use: Wien 23.\, Liesing
+
