@@ -2,7 +2,7 @@
 
 ###
 #  to run use
-#     ruby -I ./lib -I ./test test/test_fixture_matcher_adm2.rb
+#     ruby -I ./lib -I ./test test/adm/test_fixture_matcher_adm2.rb
 
 
 require 'helper'
@@ -14,15 +14,16 @@ class TestFixtureMatcherAdm2 < MiniTest::Test
 
   def test_de
     de = [
-       'de-deutschland!/by-bayern/districts',
-       'de-deutschland/by-bayern/districts',
-       'de-deutschland!/3--by-bayern/districts',
-       'de-deutschland/3--by-bayern/districts',
-       'europe/de-deutschland!/3--by-bayern/districts',
-       'europe/de-deutschland/3--by-bayern/districts',
+       'de-deutschland!/by-bayern/parts',
+       'de-deutschland/by-bayern/parts',
+       'de-deutschland!/3--by-bayern/parts',
+       'de-deutschland/3--by-bayern/parts',
+       'europe/de-deutschland!/3--by-bayern/parts',
+       'europe/de-deutschland/3--by-bayern/parts',
     ]
     assert_match_adm2_for_country( de, 'de', 'by' )
   end # method test_de
+
 
   def test_at
     at = [

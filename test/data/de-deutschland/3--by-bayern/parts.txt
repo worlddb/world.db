@@ -1,7 +1,7 @@
 ########################################
 #  Bayern
 #
-#  7 Regierungsbezirke  (administrative districts or governmental districts - use unit/division?)
+#  7 Regierungsbezirke  (administrative districts or governmental districts)
 
 ob,   Oberbayern,    München,     17_530 km²      # 091 OB
 nb,   Niederbayern,  Landshut,    10_329 km²      # 092 NB

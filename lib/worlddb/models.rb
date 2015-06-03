@@ -61,6 +61,8 @@ require 'worlddb/models/tagdb/tagging'
 
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
+require 'worlddb/matcher_adm'
+require 'worlddb/matcher_compat'
 
 require 'worlddb/readers/lang'
 require 'worlddb/readers/usage'

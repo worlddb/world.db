@@ -2,7 +2,7 @@
 
 ###
 #  to run use
-#     ruby -I ./lib -I ./test test/test_fixture_matcher_adm3.rb
+#     ruby -I ./lib -I ./test test/adm/test_fixture_matcher_adm3.rb
 
 
 require 'helper'

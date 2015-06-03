@@ -2,7 +2,7 @@
 
 ###
 #  to run use
-#     ruby -I ./lib -I ./test test/test_read_adm.rb
+#     ruby -I ./lib -I ./test test/adm/test_read_adm.rb
 
 
 require 'helper'

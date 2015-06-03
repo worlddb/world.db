@@ -14,34 +14,8 @@ module Matcher
   WORLD_STATE_CLASSIC_PATTERN  = "#{WORLD_STATE_CODE_PATTERN}-[^\\/]+"
   WORLD_STATE_MODERN_PATTERN   = "[0-9]+--#{WORLD_STATE_CODE_PATTERN}-[^\\/]+"
 
-  # note: returns name as capture (no code required)
-  WORLD_ADMIN_MODERN_PATTERN    = "[0-9]+--([^\\/]+)"
-
-    ## allow optional folders -- TODO: add restriction ?? e.g. must be 4+ alphas ???
+  ## allow optional folders -- TODO: add restriction ?? e.g. must be 4+ alphas ???
   WORLD_OPT_FOLDERS_PATTERN      = "(?:\\/[^\\/]+)*"     ## check: use double \\ or just \ ??
-
-  #####################################
-  ## begin compat - remove later!!!
-  def match_xxx_for_country_n_region( name, xxx )
-    match_xxx_for_country_n_state( name, xxx )
-  end
-
-  def match_regions_for_country( name, &blk )
-    match_states_for_country( name, &blk )
-  end
-
-  def match_regions_abbr_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    match_states_abbr_for_country( name, &blk )
-  end
-
-  def match_regions_iso_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    match_states_iso_for_country( name, &blk )
-  end
-
-  def match_regions_nuts_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    match_states_nuts_for_country( name, &blk )
-  end
-  ## end of compat region
 
 
   def match_xxx_for_country( name, xxx )  # xxx e.g. cities|states|beers|breweries
@@ -126,68 +100,6 @@ module Matcher
       false # no match found
     end
   end
-
-
-
-  def match_xxx_for_country_n_adm1( name, xxx ) # xxx e.g. districts|counties|etc.
-
-    # auto-add required country n states (from folder structure)
-    #
-    #  e.g.  de-deutschland!/3--by-bayern/districts  (regierungsbezirke)
-    #        europe/de-deutschland!/3--by-bayern/districts
-    #
-    #    at-austria!/1--n-niederoesterreich/counties  (bezirke)
-
-    xxx_pattern           = "#{xxx}"
-
-    if name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/#{WORLD_STATE_MODERN_PATTERN}\/#{xxx_pattern}/  ||
-       name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/#{WORLD_STATE_CLASSIC_PATTERN}\/#{xxx_pattern}/
-
-      country_key = $1.dup
-      state_key  = $2.dup
-      yield( country_key, state_key )
-      true # bingo - match found
-    else
-      false # no match found
-    end
-  end
-
-
-  def match_xxx_for_country_n_adm1_n_adm2( name, xxx ) # xxx e.g. districts|counties|etc.
-
-    # auto-add required country n states (from folder structure)
-    #
-    #  e.g.  de-deutschland!/3--by-bayern/4--oberfranken/counties  (landkreise)
-    #        europe/de-deutschland!/3--by-bayern/4--oberfranken/counties
-
-    xxx_pattern           = "#{xxx}"
-
-    if name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/#{WORLD_STATE_MODERN_PATTERN}\/#{WORLD_ADMIN_MODERN_PATTERN}\/#{xxx_pattern}/  ||
-       name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}\/#{WORLD_STATE_CLASSIC_PATTERN}\/#{WORLD_ADMIN_MODERN_PATTERN}\/#{xxx_pattern}/
-
-      country_key = $1.dup
-      state_key  = $2.dup
-      adm2        = $3.dup   # lowercase name e.g. oberfranken, oberbayern, etc.
-      yield( country_key, state_key, adm2 )
-      true # bingo - match found
-    else
-      false # no match found
-    end
-  end
-
-
-  def match_adm2_for_country( name, &blk )
-    ## note: also try synonyms e.g. districts|counties
-    ## note: counties might also be an adm3 match
-    found = match_xxx_for_country_n_adm1( name, 'districts', &blk )
-    found = match_xxx_for_country_n_adm1( name, 'counties', &blk ) unless found
-    found
-  end
-
-  def match_adm3_for_country( name, &blk )
-    match_xxx_for_country_n_adm1_n_adm2( name, 'counties', &blk )
-  end
-
 
 
   def match_cities_for_country( name, &blk )

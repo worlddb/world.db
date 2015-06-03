@@ -20,10 +20,10 @@
 
 # 4 kreisfreie Städte und
 
-Bamberg (Kreisfreie Stadt)
-Bayreuth (Kreisfreie Stadt)
-Coburg (Kreisfreie Stadt)
-Hof (Kreisfreie Stadt)
+Bamberg (Stadt)
+Bayreuth (Stadt)
+Coburg (Stadt)
+Hof (Stadt)
 
 
 # 9 Landkreise
@@ -35,8 +35,8 @@ Bayreuth-Landkreis  ## (Landkreis)
 Coburg-Landkreis    ## (Landkreis)
 Hof-Landkreis       ## (Landkreis)
 
-Forchheim (Landkreis)
-Kronach (Landkreis)
-Kulmbach (Landkreis)
-Lichtenfels (Landkreis)
-Wunsiedel im Fichtelgebirge (Landkreis)
+Forchheim    ## Landkreis
+Kronach      ## Landkreis
+Kulmbach     ## Landkreis
+Lichtenfels  ## Landkreis
+Wunsiedel im Fichtelgebirge  ## Landkreis
