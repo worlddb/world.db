@@ -49,11 +49,11 @@ class TestFixtureMatcherAdm2 < MiniTest::Test
 
 
 private
-  def assert_match_adm2_for_country( ary, expected_country_key, expected_region_key )
+  def assert_match_adm2_for_country( ary, expected_country_key, expected_state_key )
     ary.each do |name|
-      found = match_adm2_for_country( name ) do |country_key,region_key|
+      found = match_adm2_for_country( name ) do |country_key,state_key|
         assert_equal country_key, expected_country_key,  "#{expected_country_key} expected is #{country_key}"
-        assert_equal region_key,  expected_region_key,   "#{expected_region_key} expected is #{region_key}"
+        assert_equal state_key,  expected_state_key,   "#{expected_state_key} expected is #{state_key}"
       end
       assert found, "no match for '#{name}'"
     end

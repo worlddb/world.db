@@ -3,10 +3,10 @@
 
 require 'helper'
 
-class TestModelRegion < MiniTest::Test
+class TestModelState < MiniTest::Test
 
   def setup
-    #  delete all countries, regions, cities in in-memory only db
+    #  delete all countries, states, cities in in-memory only db
     WorldDb.delete!
   end
 
@@ -30,21 +30,21 @@ class TestModelRegion < MiniTest::Test
       'eastern austria'
     ]
 
-    r = Region.create_or_update_from_attribs( new_attributes, values )
+    st = State.create_or_update_from_attribs( new_attributes, values )
 
-    r2 = Region.find_by_key!( new_attributes[:key] )
-    assert_equal r.id, r2.id
+    st2 = State.find_by_key!( new_attributes[:key] )
+    assert_equal st.id, st2.id
 
-    assert_equal new_attributes[:name],  r.name 
-    assert_equal 415,                    r.area 
-    assert_equal at.id,                  r.country_id
+    assert_equal new_attributes[:name],  st.name 
+    assert_equal 415,                    st.area 
+    assert_equal at.id,                  st.country_id
 
     ### test place
-    assert_equal  new_attributes[:name], r.place.name
+    assert_equal  new_attributes[:name], st.place.name
 
     ## test assocs
-    assert_equal  'Austria', r.country.name
+    assert_equal  'Austria', st.country.name
   end
 
-end # class TestModelRegion
+end # class TestModelState
 

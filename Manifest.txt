@@ -17,8 +17,8 @@ lib/worlddb/models/lang.rb
 lib/worlddb/models/lang_compat.rb
 lib/worlddb/models/name.rb
 lib/worlddb/models/place.rb
-lib/worlddb/models/region.rb
-lib/worlddb/models/region_compat.rb
+lib/worlddb/models/state.rb
+lib/worlddb/models/state_compat.rb
 lib/worlddb/models/tagdb/tag.rb
 lib/worlddb/models/tagdb/tagging.rb
 lib/worlddb/models/usage.rb
@@ -29,7 +29,7 @@ lib/worlddb/reader_zip.rb
 lib/worlddb/readers/city.rb
 lib/worlddb/readers/country.rb
 lib/worlddb/readers/lang.rb
-lib/worlddb/readers/region.rb
+lib/worlddb/readers/state.rb
 lib/worlddb/readers/usage.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
@@ -52,6 +52,6 @@ test/test_fixture_matchers_ii.rb
 test/test_model_city.rb
 test/test_model_comp.rb
 test/test_model_country.rb
-test/test_model_region.rb
+test/test_model_state.rb
 test/test_models.rb
 test/test_read_adm.rb

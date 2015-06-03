@@ -5,7 +5,7 @@ require 'helper'
 class TestModelCountry < MiniTest::Test
 
   def setup
-    #  delete all countries, regions, cities in in-memory only db
+    #  delete all countries, states, cities in in-memory only db
     WorldDb.delete!
   end
 

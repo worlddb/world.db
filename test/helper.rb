@@ -14,7 +14,7 @@ Name      = WorldDb::Model::Name
 Place     = WorldDb::Model::Place
 Continent = WorldDb::Model::Continent
 Country   = WorldDb::Model::Country
-Region    = WorldDb::Model::Region
+State     = WorldDb::Model::State
 City      = WorldDb::Model::City
 
 Lang      = WorldDb::Model::Lang

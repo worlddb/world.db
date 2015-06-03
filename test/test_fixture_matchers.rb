@@ -16,7 +16,7 @@ class TestFixtureMatchers < MiniTest::Test
       'at-austria/cities',
       'at-austria!/cities',
       'at-austria!/1--niederoesterreich--eastern--cities',
-      'at-austria!/1--niederoesterreich--eastern/cities',   # region w/o code/abbrev
+      'at-austria!/1--niederoesterreich--eastern/cities',   # state w/o code/abbrev
       'at-austria!/1--niederoesterreich--eastern/1--waldviertel--cities'
     ]
 
@@ -41,7 +41,7 @@ class TestFixtureMatchers < MiniTest::Test
       'europe/1--at-austria--central/beers',
       'europe/1--at-austria--central/1--niederosterreich--eastern--beers',
       'at-austria!/1--niederoesterreich--eastern--beers',
-      'at-austria!/1--niederoesterreich--eastern/beers',    # region w/o code/abbrev
+      'at-austria!/1--niederoesterreich--eastern/beers',    # state w/o code/abbrev
       'at-austria!/1--niederoesterreich--eastern/1--waldviertel--beers'
     ]
 
@@ -68,7 +68,7 @@ class TestFixtureMatchers < MiniTest::Test
   end # method test_country
 
 
-  def test_country_n_region
+  def test_country_n_state
 
     beers_at = [
       'europe/at-austria/w-wien/beers',
@@ -86,9 +86,9 @@ class TestFixtureMatchers < MiniTest::Test
     ]
 
     beers_at.each do |name|
-      found = match_xxx_for_country_n_region( name, 'beers' ) do |country_key,region_key|
+      found = match_xxx_for_country_n_state( name, 'beers' ) do |country_key,state_key|
         assert_equal country_key, 'at'
-        assert_equal region_key,  'w'
+        assert_equal state_key,  'w'
       end
       assert found
     end
@@ -100,13 +100,12 @@ class TestFixtureMatchers < MiniTest::Test
     ]
 
     breweries_at.each do |name|
-      found = match_xxx_for_country_n_region( name, 'breweries' ) do |country_key,region_key|
+      found = match_xxx_for_country_n_state( name, 'breweries' ) do |country_key,state_key|
         assert_equal country_key, 'at'
-        assert_equal region_key,  'w'
+        assert_equal state_key,  'w'
       end
       assert found
     end
-  end # method test_country_n_region
-
+  end # method test_country_n_state
 
 end # class TestFixtureMatchers
