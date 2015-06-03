@@ -4,28 +4,28 @@ module WorldDb
   module Model
 
 
-class Region < ActiveRecord::Base
+class State < ActiveRecord::Base
 
   extend TextUtils::TagHelper  # will add self.find_tags, self.find_tags_in_attribs!, etc.
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
-  extend TextUtils::ValueHelper  # e.g. is_year?, is_region?, is_address?, is_taglist? etc.
+  extend TextUtils::ValueHelper  # e.g. is_year?, is_address?, is_taglist? etc.
 
   belongs_to :place,   class_name: 'Place',   foreign_key: 'place_id'
   belongs_to :country, class_name: 'Country', foreign_key: 'country_id'
 
-  has_many :cities, class_name: 'City', foreign_key: 'region_id'
+  has_many :cities, class_name: 'City', foreign_key: 'state_id'
 
   has_many_tags
 
-  validates :key,  format: { with: /#{REGION_KEY_PATTERN}/,  message: REGION_KEY_PATTERN_MESSAGE }
-  validates :code, format: { with: /#{REGION_CODE_PATTERN}/, message: REGION_CODE_PATTERN_MESSAGE }, allow_nil: true
+  validates :key,  format: { with: /#{STATE_KEY_PATTERN}/,  message: STATE_KEY_PATTERN_MESSAGE }
+  validates :code, format: { with: /#{STATE_CODE_PATTERN}/, message: STATE_CODE_PATTERN_MESSAGE }, allow_nil: true
 
   ### recursive self-reference - use "generic" node??
-  ## has_many :nodes, class_name: 'Region', foregin_key: 'region_id'
-  belongs_to :parent,  class_name: 'Region', foreign_key: 'region_id'
-  has_many   :regions, class_name: 'Region', foreign_key: 'region_id'  ## subregions
+  ## has_many :nodes, class_name: 'State', foreign_key: 'state_id'
+  belongs_to :parent,  class_name: 'State', foreign_key: 'state_id'
+  has_many   :states,  class_name: 'State', foreign_key: 'state_id'  ## substates
 
 
   before_create :on_create
@@ -41,18 +41,8 @@ class Region < ActiveRecord::Base
     place.update_attributes!( name: name, kind: place_kind )
   end
 
-  def is_district?()  d? == true; end
-  def is_county?()    c? == true; end
-
   def place_kind   # use place_kind_of_code ??
-    ### fix: use "generic" level counter - make it a database field (default/top level is 1)
-    if is_district?
-      'ADM2'
-    elsif is_county?
-      'ADM3'
-    else
-      'ADM1'
-    end
+    'ADM1'   # note: for now assumes always level 1
   end
 
 
@@ -78,7 +68,7 @@ class Region < ActiveRecord::Base
     attribs = attribs.merge( more_attribs )
 
     ## check for optional values
-    Region.create_or_update_from_attribs( attribs, more_values )
+    State.create_or_update_from_attribs( attribs, more_values )
   end
 
 
@@ -107,7 +97,7 @@ class Region < ActiveRecord::Base
       elsif match_number( value ) do |num|  # numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
               value_numbers << num
             end
-      elsif value =~ /#{REGION_CODE_PATTERN}/  ## assume two or three-letter code
+      elsif value =~ /#{STATE_CODE_PATTERN}/  ## assume two or three-letter code
         new_attributes[ :code ] = value
       elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
         logger.debug "   found tags: >>#{value}<<"
@@ -129,15 +119,15 @@ class Region < ActiveRecord::Base
     end  # if value_numbers.size > 0
 
     ## todo: assert that country_id is present/valid, that is, NOT null
-    rec = Region.find_by_key_and_country_id( new_attributes[ :key ], new_attributes[ :country_id] )
+    rec = State.find_by_key_and_country_id( new_attributes[ :key ], new_attributes[ :country_id] )
 
     if rec.present?
-      logger.debug "update Region #{rec.id}-#{rec.key}:"
+      logger.debug "update State #{rec.id}-#{rec.key}:"
     else
-      logger.debug "create Region:"
-      rec = Region.new
+      logger.debug "create State:"
+      rec = State.new
     end
-      
+
     logger.debug new_attributes.to_json
    
     rec.update_attributes!( new_attributes )
@@ -146,10 +136,10 @@ class Region < ActiveRecord::Base
     # auto add capital cities
 
     City.create_or_update_from_titles( value_cities,
-                                            region_id:  rec.id,
+                                            state_id:  rec.id,
                                             country_id: rec.country_id )
 
-    ### todo/fix: add captial ref to country/region
+    ### todo/fix: add captial ref to country/state
     ## todo/fix: use update_from_title and only allow one capital city
 
 
@@ -185,7 +175,7 @@ class Region < ActiveRecord::Base
 
 
 
-end # class Region
+end # class State
 
   end # module Model
 end # module WorldDb

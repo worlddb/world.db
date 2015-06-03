@@ -12,7 +12,7 @@ class Country < ActiveRecord::Base
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
-  extend TextUtils::ValueHelper  # e.g. self.is_year?, self.is_region?, self.is_address?, is_taglist? etc.
+  extend TextUtils::ValueHelper  # e.g. self.is_year?, self.is_address?, is_taglist? etc.
 
 
   self.table_name = 'countries'
@@ -23,14 +23,14 @@ class Country < ActiveRecord::Base
   has_many :usages
   has_many :langs, :through => :usages # lang(uage)s through usages (that is, countries_langs) join table
 
-  has_many :regions, class_name: 'Region', foreign_key: 'country_id'
+  has_many :states,  class_name: 'State',  foreign_key: 'country_id'
   has_many :cities,  class_name: 'City',   foreign_key: 'country_id'
-  
+
   ## self referencing hierachy within countries e.g. EU > GB > EN
   belongs_to :parent,    class_name: 'Country', foreign_key: 'country_id'
   has_many   :countries, class_name: 'Country', foreign_key: 'country_id'
   ### recursive self-reference - use node??
-  ## has_many :nodes, class_name: 'Region', foregin_key: 'region_id'
+  ## has_many :nodes, class_name: 'State', foregin_key: 'state_id'
 
 
   has_many_tags

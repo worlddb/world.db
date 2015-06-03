@@ -27,6 +27,7 @@ class Country
 
   def title_w_synonyms( opts={} )  all_names( opts );  end    # depreciated: use all_names instead
 
+  has_many :regions, class_name: 'State', foreign_key: 'state_id'
 
 end # class Country
 

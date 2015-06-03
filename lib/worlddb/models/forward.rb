@@ -19,7 +19,7 @@ class Name < ActiveRecord::Base ; end
 class Place < ActiveRecord::Base ; end
 class Continent < ActiveRecord::Base ; end
 class Country < ActiveRecord::Base ; end
-class Region < ActiveRecord::Base ; end
+class State < ActiveRecord::Base ; end
 class City < ActiveRecord::Base ; end
 
 class Lang < ActiveRecord::Base ; end
@@ -45,7 +45,7 @@ Name        = WorldDb::Model::Name
 Place       = WorldDb::Model::Place
 Continent   = WorldDb::Model::Continent
 Country     = WorldDb::Model::Country
-Region      = WorldDb::Model::Region
+State       = WorldDb::Model::State
 City        = WorldDb::Model::City
 
 Lang        = WorldDb::Model::Lang

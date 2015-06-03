@@ -46,8 +46,8 @@ require 'worlddb/models/continent_compat'    # todo: move to compat gem
 require 'worlddb/models/country'
 require 'worlddb/models/country_compat'      # todo: move to compat gem
 require 'worlddb/models/country_code'
-require 'worlddb/models/region'
-require 'worlddb/models/region_compat'       # todo: move to compat gem
+require 'worlddb/models/state'
+require 'worlddb/models/state_compat'       # todo: move to compat gem
 require 'worlddb/models/city'
 require 'worlddb/models/city_compat'         # todo: move to compat gem
 require 'worlddb/models/lang'
@@ -65,7 +65,7 @@ require 'worlddb/matcher'
 require 'worlddb/readers/lang'
 require 'worlddb/readers/usage'
 require 'worlddb/readers/country'
-require 'worlddb/readers/region'
+require 'worlddb/readers/state'
 require 'worlddb/readers/city'
 
 require 'worlddb/reader'

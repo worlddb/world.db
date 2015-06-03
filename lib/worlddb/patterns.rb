@@ -33,11 +33,11 @@ module WorldDb
   COUNTRY_CODE_PATTERN_MESSAGE = "expected three uppercase letters A-Z (and _) /#{COUNTRY_CODE_PATTERN}/"
 
 
-  REGION_KEY_PATTERN = '\A[a-z]+\z'
-  REGION_KEY_PATTERN_MESSAGE = "expected one or more lowercase letters a-z /#{REGION_KEY_PATTERN}/"
+  STATE_KEY_PATTERN = '\A[a-z]+\z'
+  STATE_KEY_PATTERN_MESSAGE = "expected one or more lowercase letters a-z /#{STATE_KEY_PATTERN}/"
 
-  REGION_CODE_PATTERN = '\A[A-Z_]{2,3}\z'
-  REGION_CODE_PATTERN_MESSAGE = "expected two or three uppercase letters A-Z (and _) /#{REGION_CODE_PATTERN}/"
+  STATE_CODE_PATTERN = '\A[A-Z_]{2,3}\z'
+  STATE_CODE_PATTERN_MESSAGE = "expected two or three uppercase letters A-Z (and _) /#{STATE_CODE_PATTERN}/"
 
 
   CITY_KEY_PATTERN = '\A[a-z]{3,}\z'

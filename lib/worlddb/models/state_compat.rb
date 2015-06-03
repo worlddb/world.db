@@ -7,8 +7,8 @@ module WorldDb
 # collect depreciated or methods for future removal here
 #  - keep for now for commpatibility (for old code)
 
-class Region
-  
+class State
+
   def title()       name;              end
   def title=(value) self.name = value; end
 
@@ -19,8 +19,12 @@ class Region
 
   def title_w_synonyms( opts={} )  all_names( opts );  end    # depreciated: use all_names instead
 
+  ## has_many  :regions, class_name: 'State', foreign_key: 'state_id'   ## subregions
 
-end # class Region
+end # class State
+
+### add "old" alias for State class
+## Region = State
 
   end # module Model
 end # module WorldDb

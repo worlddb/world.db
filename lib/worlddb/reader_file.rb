@@ -40,12 +40,12 @@ class Reader < ReaderBase
     CountryReader.from_file( path, more_attribs )
   end
 
-  def create_region_reader( name, more_attribs={} )
+  def create_state_reader( name, more_attribs={} )
     path = "#{@include_path}/#{path_to_real_path(name)}.txt"
 
-    logger.info "parsing data (region) '#{name}' (#{path})..."
+    logger.info "parsing data (state) '#{name}' (#{path})..."
 
-    RegionReader.from_file( path, more_attribs )
+    StateReader.from_file( path, more_attribs )
   end
 
   def create_city_reader( name, more_attribs={} )

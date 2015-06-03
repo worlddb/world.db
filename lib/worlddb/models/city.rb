@@ -19,14 +19,14 @@ class City < ActiveRecord::Base
 
   # NB: use extend - is_<type>? become class methods e.g. self.is_<type>? for use in
   #   self.create_or_update_from_values
-  extend TextUtils::ValueHelper  # e.g. self.is_year?, self.is_region?, self.is_address?, self.is_taglist? etc.
+  extend TextUtils::ValueHelper  # e.g. self.is_year?, self.is_address?, self.is_taglist? etc.
 
 
   self.table_name = 'cities'
 
   belongs_to :place,   class_name: 'Place',   foreign_key: 'place_id'
   belongs_to :country, class_name: 'Country', foreign_key: 'country_id'
-  belongs_to :region,  class_name: 'Region',  foreign_key: 'region_id'
+  belongs_to :state,   class_name: 'State',   foreign_key: 'state_id'
 
   ## self referencing hierachy within cities e.g. m|metro > c|city > d|district
 
@@ -147,8 +147,8 @@ class City < ActiveRecord::Base
     ## check for optional values
 
     values.each_with_index do |value,index|
-      if match_region_for_country( value, new_attributes[:country_id] ) do |region|
-           new_attributes[ :region_id ] = region.id
+      if match_state_for_country( value, new_attributes[:country_id] ) do |state|
+           new_attributes[ :state_id ] = state.id
          end
       elsif match_country( value ) do |country|
               new_attributes[ :country_id ] = country.id

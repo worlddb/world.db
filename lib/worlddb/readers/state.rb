@@ -2,7 +2,7 @@
 
 module WorldDb
 
-class RegionReader
+class StateReader
 
   include LogUtils::Logging
 
@@ -51,7 +51,7 @@ class RegionReader
   end
 
   def self.from_string( text, more_attribs={} )
-    RegionReader.new( text, more_attribs )
+    StateReader.new( text, more_attribs )
   end
 
 
@@ -71,9 +71,9 @@ class RegionReader
 
     reader.each_line do |attribs, values|
       opts = { skip_tags: skip_tags? }
-      Region.create_or_update_from_attribs( attribs, values, opts )
+      State.create_or_update_from_attribs( attribs, values, opts )
     end
   end
 
-end # class RegionReader
+end # class StateReader
 end # module WorldDb

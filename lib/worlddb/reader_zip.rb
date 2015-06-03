@@ -85,11 +85,11 @@ class ZipReader < ReaderBase
     CountryReader.from_zip( @zip_file, path, more_attribs )
   end
 
-  def create_region_reader( name, more_attribs={} )
+  def create_state_reader( name, more_attribs={} )
     path = name_to_zip_entry_path( name )
-    logger.info "parsing data (region) in zip '#{name}' (#{path})..."
+    logger.info "parsing data (state) in zip '#{name}' (#{path})..."
 
-    RegionReader.from_zip( @zip_file, path, more_attribs )
+    StateReader.from_zip( @zip_file, path, more_attribs )
   end
 
   def create_city_reader( name, more_attribs={} )

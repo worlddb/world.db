@@ -9,7 +9,7 @@ module WorldDb
       puts "Stats:"
       puts " #{'%5d' % Continent.count} continents"
       puts " #{'%5d' % Country.count} countries (#{Country.where(s: true).count} supras, #{Country.where(d:true).count} deps), #{Country.where(m:true).count} miscs)"
-      puts " #{'%5d' % Region.count} regions"
+      puts " #{'%5d' % State.count} states"
       puts " #{'%5d' % City.where(m: true).where(c: false).count} metros"
       puts " #{'%5d' % City.where(c: true).count} cities (#{City.where(c: true).where(m: true).count} metros)"
       puts " #{'%5d' % City.where(d: true).count} districts"

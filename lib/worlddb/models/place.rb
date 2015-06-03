@@ -6,7 +6,7 @@ module WorldDb
 class Place < ActiveRecord::Base
 
   ## todo: depending on type
-  ##  has_one continent, country, region, city etc.
+  ##  has_one continent, country, state, city etc.
 
 end  # class Place
 
