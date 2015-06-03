@@ -1,7 +1,7 @@
 
 module WorldDb
 
-class CreateDb 
+class CreateDb
 
 def up
 
@@ -17,13 +17,14 @@ create_table :places do |t|
   #  SUPR - supra (e.g. European Union)
   #  CNTY - country
   #  TERR - terr
-  # region:
-  #  ADM1 - e.g. region/state/province
-  #  ADM2 - e.g. county/district/
-  #  ADM3 - e.g. 
+  # state:
+  #  ADM1 - e.g. state/province
+  #  ADM2 - e.g. county/bezirk/kreis
+  #  ADM3 - e.g. municipality/gemeinde
+  #  ADM4
   # city:
   #  MTRO - metro
-  #  CITY - city/town/
+  #  CITY - city/town/village/hamlet //(de)ort/stadt/markt
   #  DIST - district/
   #
   #  add new table for zones (e.g. informal regions e.g. tourism, wine regions, etc.) ??
@@ -33,7 +34,8 @@ create_table :places do |t|
   t.float   :lat   # optional for now (latitude)
   t.float   :lng   # optional for now (longitude)
 
-  ## todo: add parent for hierachy ?? or keep it in country/region/city etc. table ??
+  ## todo: add parent for hierachy ?? or keep it in country/state/city etc. table
+  ##    or use extra hierachy join table ??
 
   ## timestamp at last
   t.timestamps
@@ -43,7 +45,7 @@ end
 #############
 # todo: use many-to-many assoc w/ join table  for name and place ???
 #  why? why not?
-#    - wien -> city n region n metro ?  collect more samples of names used more than once
+#    - wien -> city n state n metro ?  collect more samples of names used more than once
 
 ### alternative names for places
 create_table :names do |t|
@@ -128,8 +130,114 @@ add_index :countries, :key,  unique: true
 add_index :countries, :code, unique: true
 
 
-## kind of regions/states but not hierachical (used for tourist/colloquial zones etc.)
-#    uses many-to-many join tables w/ cities n regions
+
+######
+# used for state/provice/land/regioni/etc.
+create_table :states do |t|
+  t.string     :name,   null: false
+  t.string     :key,    null: false
+  t.references :place,  null: false
+  t.string :code     # short two or three letter code e.g. NY, OAX, etc.
+  t.string :abbr     # optional conventional abbrevation (e.g. Stmk., Gto., etc.)
+  t.string :iso      # iso code
+  t.string :nuts     # nuts code (europe/eu only)
+  t.string :alt_names  # comma separated list of alternate names (synonyms)
+
+  t.references :country,  null: false
+  t.references :state      ## parent state (optional for now - may be null for top level e.g. state/province)
+  t.integer    :level,    null: false, default: 1  # default assumes 1 e.g. state/province/etc.
+  ### change to l (instead of level)!!!! - shorter, why, why not???
+
+  ## flags (use single int named flags - why? why not?  
+  ### fix: use a generic kind string type flag!!!!!!
+  ## t.boolean :s,  null: false, default: false   # state flag (use adm1? or a1)
+  ## t.boolean :p,  null: false, default: false   # governmental district falg (use adm2? or a2)  - check is Oberfranken/Oberbayern admin2 in Bayern (DE) ?? - note: might be optional (than adm3 becomes adm2)
+  ## t.boolean :c,  null: false, default: false   # county (or bezirk etc.) (use adm3? or a3?)
+
+  t.integer :pop     # optional population count
+  t.integer :area    # optional area in square km (sq. km)
+  t.timestamps
+end
+
+### fix: add kind to unique ???
+add_index :states, [:key, :country_id], unique: true
+
+
+####
+#  todo: use a view (of states/admins) instead - why? why not??
+#  parts used for regierungsbezirke
+create_table :parts do |t|
+  t.string     :name,   null: false
+  t.string     :key,    null: false
+  t.references :place,  null: false
+  t.string :code     # short two or three letter code e.g. NY, OAX, etc.
+  t.string :abbr     # optional conventional abbrevation (e.g. Stmk., Gto., etc.)
+  t.string :iso      # iso code  -- check in use/possible - ???
+  t.string :nuts     # nuts code (europe/eu only)
+  t.string :alt_names  # comma separated list of alternate names (synonyms)
+
+  t.references :state,  null: false
+  t.integer    :level,  null: false, default: 2  # default assumes 2
+  ### change to l (instead of level)!!!! - shorter, why, why not???
+
+  t.integer :pop     # optional population count
+  t.integer :area    # optional area in square km (sq. km)
+  t.timestamps
+end
+
+####
+#  todo: use a view (of states/admins) instead - why? why not??
+#    counties used for kreise, bezirke, etc.
+
+create_table :counties do |t|
+  t.string     :name,   null: false
+  t.string     :key,    null: false
+  t.references :place,  null: false
+  t.string :code     # short two or three letter code e.g. NY, OAX, etc.
+  t.string :abbr     # optional conventional abbrevation (e.g. Stmk., Gto., etc.)
+  t.string :iso      # iso code  -- check in use/possible - ???
+  t.string :nuts     # nuts code (europe/eu only)
+  t.string :alt_names  # comma separated list of alternate names (synonyms)
+
+  t.references :state,  null: false
+  t.references :part    # optional part (e.g. regierungsbezirk, etc.)
+  t.integer    :level,  null: false, default: 2  # default assumes 2 - note: is (change to) 3 if parts incl.
+  ### change to l (instead of level)!!!! - shorter, why, why not???
+
+  t.integer :pop     # optional population count
+  t.integer :area    # optional area in square km (sq. km)
+  t.timestamps
+end
+
+
+####
+#  todo: use a view (of states/admins) instead - why? why not??
+#    counties used for kreise, bezirke, etc.
+
+create_table :munis do |t|
+  t.string     :name,   null: false
+  t.string     :key,    null: false
+  t.references :place,  null: false
+  t.string :code     # short two or three letter code e.g. NY, OAX, etc.
+  t.string :abbr     # optional conventional abbrevation (e.g. Stmk., Gto., etc.)
+  t.string :iso      # iso code  -- check in use/possible - ???
+  t.string :nuts     # nuts code (europe/eu only)
+  t.string :alt_names  # comma separated list of alternate names (synonyms)
+
+  t.references :state,  null: false
+  t.references :county   # optional county (e.g. bezirk,kreis, etc.)
+  t.integer    :level,  null: false, default: 3  # default assumes 3 - note: is (change to) 4 if parts incl.
+  ### change to l (instead of level)!!!! - shorter, why, why not???
+
+  t.integer :pop     # optional population count
+  t.integer :area    # optional area in square km (sq. km)
+  t.timestamps
+end
+
+
+
+## kind of regions but not hierachical (used for tourist/colloquial zones etc.)
+#    uses many-to-many join tables w/ cities n states/admins
 #
 #  examples:
 #    Salzkammergut (part of Salzburg and Oberoesterreich)
@@ -139,48 +247,15 @@ create_table :zones do |t|
   # to be done
 end
 
-
-######
-# NB: rename to adms/admins ?? or use states ???
-#
-# used for state/provice/land/regioni/etc.
-create_table :regions do |t|
-  t.string     :name,   null: false
-  t.string     :key,    null: false
-  t.references :place,  null: false
-  t.string :code     # short two or three letter code e.g. NY, OAX, etc.
-  t.string :abbr     # optional conventional abbrevation (e.g. Stmk., Gto., etc.)
-  t.string :iso      # iso code
-  t.string :nuts     # nuts code (europe/eu only)
-  t.string     :alt_names  # comma separated list of alternate names (synonyms)
-
-  t.references :country,  null: false
-  t.references :region    ## parent region (optional for now - may be null for top level e.g. state/province)
-  t.integer    :level,    null: false, default: 1  # default assumes 1 e.g. state/province/etc.
-  ### change to l (instead of level)!!!! - shorter, why, why not???
-
-  ## flags (use single int named flags - why? why not?  
-  ### fix: use a generic kind string type flag!!!!!!
-  t.boolean :s,  null: false, default: false   # state flag (use adm1? or a1)
-  t.boolean :d,  null: false, default: false   # governmental district falg (use adm2? or a2)  - check is Oberfranken/Oberbayern admin2 in Bayern (DE) ?? - note: might be optional (than adm3 becomes adm2)
-  t.boolean :c,  null: false, default: false   # county (or bezirk etc.) (use adm3? or a3?)
+## create_table :city_rels do |t|   ## city relationships (w/ states/admins) -- part of state/zone
+##   t.references :city,   null: false
+##  t.references :state  ## optional ?? either state/admin or zone ?? use polymorphic assoc or use node w/ kind for place?
+##   t.references :zone    ## tourist zone e.g. fraenkische schweiz, wachau, steigerwald, etc. - use own join table???
+## end
 
 
-  t.integer :pop     # optional population count
-  t.integer :area    # optional area in square km (sq. km)
-  t.timestamps
-end
-
-### fix: add kind to unique ???
-add_index :regions, [:key, :country_id], unique: true
-
-
-
-create_table :city_rels do |t|   ## city relationships (w/ regions) -- part of region/zone
-  t.references :city,   null: false
-  t.references :region  ## optional ?? either region or zone ?? use polymorphic assoc or use node w/ kind for place?
-  t.references :zone    ## tourist zone e.g. fraenkische schweiz, wachau, steigerwald, etc. - use own join table???
-end
+###########
+# fix: create (new) tables metros, districts!!!! -- break out from cities!!
 
 create_table :cities do |t|
   t.string     :name,   null: false
@@ -189,8 +264,10 @@ create_table :cities do |t|
   t.string     :code     # short three letter code (ITAT/airport code e.g. NYC or VIE)
   t.string     :alt_names  # comma separated list of alternate names (synonyms)
   t.references :country,  null: false
-  t.references :region    # optional for now
-  t.references :city  # optional parent (e.g. metro for city, or city for district)
+  t.references :state    # optional for now (e.g. state, bundesland, etc.)
+  t.references :muni     # optional for now (e.g. gemeinde, etc.)
+
+  t.references :city     # optional parent (e.g. metro for city, or city for district)
   t.integer :pop     # optional population count (city proper)
   t.integer :popm    # optional population count (metropolitan/aglomeration)
   t.integer :area    # optional area in square km (sq. km)
