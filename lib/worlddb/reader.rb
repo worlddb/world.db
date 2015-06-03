@@ -109,8 +109,9 @@ class ReaderBase
             end
             logger.debug "State (Adm2) #{adm2.key} >#{adm2.title}<"
 
-            r = create_state_reader( name, country_id: country.id, state_id: adm2.id, level:3, c:true )
-            r.read()
+            st = create_state_reader( name, country_id: country.id, state_id: adm2.id, level:3  )
+            ## was: r = create_state_reader( name, country_id: country.id, state_id: adm2.id, level:3, c:true )
+            st.read()
           end
     elsif match_adm2_for_country( name ) do |country_key,state_key|
             ## auto-add required country code (from folder structure)
@@ -119,8 +120,9 @@ class ReaderBase
             state  = State.find_by_key_and_country_id!( state_key, country.id )
             logger.debug "State (Adm1) #{state.key} >#{state.title}<"
 
-            r = create_state_reader( name, country_id: country.id, state_id: state.id, level:2, d:true )
-            r.read()
+            st = create_state_reader( name, country_id: country.id, state_id: state.id, level:2 )
+            ## was: r = create_state_reader( name, country_id: country.id, state_id: state.id, level:2, d:true )
+            st.read()
           end
     ### fix: change to match_adm1_for_country()
     elsif match_states_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/states/
@@ -128,8 +130,9 @@ class ReaderBase
             country = Country.find_by_key!( country_key )
             logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
 
-            r = create_state_reader( name, country_id: country.id, state_id: nil, level:1, s:true )
-            r.read()
+            st = create_state_reader( name, country_id: country.id, state_id: nil, level:1 )
+            ## was: r = create_state_reader( name, country_id: country.id, state_id: nil, level:1, s:true )
+            st.read()
           end
     else
       logger.error "unknown world.db fixture type >#{name}<"

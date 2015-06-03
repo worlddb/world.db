@@ -6,7 +6,7 @@ require 'helper'
 class TestModels < MiniTest::Test
 
   def setup
-    #  delete all countries, regions, cities in in-memory only db
+    #  delete all countries, states, cities in in-memory only db
     WorldDb.delete!
   end
 
@@ -15,7 +15,7 @@ class TestModels < MiniTest::Test
     assert_equal 0, Place.count
     assert_equal 0, Continent.count
     assert_equal 0, Country.count
-    assert_equal 0, Region.count
+    assert_equal 0, State.count
     assert_equal 0, City.count
 
     assert_equal 0, Lang.count
@@ -27,7 +27,7 @@ class TestModels < MiniTest::Test
   def test_place_assoc_counts
     # assert_equal 0, Continent.new.place.count
     # assert_equal 0, Country.new.place.count
-    # assert_equal 0, Region.new.place.count
+    # assert_equal 0, State.new.place.count
     # assert_equal 0, City.new.place.count
   end
 

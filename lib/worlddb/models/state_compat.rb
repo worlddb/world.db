@@ -19,12 +19,12 @@ class State
 
   def title_w_synonyms( opts={} )  all_names( opts );  end    # depreciated: use all_names instead
 
-  ## has_many  :regions, class_name: 'State', foreign_key: 'state_id'   ## subregions
+  has_many  :regions, class_name: 'State', foreign_key: 'state_id'   ## subregions
 
 end # class State
 
 ### add "old" alias for State class
-## Region = State
+Region = State
 
   end # module Model
 end # module WorldDb

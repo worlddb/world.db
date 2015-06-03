@@ -10,7 +10,7 @@ require 'helper'
 class TestReadAdm < MiniTest::Test
 
   def setup
-    #  delete all countries, regions, cities in in-memory only db
+    #  delete all countries, states, cities in in-memory only db
     WorldDb.delete!
   end
 
@@ -26,7 +26,7 @@ class TestReadAdm < MiniTest::Test
 
     ###
     ## todo/fix: shorten level to l -- why, why not???
-    assert_equal 9, at.regions.where(level:1).count
+    assert_equal 9, at.states.where(level:1).count
   end
 
 
@@ -44,24 +44,24 @@ class TestReadAdm < MiniTest::Test
     ###
     ## todo/fix: shorten level to l -- why, why not???
 
-    assert_equal 16, de.regions.where(level:1).count
-    ## assert_equal 16+??, de.regions.count
+    assert_equal 16, de.states.where(level:1).count
+    ## assert_equal 16+??, de.states.count
 
-    by = Region.find_by_key!( 'by' )
-    assert_equal 7, by.regions.where(level:2).count
-    ## assert_equal 7+??, by.regions.count
+    by = State.find_by_key!( 'by' )
+    assert_equal 7, by.states.where(level:2).count
+    ## assert_equal 7+??, by.states.count
 
-    ## pp by.regions
+    ## pp by.states
 
-    ob = Region.find_by_key!( 'ob' )
+    ob = State.find_by_key!( 'ob' )
     assert_equal 'Oberbayern', ob.name
-    assert_equal 23, ob.regions.where(level:3).count
-    assert_equal 23, ob.regions.count
+    assert_equal 23, ob.states.where(level:3).count
+    assert_equal 23, ob.states.count
 
-    ofr = Region.find_by_key!( 'ofr' )
+    ofr = State.find_by_key!( 'ofr' )
     assert_equal 'Oberfranken', ofr.name
-    assert_equal 13, ofr.regions.where(level:3).count
-    assert_equal 13, ofr.regions.count
+    assert_equal 13, ofr.states.where(level:3).count
+    assert_equal 13, ofr.states.count
   end
 
 end # class TestReadAdm
