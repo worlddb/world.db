@@ -8,6 +8,15 @@ class Continent < ActiveRecord::Base
   belongs_to :place,     class_name: 'Place',   foreign_key: 'place_id'
   has_many   :countries
 
+  ## begin compat
+  def title()       name;              end
+  def title=(value) self.name = value; end
+
+  def synonyms()       alt_names;              end
+  def synonyms=(value) self.alt_names = value; end
+  ## end
+
+
   # NB: allow dots in keys e.g. concacaf.naf etc.    
 
   before_create :on_create

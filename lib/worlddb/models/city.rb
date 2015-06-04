@@ -44,6 +44,16 @@ class City < ActiveRecord::Base
 
   has_many_tags
 
+  ## begin compat
+  def title()        name;              end
+  def title=(value)  self.name = value; end
+
+  def synonyms()       alt_names;              end
+  def synonyms=(value) self.alt_names = value; end
+  ## end
+
+
+
   ###
   #  NB: use is_  for flags to avoid conflict w/ assocs (e.g. metro?, city? etc.)
   

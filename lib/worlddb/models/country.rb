@@ -38,6 +38,14 @@ class Country < ActiveRecord::Base
   validates :key,  format: { with: /#{COUNTRY_KEY_PATTERN}/,  message: COUNTRY_KEY_PATTERN_MESSAGE }
   validates :code, format: { with: /#{COUNTRY_CODE_PATTERN}/, message: COUNTRY_CODE_PATTERN_MESSAGE }
 
+  ## begin compat
+  def title()       name;              end
+  def title=(value) self.name = value; end
+
+  def synonyms()       alt_names;              end
+  def synonyms=(value) self.alt_names = value; end
+  ## end
+
 
   scope :by_key,   ->{ order( 'key asc' ) }    # order by key (a-z)
   scope :by_name,  ->{ order( 'name asc' ) }   # order by name (a-z)

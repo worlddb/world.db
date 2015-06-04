@@ -11,6 +11,12 @@ class Lang < ActiveRecord::Base
 
   validates :key, format: { with: /#{LANG_KEY_PATTERN}/, message: LANG_KEY_PATTERN_MESSAGE }
 
+  ## begin compat
+  def title()       name;              end
+  def title=(value) self.name = value; end
+  ## end
+
+
 end  # class Lang
 
   end # module Model

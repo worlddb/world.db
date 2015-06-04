@@ -80,7 +80,7 @@ class ReaderBase
     elsif match_cities_for_country( name ) do |country_key|  #  name =~ /\/([a-z]{2})\/cities/
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
-            logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+            logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
 
             r = create_city_reader( name, country_id: country.id )
             r.read()
@@ -97,9 +97,9 @@ class ReaderBase
     elsif match_adm3_for_country( name ) do |country_key,state_key,adm2_name|
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
-            logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+            logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
             state  = State.find_by_key_and_country_id!( state_key, country.id )
-            logger.debug "State (Adm1) #{state.key} >#{state.title}<"
+            logger.debug "State (Adm1) #{state.key} >#{state.name}<"
             ### todo: move find adm2 to model for (re)use !!!
             adm2    = State.where( "lower(name) = ? AND country_id = ?",
                                      adm2_name, country.id ).first   ## check - first needed? returns ary??
@@ -107,31 +107,28 @@ class ReaderBase
               puts "*** error/warn: fix - skipping adm3 - adm2 '#{adm2_name}' not found"
               next
             end
-            logger.debug "State (Adm2) #{adm2.key} >#{adm2.title}<"
+            logger.debug "State (Adm2) #{adm2.key} >#{adm2.name}<"
 
             st = create_state_reader( name, country_id: country.id, state_id: adm2.id, level:3  )
-            ## was: r = create_state_reader( name, country_id: country.id, state_id: adm2.id, level:3, c:true )
             st.read()
           end
     elsif match_adm2_for_country( name ) do |country_key,state_key|
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
-            logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+            logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
             state  = State.find_by_key_and_country_id!( state_key, country.id )
-            logger.debug "State (Adm1) #{state.key} >#{state.title}<"
+            logger.debug "State (Adm1) #{state.key} >#{state.name}<"
 
             st = create_state_reader( name, country_id: country.id, state_id: state.id, level:2 )
-            ## was: r = create_state_reader( name, country_id: country.id, state_id: state.id, level:2, d:true )
             st.read()
           end
     ### fix: change to match_adm1_for_country()
     elsif match_states_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/states/
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
-            logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+            logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
 
             st = create_state_reader( name, country_id: country.id, state_id: nil, level:1 )
-            ## was: r = create_state_reader( name, country_id: country.id, state_id: nil, level:1, s:true )
             st.read()
           end
     else
@@ -144,7 +141,7 @@ class ReaderBase
   ### use StateAttrReader
   def load_states_xxx( country_key, xxx, name )
     country = Country.find_by_key!( country_key )
-    logger.debug "Country #{country.key} >#{country.title} (#{country.code})<"
+    logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
 
     reader = create_hash_reader( name )
 

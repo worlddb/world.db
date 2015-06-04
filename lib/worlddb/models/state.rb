@@ -27,6 +27,13 @@ class State < ActiveRecord::Base
   belongs_to :parent,  class_name: 'State', foreign_key: 'state_id'
   has_many   :states,  class_name: 'State', foreign_key: 'state_id'  ## substates
 
+  ## begin compat
+  def title()       name;              end
+  def title=(value) self.name = value; end
+
+  def synonyms()       alt_names;              end
+  def synonyms=(value) self.alt_names = value; end
+  ## end
 
   before_create :on_create
   before_update :on_update
@@ -65,6 +72,8 @@ class State < ActiveRecord::Base
 
     ## key & title & country required
     attribs, more_values = find_key_n_title( values )
+    ## fix/hack: change :title to :name
+    ## attribs[:name] = attribs[:title]; attribs.delete( :title )
     attribs = attribs.merge( more_attribs )
 
     ## check for optional values
