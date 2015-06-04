@@ -3,6 +3,7 @@ Manifest.txt
 README.md
 Rakefile
 lib/worlddb/deleter.rb
+lib/worlddb/helpers/value_helper.rb
 lib/worlddb/matcher.rb
 lib/worlddb/matcher_adm.rb
 lib/worlddb/models.rb

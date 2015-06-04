@@ -52,9 +52,10 @@ require 'worlddb/models/usage'
 require 'worlddb/models/tagdb/tag'
 require 'worlddb/models/tagdb/tagging'
 
+require 'worlddb/helpers/value_helper'  # Note: extends module TextUtils(!!)::ValueHelper
 
 
-require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
+require 'worlddb/schema'       # Note: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
 require 'worlddb/matcher_adm'
 
