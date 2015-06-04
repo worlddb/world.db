@@ -30,9 +30,9 @@ Everything is a place.
     at.area
     # => 83_871
     
-    at.regions.count
+    at.states.count
     # => 9
-    at.regions
+    at.states
     # => [ 'Wien', 'Niederösterreich', 'Oberösterreich', ... ]
 
     at.cities.by_pop
@@ -52,9 +52,9 @@ Everything is a place.
     la = City.find_by! key: 'losangeles'
     la.name
     # => 'Los Angeles'
-    la.region.name
+    la.state.name
     # => 'California'
-    la.region.key
+    la.state.key
     # => 'ca'
     la.country.name
     # => 'United States'
@@ -73,11 +73,11 @@ Everything is a place.
     # => ['Austria, 'Belgium', 'Cyprus', ... ]
     
     flanders = Tag.find_by! key: 'flanders'
-    flanders.regions.count
+    flanders.states.count
     # => 5
-    flanders.regions
+    flanders.states
     # => ['Antwerpen', 'Brabant Wallon', 'Limburg', 'Oost-Vlaanderen', 'West-Vlaanderen']
-    flanders.regions.first.country.name
+    flanders.states.first.country.name
     # => 'Belgium'
 
 and so on.
