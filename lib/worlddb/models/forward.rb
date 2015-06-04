@@ -19,8 +19,10 @@ class Name < ActiveRecord::Base ; end
 class Place < ActiveRecord::Base ; end
 class Continent < ActiveRecord::Base ; end
 class Country < ActiveRecord::Base ; end
-class State < ActiveRecord::Base ; end
 class City < ActiveRecord::Base ; end
+
+class StateBase < ActiveRecord::Base ; end
+class State < StateBase ; end
 
 class Lang < ActiveRecord::Base ; end
 class Usage < ActiveRecord::Base ; end
