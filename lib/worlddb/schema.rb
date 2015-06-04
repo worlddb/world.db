@@ -264,8 +264,11 @@ create_table :cities do |t|
   t.string     :code     # short three letter code (ITAT/airport code e.g. NYC or VIE)
   t.string     :alt_names  # comma separated list of alternate names (synonyms)
   t.references :country,  null: false
-  t.references :state    # optional for now (e.g. state, bundesland, etc.)
-  t.references :muni     # optional for now (e.g. gemeinde, etc.)
+  t.references :state    # optional for now (e.g. state, bundesland, etc.)  -- ADM1
+  t.references :part     # optional for now (e.g. regierungsbezirk, etc.)   -- -   /ADM2
+  t.references :county   # optional for now (e.g. landkreis, bezirk, etc.)  -- ADM2/ADM3
+  t.references :muni     # optional for now (e.g. gemeinde, etc.)           -- ADM3/ADM4
+
 
   t.references :city     # optional parent (e.g. metro for city, or city for district)
   t.integer :pop     # optional population count (city proper)

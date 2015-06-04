@@ -22,7 +22,10 @@ class Country < ActiveRecord::Base ; end
 class City < ActiveRecord::Base ; end
 
 class StateBase < ActiveRecord::Base ; end
-class State < StateBase ; end
+class State  < StateBase ; end  ## ADM1
+class Part   < StateBase ; end  ## ADM2/-
+class County < StateBase ; end  ## ADM3/ADM2
+class Muni   < StateBase ; end  ## ADM4/ADM3
 
 class Lang < ActiveRecord::Base ; end
 class Usage < ActiveRecord::Base ; end
@@ -47,7 +50,12 @@ Name        = WorldDb::Model::Name
 Place       = WorldDb::Model::Place
 Continent   = WorldDb::Model::Continent
 Country     = WorldDb::Model::Country
-State       = WorldDb::Model::State
+
+State       = WorldDb::Model::State   ## ADM1
+Part        = WorldDb::Model::Part    ## ADM2/-
+County      = WorldDb::Model::County  ## ADM3/ADM2
+Muni        = WorldDb::Model::Muni    ## ADM4/ADM3
+
 City        = WorldDb::Model::City
 
 Lang        = WorldDb::Model::Lang

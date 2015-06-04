@@ -15,7 +15,6 @@ class StateBase < ActiveRecord::Base
   extend TextUtils::ValueHelper  # e.g. is_year?, is_address?, is_taglist? etc.
 
   belongs_to :place,   class_name: 'Place',   foreign_key: 'place_id'
-  belongs_to :country, class_name: 'Country', foreign_key: 'country_id'
 
   has_many_tags   # note: check if working w/ base class (statebase) -- use/try concern??
 

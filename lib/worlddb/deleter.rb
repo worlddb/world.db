@@ -19,6 +19,9 @@ module WorldDb
       Place.delete_all
       City.delete_all
       State.delete_all
+      Part.delete_all
+      County.delete_all
+      Muni.delete_all
       Country.delete_all
       Continent.delete_all
       Usage.delete_all
