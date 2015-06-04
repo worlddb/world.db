@@ -42,16 +42,11 @@ require 'worlddb/models/forward'
 require 'worlddb/models/name'
 require 'worlddb/models/place'
 require 'worlddb/models/continent'
-require 'worlddb/models/continent_compat'    # todo: move to compat gem
 require 'worlddb/models/country'
-require 'worlddb/models/country_compat'      # todo: move to compat gem
 require 'worlddb/models/country_code'
 require 'worlddb/models/state'
-require 'worlddb/models/state_compat'       # todo: move to compat gem
 require 'worlddb/models/city'
-require 'worlddb/models/city_compat'         # todo: move to compat gem
 require 'worlddb/models/lang'
-require 'worlddb/models/lang_compat'         # todo: move to compat gem 
 require 'worlddb/models/usage'
 
 require 'worlddb/models/tagdb/tag'
@@ -62,7 +57,6 @@ require 'worlddb/models/tagdb/tagging'
 require 'worlddb/schema'       # NB: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
 require 'worlddb/matcher_adm'
-require 'worlddb/matcher_compat'
 
 require 'worlddb/readers/lang'
 require 'worlddb/readers/usage'
