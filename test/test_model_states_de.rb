@@ -2,12 +2,12 @@
 
 ###
 #  to run use
-#     ruby -I ./lib -I ./test test/test_model_states.rb
+#     ruby -I ./lib -I ./test test/test_model_states_de.rb
 
 
 require 'helper'
 
-class TestModelStates < MiniTest::Test
+class TestModelStatesDe < MiniTest::Test
 
   def setup
     #  delete all countries, states, cities in in-memory only db
@@ -15,7 +15,7 @@ class TestModelStates < MiniTest::Test
   end
 
 
-  def test_de   # country > state > part > county > muni
+  def test_bayern   # country > state > part > county > muni
 
     de = Country.create!( key: 'de',
                           name: 'Deutschland',
@@ -45,6 +45,8 @@ class TestModelStates < MiniTest::Test
     assert_equal  'Deutschland', by.country.name
     assert_equal  0,             by.parts.count
     assert_equal  0,             by.counties.count
+    assert_equal  0,             by.munis.count
+    assert_equal  0,             by.cities.count
 
     ############
     # Part
@@ -70,6 +72,7 @@ class TestModelStates < MiniTest::Test
     ## test assocs
     assert_equal  'Bayern',      ob.state.name
     assert_equal  0,             ob.counties.count
+    assert_equal  0,             ob.cities.count
     assert_equal  1,             by.parts.count
     assert_equal  'Oberbayern',  by.parts.first.name
 
@@ -101,11 +104,44 @@ class TestModelStates < MiniTest::Test
     assert_equal  'Bayern',      fs.state.name
     assert_equal  'Oberbayern',  fs.part.name
     assert_equal  0,             fs.munis.count
+    assert_equal  0,             fs.cities.count
     assert_equal  1,             by.counties.count
     assert_equal  1,             ob.counties.count
     assert_equal  'Freising',    by.counties.first.name
     assert_equal  'Freising',    ob.counties.first.name
 
+    #############################
+    # Muni (Gemeinde - Markt, Stadt, etc.)
+
+    au = Muni.create!( key: 'auidhallertau',
+                       name: 'Au i.d. Hallertau',
+                       state_id: by.id,
+                       county_id: fs.id,
+                       pop: 1,
+                       area: 1,
+                       level: 4 )
+
+    au2 = Muni.find_by_key!( 'auidhallertau' )
+    assert_equal au.id, au2.id
+
+    assert_equal 'Au i.d. Hallertau', au.name 
+    assert_equal 1,                   au.area 
+    assert_equal by.id,               au.state_id
+    assert_equal fs.id,               au.county_id
+    assert_equal 4,                   au.level
+    assert_equal 'ADM4',              au.place_kind
+
+    ### test place
+    assert_equal  'Au i.d. Hallertau', au.place.name
+
+    ## test assocs
+    assert_equal  'Bayern',            au.county.state.name
+    assert_equal  'Oberbayern',        au.county.part.name
+    assert_equal  0,                   au.cities.count
+    assert_equal  1,                   by.munis.count
+    assert_equal  1,                   fs.munis.count
+    assert_equal  'Au i.d. Hallertau', by.munis.first.name
+    assert_equal  'Au i.d. Hallertau', fs.munis.first.name
   end
 
-end # class TestModelStates
+end # class TestModelStatesDe

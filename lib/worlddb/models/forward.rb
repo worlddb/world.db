@@ -23,9 +23,9 @@ class City < ActiveRecord::Base ; end
 
 class StateBase < ActiveRecord::Base ; end
 class State  < StateBase ; end  ## ADM1
-class Part   < StateBase ; end  ## ADM2/-
-class County < StateBase ; end  ## ADM3/ADM2
-class Muni   < StateBase ; end  ## ADM4/ADM3
+class Part   < StateBase ; end  ## x   /ADM2
+class County < StateBase ; end  ## ADM2/ADM3
+class Muni   < StateBase ; end  ## ADM3/ADM4
 
 class Lang < ActiveRecord::Base ; end
 class Usage < ActiveRecord::Base ; end
@@ -52,9 +52,9 @@ Continent   = WorldDb::Model::Continent
 Country     = WorldDb::Model::Country
 
 State       = WorldDb::Model::State   ## ADM1
-Part        = WorldDb::Model::Part    ## ADM2/-
-County      = WorldDb::Model::County  ## ADM3/ADM2
-Muni        = WorldDb::Model::Muni    ## ADM4/ADM3
+Part        = WorldDb::Model::Part    ## x   /ADM2
+County      = WorldDb::Model::County  ## ADM2/ADM3
+Muni        = WorldDb::Model::Muni    ## ADM3/ADM4
 
 City        = WorldDb::Model::City
 

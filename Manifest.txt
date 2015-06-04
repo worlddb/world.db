@@ -16,6 +16,7 @@ lib/worlddb/models/lang.rb
 lib/worlddb/models/name.rb
 lib/worlddb/models/place.rb
 lib/worlddb/models/state.rb
+lib/worlddb/models/state_base.rb
 lib/worlddb/models/tagdb/tag.rb
 lib/worlddb/models/tagdb/tagging.rb
 lib/worlddb/models/usage.rb
@@ -51,4 +52,5 @@ test/test_model_city.rb
 test/test_model_comp.rb
 test/test_model_country.rb
 test/test_model_state.rb
+test/test_model_states_de.rb
 test/test_models.rb
