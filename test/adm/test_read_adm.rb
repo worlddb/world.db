@@ -24,9 +24,7 @@ class TestReadAdm < MiniTest::Test
     reader = WorldDb::Reader.new( "#{WorldDb.root}/test/data/at-austria" )
     reader.load_setup( 'setups/adm' )
 
-    ###
-    ## todo/fix: shorten level to l -- why, why not???
-    assert_equal 9, at.states.where(level:1).count
+    assert_equal 9, at.states.count
   end
 
 
@@ -41,27 +39,22 @@ class TestReadAdm < MiniTest::Test
     reader.load_setup( 'setups/adm' )
 
 
-    ###
-    ## todo/fix: shorten level to l -- why, why not???
-
-    assert_equal 16, de.states.where(level:1).count
-    ## assert_equal 16+??, de.states.count
+    assert_equal 16, de.states.count
 
     by = State.find_by_key!( 'by' )
-    assert_equal 7, by.states.where(level:2).count
-    ## assert_equal 7+??, by.states.count
+    assert_equal 7, by.parts.count
+    ## assert_equal 23+, by.counties.count
 
-    ## pp by.states
+    ## pp by.parts
 
-    ob = State.find_by_key!( 'ob' )
+    ob = Part.find_by_key!( 'ob' )
     assert_equal 'Oberbayern', ob.name
-    assert_equal 23, ob.states.where(level:3).count
-    assert_equal 23, ob.states.count
+    assert_equal 23, ob.counties.count
 
-    ofr = State.find_by_key!( 'ofr' )
+    ofr = Part.find_by_key!( 'ofr' )
     assert_equal 'Oberfranken', ofr.name
-    assert_equal 13, ofr.states.where(level:3).count
-    assert_equal 13, ofr.states.count
+    assert_equal 13, ofr.counties.count
   end
 
 end # class TestReadAdm
+

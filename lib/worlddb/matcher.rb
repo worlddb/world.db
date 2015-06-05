@@ -4,6 +4,62 @@ module WorldDb
 
 module Matcher
 
+
+  def match_cities_for_country( name, &blk )
+    ## todo: check if there's a better (more ruby way) to pass along code block ??
+    ## e.g. try
+    ##   match_xxx_for_country( name, 'cities') { |country_key| yield(country_key) }
+
+    match_xxx_for_country( name, 'cities', &blk )
+  end
+
+
+  def match_states_for_country( name, &blk )
+    ## todo/fix: remove regions (obsolete) - no longer supported
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states', &blk )
+    found = match_xxx_for_country( name, 'regions', &blk ) unless found
+    found
+  end
+
+  def match_states_abbr_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states\.abbr', &blk )
+    found = match_xxx_for_country( name, 'regions\.abbr', &blk ) unless found
+    found
+  end
+
+  def match_states_iso_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states\.iso', &blk )
+    found = match_xxx_for_country( name, 'regions\.iso', &blk ) unless found
+    found 
+  end
+
+  def match_states_nuts_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
+    ## also try synonyms e.g. old regions (if not match for states)
+    found = match_xxx_for_country( name, 'states\.nuts', &blk )
+    found = match_xxx_for_country( name, 'regions\.nuts', &blk ) unless found
+    found
+  end
+
+
+  def match_countries_for_continent( name )
+    if name =~ /^([a-z][a-z\-_]+[a-z])\/countries/     # e.g. africa/countries or america/countries
+      ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
+      ## auto-add continent (from folder structure) as tag
+      ## fix: allow dash/hyphen/minus in tag
+      continent = $1.dup
+      yield( continent )
+      true
+    else
+      false # no match found
+    end
+  end
+
+
+private
+
   # note: returns code as capture
   WORLD_COUNTRY_CODE_PATTERN    = '([a-z]{2,3})'
   WORLD_COUNTRY_CLASSIC_PATTERN = "#{WORLD_COUNTRY_CODE_PATTERN}-[^\\/]+"          ## note: if you use "" need to double escape backslash!!!
@@ -96,58 +152,6 @@ module Matcher
       state_key  = $2.dup
       yield( country_key, state_key )
       true # bingo - match found
-    else
-      false # no match found
-    end
-  end
-
-
-  def match_cities_for_country( name, &blk )
-    ## todo: check if there's a better (more ruby way) to pass along code block ??
-    ## e.g. try
-    ##   match_xxx_for_country( name, 'cities') { |country_key| yield(country_key) }
-
-    match_xxx_for_country( name, 'cities', &blk )
-  end
-
-
-  def match_states_for_country( name, &blk )
-    ## also try synonyms e.g. old regions (if not match for states)
-    found = match_xxx_for_country( name, 'states', &blk )
-    found = match_xxx_for_country( name, 'regions', &blk ) unless found
-    found
-  end
-
-  def match_states_abbr_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    ## also try synonyms e.g. old regions (if not match for states)
-    found = match_xxx_for_country( name, 'states\.abbr', &blk )
-    found = match_xxx_for_country( name, 'regions\.abbr', &blk ) unless found
-    found
-  end
-
-  def match_states_iso_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    ## also try synonyms e.g. old regions (if not match for states)
-    found = match_xxx_for_country( name, 'states\.iso', &blk )
-    found = match_xxx_for_country( name, 'regions\.iso', &blk ) unless found
-    found 
-  end
-
-  def match_states_nuts_for_country( name, &blk )  # NB: . gets escaped for regex, that is, \.
-    ## also try synonyms e.g. old regions (if not match for states)
-    found = match_xxx_for_country( name, 'states\.nuts', &blk )
-    found = match_xxx_for_country( name, 'regions\.nuts', &blk ) unless found
-    found
-  end
-
-
-  def match_countries_for_continent( name )
-    if name =~ /^([a-z][a-z\-_]+[a-z])\/countries/     # e.g. africa/countries or america/countries
-      ### NB: continent changed to regions (e.g. middle-east, caribbean, north-america, etc.)
-      ## auto-add continent (from folder structure) as tag
-      ## fix: allow dash/hyphen/minus in tag
-      continent = $1.dup
-      yield( continent )
-      true
     else
       false # no match found
     end

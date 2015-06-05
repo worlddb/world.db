@@ -9,6 +9,21 @@ module WorldDb
 
 module Matcher
 
+  def match_adm2_parts_for_country( name, &blk )
+    match_xxx_for_country_n_adm1( name, 'parts', &blk )
+  end
+
+  def match_adm2_counties_for_country( name, &blk )
+    ## note: counties might also be an adm3 match
+    match_xxx_for_country_n_adm1( name, 'counties', &blk )
+  end
+
+  def match_adm3_counties_for_country( name, &blk )
+    match_xxx_for_country_n_adm1_n_adm2( name, 'counties', &blk )
+  end
+
+
+private
   # note: returns name as capture (no code required)
   WORLD_ADMIN_MODERN_PATTERN    = "[0-9]+--([^\\/]+)"
 
@@ -59,19 +74,6 @@ module Matcher
     else
       false # no match found
     end
-  end
-
-
-  def match_adm2_for_country( name, &blk )
-    ## note: also try synonyms e.g. parts|counties
-    ## note: counties might also be an adm3 match
-    found = match_xxx_for_country_n_adm1( name, 'parts', &blk )
-    found = match_xxx_for_country_n_adm1( name, 'counties', &blk ) unless found
-    found
-  end
-
-  def match_adm3_for_country( name, &blk )
-    match_xxx_for_country_n_adm1_n_adm2( name, 'counties', &blk )
   end
 
 end # module Matcher

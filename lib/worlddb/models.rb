@@ -60,6 +60,7 @@ require 'worlddb/schema'       # Note: requires worlddb/models (include WorldDB:
 require 'worlddb/matcher'
 require 'worlddb/matcher_adm'
 
+require 'worlddb/readers/base'
 require 'worlddb/readers/lang'
 require 'worlddb/readers/usage'
 require 'worlddb/readers/country'

@@ -35,6 +35,10 @@ class Part < StateBase    ## optional ADM2 e.g. Regierungsbezirke in Bayern, etc
     'ADM2'   # note: for now assumes always level 2
   end
 
+  def country_id  # return country_id via top-level (e.g. adm1) state; -- used for auto-creating cities
+    state.country_id
+  end
+
 end # class Part
 
 
@@ -50,6 +54,10 @@ class County < StateBase   ## note: might be ADM2 or ADM3
     "ADM#{level}"   # note: might be ADM2 or ADM3
   end
 
+  def country_id  # return country_id via top-level (e.g. adm1) state
+    state.country_id
+  end
+
 end # class County
 
 
@@ -62,6 +70,10 @@ class Muni < StateBase   ## note: might be ADM3 or ADM4
 
   def place_kind   # use place_kind_of_code ??
     "ADM#{level}"   # note: might be ADM3 or ADM4
+  end
+
+  def country_id  # return country_id via top-level (e.g. adm1) state
+    state.country_id
   end
 
 end # class Muni

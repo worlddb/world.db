@@ -92,6 +92,29 @@ class ZipReader < ReaderBase
     StateReader.from_zip( @zip_file, path, more_attribs )
   end
 
+  def create_part_reader( name, more_attribs={} )
+    path = name_to_zip_entry_path( name )
+    logger.info "parsing data (part) in zip '#{name}' (#{path})..."
+
+    PartReader.from_zip( @zip_file, path, more_attribs )
+  end
+
+  def create_county_reader( name, more_attribs={} )
+    path = name_to_zip_entry_path( name )
+    logger.info "parsing data (county) in zip '#{name}' (#{path})..."
+
+    CountyReader.from_zip( @zip_file, path, more_attribs )
+  end
+
+  def create_muni_reader( name, more_attribs={} )
+    path = name_to_zip_entry_path( name )
+    logger.info "parsing data (muni) in zip '#{name}' (#{path})..."
+
+    MuniReader.from_zip( @zip_file, path, more_attribs )
+  end
+
+
+
   def create_city_reader( name, more_attribs={} )
     path = name_to_zip_entry_path( name )
     logger.info "parsing data (city) in zip '#{name}' (#{path})..."

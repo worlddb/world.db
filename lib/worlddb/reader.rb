@@ -94,41 +94,62 @@ class ReaderBase
     elsif match_states_nuts_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/states\.nuts/
             load_states_xxx( country_key, 'nuts', name )
           end
-    elsif match_adm3_for_country( name ) do |country_key,state_key,adm2_name|
+    elsif match_adm3_counties_for_country( name ) do |country_key, state_key, part_name|
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
             logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
             state  = State.find_by_key_and_country_id!( state_key, country.id )
-            logger.debug "State (Adm1) #{state.key} >#{state.name}<"
+            logger.debug "State (ADM1) #{state.key} >#{state.name}<"
+
             ### todo: move find adm2 to model for (re)use !!!
-            adm2    = State.where( "lower(name) = ? AND country_id = ?",
-                                     adm2_name, country.id ).first   ## check - first needed? returns ary??
-            if adm2.nil?
-              puts "*** error/warn: fix - skipping adm3 - adm2 '#{adm2_name}' not found"
+            part = Part.where( "lower(name) = ? AND state_id = ?",
+                                     part_name, state.id ).first   ## check - first needed? returns ary??
+            if part.nil?
+              logger.error "fix!! - skipping adm3_counties - part (ADM2) '#{part_name}' not found"
               next
             end
-            logger.debug "State (Adm2) #{adm2.key} >#{adm2.name}<"
+            logger.debug "Part (ADM2) #{part.key} >#{part.name}<"
 
-            st = create_state_reader( name, country_id: country.id, state_id: adm2.id, level:3  )
+            st = create_county_reader( name, 
+                                       state_id: state.id,
+                                       part_id: part.id,
+                                       level: 3 )   # note: change county level to 3 (default is 2)
             st.read()
           end
-    elsif match_adm2_for_country( name ) do |country_key,state_key|
+    elsif match_adm2_counties_for_country( name ) do |country_key,state_key|
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
             logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
             state  = State.find_by_key_and_country_id!( state_key, country.id )
-            logger.debug "State (Adm1) #{state.key} >#{state.name}<"
+            logger.debug "State (ADM1) #{state.key} >#{state.name}<"
 
-            st = create_state_reader( name, country_id: country.id, state_id: state.id, level:2 )
+            st = create_county_reader( name,
+                                       state_id: state.id,
+                                       ## part_id: nil,
+                                       level: 2 )
             st.read()
           end
-    ### fix: change to match_adm1_for_country()
+    elsif match_adm2_parts_for_country( name ) do |country_key,state_key|
+            ## auto-add required country code (from folder structure)
+            country = Country.find_by_key!( country_key )
+            logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
+            state  = State.find_by_key_and_country_id!( state_key, country.id )
+            logger.debug "State (ADM2) #{state.key} >#{state.name}<"
+
+            st = create_part_reader( name,
+                                     state_id: state.id,
+                                     level: 2 )
+            st.read()
+          end
+    ### fix: change to match_adm1_states_for_country() - why? why not??
     elsif match_states_for_country( name ) do |country_key|  # name =~ /\/([a-z]{2})\/states/
             ## auto-add required country code (from folder structure)
             country = Country.find_by_key!( country_key )
             logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
 
-            st = create_state_reader( name, country_id: country.id, state_id: nil, level:1 )
+            st = create_state_reader( name,
+                                      country_id: country.id,
+                                      level: 1 )
             st.read()
           end
     else

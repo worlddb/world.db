@@ -72,7 +72,7 @@ class StateBase < ActiveRecord::Base
     attribs = attribs.merge( more_attribs )
 
     ## check for optional values
-    puts "[debug] StateBase calling #{self.name}"  # note: assume self is derived class (object)
+    puts "[debug] StateBase.create_or_update_from_values calling #{self.name}"  # note: assume self is derived class (object)
     self.create_or_update_from_attribs( attribs, more_values )
   end
 
@@ -124,14 +124,25 @@ class StateBase < ActiveRecord::Base
     end  # if value_numbers.size > 0
 
     ## todo: assert that country_id is present/valid, that is, NOT null
-    puts "[debug] StateBase calling #{self.name}"  # note: assume self is derived class (object)
-    rec = self.find_by_key_and_country_id( new_attributes[ :key ], new_attributes[ :country_id] )
+    puts "[debug] StateBase.create_or_update_from_attribs calling #{self.name}.where"  # note: assume self is derived class (object)
+    # note: was self.find_by_key_and_country_id
+    if self == State
+      ## note: state scoped by country (all others by top-level state and NOT country)
+      rec = self.where(
+                    key:         new_attributes[ :key ],
+                    country_id:  new_attributes[ :country_id] ).first
+    else
+      rec = self.where(
+                    key:      new_attributes[ :key ],
+                    state_id: new_attributes[ :state_id] ).first
+    end
 
     if rec.present?
       logger.debug "update #{self.name} #{rec.id}-#{rec.key}:"
     else
       logger.debug "create #{self.name}:"    ## e.g. self.name => State, County, Muni, etc.
-      rec = State.new
+      puts "[debug] StateBase.create_or_update_from_attribs calling #{self.name}.new"  # note: assume self is derived class (object)
+      rec = self.new
     end
 
     logger.debug new_attributes.to_json

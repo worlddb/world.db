@@ -48,6 +48,32 @@ class Reader < ReaderBase
     StateReader.from_file( path, more_attribs )
   end
 
+  def create_part_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{path_to_real_path(name)}.txt"
+
+    logger.info "parsing data (part) '#{name}' (#{path})..."
+
+    PartReader.from_file( path, more_attribs )
+  end
+
+  def create_county_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{path_to_real_path(name)}.txt"
+
+    logger.info "parsing data (county) '#{name}' (#{path})..."
+
+    CountyReader.from_file( path, more_attribs )
+  end
+
+  def create_muni_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{path_to_real_path(name)}.txt"
+
+    logger.info "parsing data (muni) '#{name}' (#{path})..."
+
+    MuniReader.from_file( path, more_attribs )
+  end
+
+
+
   def create_city_reader( name, more_attribs={} )
     path = "#{@include_path}/#{path_to_real_path(name)}.txt"
     logger.info "parsing data (city) '#{name}' (#{path})..."
