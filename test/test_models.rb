@@ -15,8 +15,15 @@ class TestModels < MiniTest::Test
     assert_equal 0, Place.count
     assert_equal 0, Continent.count
     assert_equal 0, Country.count
+
     assert_equal 0, State.count
+    assert_equal 0, Part.count
+    assert_equal 0, County.count
+    assert_equal 0, Muni.count
+
+    assert_equal 0, Metro.count
     assert_equal 0, City.count
+    assert_equal 0, District.count
 
     assert_equal 0, Lang.count
     assert_equal 0, Usage.count

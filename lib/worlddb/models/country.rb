@@ -175,6 +175,15 @@ class Country < ActiveRecord::Base
   end
 
 
+
+  def self.parse( *args )
+    ## remove (extract) attribs hash (if last arg is a hash n present)
+    more_attribs = args.last.is_a?(Hash) ? args.pop : {}  ## extract_options!
+    values       = args
+  
+    self.create_or_update_from_values( values, more_attribs )
+  end
+
   def self.create_or_update_from_values( values, more_attribs={} )
 
       ## key & title
