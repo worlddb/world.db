@@ -18,6 +18,8 @@ module WorldDb
       Name.delete_all
       Place.delete_all
       City.delete_all
+      Metro.delete_all
+      District.delete_all
       State.delete_all
       Part.delete_all
       County.delete_all

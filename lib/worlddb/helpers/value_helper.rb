@@ -71,7 +71,6 @@ module TextUtils
   end
 
 
-
   def match_city( value )  # NB: might be nil (city not found)
     if value =~ /^city:/   ## city:
       city_key = value[5..-1]  ## cut off city: prefix
@@ -83,12 +82,11 @@ module TextUtils
     end
   end
 
-
   def match_metro( value )
     if value =~ /^metro:/   ## metro:
-      city_key = value[6..-1]  ## cut off metro: prefix
-      city = WorldDb::Model::City.find_by_key!( city_key )   # NB: parent city/metro required, that is, lookup w/ !
-      yield( city )
+      metro_key = value[6..-1]  ## cut off metro: prefix
+      metro = WorldDb::Model::Metro.find_by_key!( metro_key )
+      yield( metro )
       true # bingo - match found
     else
       false # no match found

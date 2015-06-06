@@ -20,8 +20,9 @@ Part      = WorldDb::Model::Part
 County    = WorldDb::Model::County
 Muni      = WorldDb::Model::Muni
 
-
+Metro     = WorldDb::Model::Metro
 City      = WorldDb::Model::City
+District  = WorldDb::Model::District
 
 Lang      = WorldDb::Model::Lang
 Usage     = WorldDb::Model::Usage

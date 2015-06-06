@@ -8,6 +8,7 @@ lib/worlddb/matcher.rb
 lib/worlddb/matcher_adm.rb
 lib/worlddb/models.rb
 lib/worlddb/models/city.rb
+lib/worlddb/models/city_base.rb
 lib/worlddb/models/continent.rb
 lib/worlddb/models/country.rb
 lib/worlddb/models/country_code.rb
@@ -50,7 +51,7 @@ test/helper.rb
 test/test_fixture_matchers.rb
 test/test_fixture_matchers_ii.rb
 test/test_model_city.rb
-test/test_model_comp.rb
+test/test_model_compat.rb
 test/test_model_country.rb
 test/test_model_state.rb
 test/test_model_states_at.rb

@@ -3,7 +3,7 @@
 
 require 'helper'
 
-class TestModelComp < MiniTest::Test
+class TestModelCompat < MiniTest::Test
 
   def setup
     #  delete all countries, states, cities in in-memory only db
@@ -12,6 +12,9 @@ class TestModelComp < MiniTest::Test
 
 
   def test_title
+   
+   ## todo: change :name to :title -- why? why not?? 
+
     at = Country.create!( key: 'at',
                           name: 'Austria',
                           code: 'AUT',
@@ -36,13 +39,12 @@ class TestModelComp < MiniTest::Test
     assert_equal c2.id, c.id
 
     assert_equal new_attributes[:name], c.name
-    ## assert_equal new_attributes[:name], c.title    ## todo: move to comapt 
+    assert_equal new_attributes[:name], c.title    ## todo: move to comapt 
     assert_equal new_attributes[:key],  c.key
-    assert_equal false,     c.m
     assert_equal w.id,      c.state_id
     assert_equal at.id,     c.country_id
   end
 
 
-end # class TestModelComp
+end # class TestModelCompat
 

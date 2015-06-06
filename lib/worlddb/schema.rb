@@ -249,13 +249,10 @@ end
 
 ## create_table :city_rels do |t|   ## city relationships (w/ states/admins) -- part of state/zone
 ##   t.references :city,   null: false
-##  t.references :state  ## optional ?? either state/admin or zone ?? use polymorphic assoc or use node w/ kind for place?
+##   t.references :state  ## optional ?? either state/admin or zone ?? use polymorphic assoc or use node w/ kind for place?
 ##   t.references :zone    ## tourist zone e.g. fraenkische schweiz, wachau, steigerwald, etc. - use own join table???
 ## end
 
-
-###########
-# fix: create (new) tables metros, districts!!!! -- break out from cities!!
 
 create_table :cities do |t|
   t.string     :name,   null: false
@@ -265,29 +262,51 @@ create_table :cities do |t|
   t.string     :alt_names  # comma separated list of alternate names (synonyms)
   t.references :country,  null: false
   t.references :state    # optional for now (e.g. state, bundesland, etc.)  -- ADM1
-  t.references :part     # optional for now (e.g. regierungsbezirk, etc.)   -- -   /ADM2
+  t.references :part     # optional for now (e.g. regierungsbezirk, etc.)   -- x   /ADM2
   t.references :county   # optional for now (e.g. landkreis, bezirk, etc.)  -- ADM2/ADM3
   t.references :muni     # optional for now (e.g. gemeinde, etc.)           -- ADM3/ADM4
 
+  t.references :metro    # optional for now (part of metro e.g. Ruhrgebiet or Vienna Metro(politean) Area etc.)
 
-  t.references :city     # optional parent (e.g. metro for city, or city for district)
-  t.integer :pop     # optional population count (city proper)
-  t.integer :popm    # optional population count (metropolitan/aglomeration)
+  t.integer :pop     # optional population count (city proper); see metro for metro pop
   t.integer :area    # optional area in square km (sq. km)
 
   ## t.float   :lat   # optional for now  --  FIX: remove?? moved to places
   ## t.float   :lng   # optional for now  --  FIX: remove?? moved to places
 
-  ## flags (use single int named flags - why? why not?    
-  ### fix: use a generic kind string type flag!!!!!!
-  t.boolean :m,  null: false, default: false   # metro flag
-  t.boolean :c,  null: false, default: false   # city flag (is this needed?)
-  t.boolean :d,  null: false, default: false   # district flag
-
   ### t.boolean :capital, null: false, default: false  # is national captial?
 
   t.timestamps
 end
+
+create_table :metros do |t|
+  t.string     :name,   null: false
+  t.string     :key,    null: false
+  t.references :place,  null: false
+  t.string     :code     # short three letter code (ITAT/airport code e.g. NYC or VIE)
+  t.string     :alt_names  # comma separated list of alternate names (synonyms)
+  t.references :country,  null: false
+
+  t.integer :pop     # optional population count
+  t.integer :area    # optional area in square km (sq. km)
+
+  t.timestamps
+end
+
+create_table :districts do |t|
+  t.string     :name,   null: false
+  t.string     :key,    null: false
+  t.references :place,  null: false
+  t.string     :code     # short three letter code (ITAT/airport code e.g. NYC or VIE)
+  t.string     :alt_names  # comma separated list of alternate names (synonyms)
+  t.references :city,  null: false
+
+  t.integer :pop     # optional population count
+  t.integer :area    # optional area in square km (sq. km)
+
+  t.timestamps
+end
+
 
 
 create_table :langs do |t|  # langs == languages (e.g. en/English, de/Deutsch, etc.)
