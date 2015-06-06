@@ -2,7 +2,7 @@
 
 module WorldDb
 
-class StateReader < StateReaderBase
+class StateReader < ReaderBaseWithMoreAttribs
 
   def read
     reader = ValuesReader.from_string( @text, @more_attribs )
@@ -16,7 +16,7 @@ class StateReader < StateReaderBase
 end # class StateReader
 
 
-class PartReader < StateReaderBase
+class PartReader < ReaderBaseWithMoreAttribs
 
   def read
     reader = ValuesReader.from_string( @text, @more_attribs )
@@ -30,7 +30,7 @@ class PartReader < StateReaderBase
 end # class PartReader
 
 
-class CountyReader < StateReaderBase
+class CountyReader < ReaderBaseWithMoreAttribs
 
   def read
     reader = ValuesReader.from_string( @text, @more_attribs )
@@ -44,7 +44,7 @@ class CountyReader < StateReaderBase
 end # class CountyReader
 
 
-class MuniReader < StateReaderBase
+class MuniReader < ReaderBaseWithMoreAttribs
 
   def read
     reader = ValuesReader.from_string( @text, @more_attribs )

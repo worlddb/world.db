@@ -2,11 +2,13 @@
 
 module WorldDb
 
+
 ###
-# todo/fix: change to more generic ReaderBase later for all readers - why? why not??
+# todo/fix:
+#   try to merge ReaderBaseWithMoreAttribs and ReaderBaseWithOpts into one base - why? why not?
 
 
-class StateReaderBase
+class ReaderBaseWithMoreAttribs
 
   include LogUtils::Logging
 
@@ -55,7 +57,7 @@ class StateReaderBase
   end
 
   def self.from_string( text, more_attribs={} )
-    puts "[debug] StateReaderBase.from_string calling #{self.name}.new"  # note: assume self is derived class (object)
+    puts "[debug] ReaderBase.from_string calling #{self.name}.new"  # note: assume self is derived class (object)
     self.new( text, more_attribs )
   end
 
@@ -70,5 +72,78 @@ class StateReaderBase
     @more_attribs = more_attribs
   end
 
-end # class StateReaderBase
+end # class ReaderBaseWithMoreAttribs
+
+
+
+class ReaderBaseWithOpts
+
+  include LogUtils::Logging
+
+## make models available by default with namespace
+#  e.g. lets you use Usage instead of Model::Usage
+  include Models
+
+## value helpers e.g. is_year?, is_taglist? etc.
+  include TextUtils::ValueHelper
+
+
+  ## todo: add opts={} etc.
+  def self.from_zip( zip_file, entry_path )
+    ## get text content from zip
+
+    entry = zip_file.find_entry( entry_path )
+
+    ## todo/fix: add force encoding to utf-8 ??
+    ##  check!!!
+    ##  clean/prepprocess lines
+    ##  e.g. CR/LF (/r/n) to LF (e.g. /n)
+    text = entry.get_input_stream().read()
+
+    ## NOTE: needs logger ref; only available in instance methods; use global logger for now
+    logger = LogUtils::Logger.root
+    logger.debug "text.encoding.name (before): #{text.encoding.name}"
+#####
+# NB: ASCII-8BIT == BINARY == Encoding Unknown; Raw Bytes Here
+## NB:
+# for now "hardcoded" to utf8 - what else can we do?
+# - note: force_encoding will NOT change the chars only change the assumed encoding w/o translation
+    text = text.force_encoding( Encoding::UTF_8 )
+    logger.debug "text.encoding.name (after): #{text.encoding.name}"     
+
+    ## todo:
+    # NB: for convenience: convert fancy unicode dashes/hyphens to plain ascii hyphen-minus
+    ## text = TextUtils.convert_unicode_dashes_to_plain_ascii( text, path: path )
+
+    self.from_string( text )
+  end
+
+  def self.from_file( path, opts={} )
+    ## note: assume/enfore utf-8 encoding (with or without BOM - byte order mark)
+    ## - see textutils/utils.rb
+    text = File.read_utf8( path )
+    self.from_string( text, opts )
+  end
+
+  def self.from_string( text, opts={} )
+    puts "[debug] ReaderBase.from_string calling #{self.name}.new"  # note: assume self is derived class (object)
+    self.new( text, opts )
+  end
+
+
+  def skip_tags?()   @skip_tags == true;  end
+  def strict?()      @strict == true;     end
+
+  def initialize( text, opts={} )
+    @text = text
+
+    ## option: do NOT generate/add any tags for countries/regions/cities
+    @skip_tags =  opts[:skip_tags].present? ? true : false
+    ## option: for now issue warning on update, that is, if key/record (country,region,city) already exists
+    @strict    =  opts[:strict].present? ? true : false
+  end
+
+end # class ReaderBaseWithOpts
+
+
 end # module WorldDb
