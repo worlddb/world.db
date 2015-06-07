@@ -1,0 +1,104 @@
+2     Bayern
+24    .. Oberfranken
+241   .... Bamberg (Stadt)     ## Kreisfreie Stadt
+      ...... Bamberg
+      ........ Bamberg
+242   .... Bayreuth (Stadt)    ## Kreisfreie Stadt
+      ...... Bayreuth
+      ........ Bayreuth
+243   .... Coburg (Stadt)      ## Kreisfreie Stadt
+      ...... Coburg
+      ........ Coburg 
+244   .... Hof (Stadt)         ## Kreisfreie Stadt
+      ...... Hof
+      ........ Hof
+
+245   .... Bamberg (Land)      ## Landkreis   -- 36 Gemeinden; see de.wikipedia.org/wiki/Landkreis_Bamberg
+             ## 4 Städte
+      ...... Baunach        ## (4013, 30,9 km²)
+      ........ Baunach
+      ...... Hallstadt      ## (8364, 14,5 km²)
+      ........ Hallstadt    ## (7588)
+      ........ Dörfleins    ## (1380)
+      ...... Scheßlitz      ## (7184, 94,9 km²)
+      ........ Scheßlitz
+      ........ Köttensdorf
+      ........ Würgau
+      ...... Schlüsselfeld  ## (5712, 70,2 km²)
+
+             ## 8 Märkte
+      ...... Burgebrach             ## (6553, 87,9 km²)
+      ...... Burgwindheim           ## (1311, 37,4 km²)
+      ...... Buttenheim             ## (3472, 30 km²)
+      ...... Ebrach                 ## (1830, 29,6 km²)
+      ...... Heiligenstadt i. OFr.  ## (3525, 76,7 km²)
+      ........ Heiligenstadt i. OFr.
+      ........ Oberleinleiter
+      ...... Hirschaid              ## (11.919, 41 km²)
+      ...... Rattelsdorf            ## (4568, 39,6 km²)
+      ........ Rattelsdorf
+      ........ Mürsbach
+      ........ Freudeneck
+      ........ Höfen
+      ........ Ebing
+      ...... Zapfendorf             ## (4954, 30,6 km²)
+
+             ## 24 Gemeinden
+      ...... Altendorf              ## (2012, 8,6 km²)
+      ...... Bischberg              ## (6012, 17,5 km²)
+      ...... Breitengüßbach         ## (4586, 16,9 km²)
+      ........ Breitengüßbach
+      ...... Frensdorf              ## (4865, 44 km²)
+      ...... Gerach                 ## (946, 7,8 km²)
+      ...... Gundelsheim            ## (3378, 3,8 km²)
+      ...... Kemmern                ## (2544, 8,3 km²)
+      ........ Kemmern
+      ...... Königsfeld             ## (1335, 42,7 km²)
+      ........ Königsfeld
+      ........ Huppendorf
+      ...... Lauter                 ## (1139, 12,8 km²)
+      ........ Lauter               ## (601)
+      ........ Appendorf            ## (213)
+      ...... Lisberg                ## (1813, 8,4 km²)
+      ...... Litzendorf             ## (6057, 25,9 km²)
+      ........ Litzendorf
+      ........ Schammelsdorf
+      ........ Melkendorf
+      ........ Lohndorf
+      ........ Tiefenellern
+      ...... Memmelsdorf            ## (8854, 26,2 km²)
+      ........ Memmelsdorf
+      ........ Merkendorf
+      ........ Drosendorf      
+      ...... Oberhaid               ## (4590, 27,2 km²)
+      ........ Oberhaid
+      ........ Staffelbach
+      ...... Pettstadt                  ## (1940, 9,9 km²)
+      ...... Pommersfelden              ## (2851, 35,7 km²)
+      ...... Priesendorf                ## (1470, 8,4 km²)
+      ...... Reckendorf                 ## (2033, 13,1 km²)
+      ........ Reckendorf
+      ...... Schönbrunn im Steigerwald  ## (1880, 24,7 km²)
+      ...... Stadelhofen                ## (1250, 41 km²)
+      ........ Stadelhofen
+      ........ Steinfeld
+      ........ Schederndorf
+      ...... Stegaurach                 ## (6842, 23,9 km²)
+      ...... Strullendorf               ## (7807, 31,7 km²)
+      ........ Strullendorf
+      ........ Geisfeld
+      ........ Roßdorf am Forst
+      ...... Viereth-Trunstadt          ## (3562, 15,8 km²)
+      ...... Walsdorf                   ## (2575, 16,2 km²)
+      ...... Wattendorf                 ## (679, 22,2 km²)
+      ........ Wattendorf
+
+246   .... Bayreuth (Land)     ## Landkreis
+247   .... Coburg (Land)       ## Landkreis
+248   .... Forchheim
+249   .... Hof (Land)          ## Landkreis
+24A   .... Kronach
+24B   .... Kulmbach
+24C   .... Lichtenfels
+24D   .... Wunsiedel i. Fichtelgebirge
+

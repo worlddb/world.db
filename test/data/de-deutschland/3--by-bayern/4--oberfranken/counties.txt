@@ -20,23 +20,24 @@
 
 # 4 kreisfreie Städte und
 
-Bamberg (Stadt)
-Bayreuth (Stadt)
-Coburg (Stadt)
-Hof (Stadt)
+ba, Bamberg (Stadt)
+bt, Bayreuth (Stadt)
+co, Coburg (Stadt)
+ho, Hof (Stadt)
 
 
 # 9 Landkreise
 ## how to deal w/ same name?? (same keys)
 ##  - use bambergland, bayreuthland etc. for key ??
 
-Bamberg-Landkreis   ## (Landkreis)
-Bayreuth-Landkreis  ## (Landkreis)
-Coburg-Landkreis    ## (Landkreis)
-Hof-Landkreis       ## (Landkreis)
+baland, Bamberg (Land)    ## (Landkreis)
+btland, Bayreuth (Land)   ## (Landkreis)
+coland, Coburg (Land)     ## (Landkreis)
+holand, Hof (Land)        ## (Landkreis)
 
-Forchheim    ## Landkreis
-Kronach      ## Landkreis
-Kulmbach     ## Landkreis
-Lichtenfels  ## Landkreis
-Wunsiedel im Fichtelgebirge  ## Landkreis
+fo,  Forchheim    ## Landkreis
+kc,  Kronach      ## Landkreis
+ku,  Kulmbach     ## Landkreis
+lif, Lichtenfels  ## Landkreis
+wun, Wunsiedel i. Fichtelgebirge  ## Landkreis
+
