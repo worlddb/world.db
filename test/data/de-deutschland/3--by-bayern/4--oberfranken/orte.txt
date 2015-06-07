@@ -102,3 +102,8 @@
 24C   .... Lichtenfels
 24D   .... Wunsiedel i. Fichtelgebirge
 
+#####
+# for testing add berlin
+# 9     Berlin
+# 91    .. Berlin
+

@@ -33,6 +33,7 @@ lib/worlddb/readers/state.rb
 lib/worlddb/readers/usage.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
+lib/worlddb/tree_reader.rb
 lib/worlddb/version.rb
 test/adm/test_fixture_matcher_adm2.rb
 test/adm/test_fixture_matcher_adm3.rb
@@ -44,6 +45,7 @@ test/data/at-austria/setups/adm.txt
 test/data/at-austria/states.txt
 test/data/de-deutschland/3--by-bayern/1--oberbayern/counties.txt
 test/data/de-deutschland/3--by-bayern/4--oberfranken/counties.txt
+test/data/de-deutschland/3--by-bayern/4--oberfranken/orte.txt
 test/data/de-deutschland/3--by-bayern/parts.txt
 test/data/de-deutschland/setups/adm.txt
 test/data/de-deutschland/states.txt
