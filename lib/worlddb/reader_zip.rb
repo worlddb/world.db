@@ -114,6 +114,13 @@ class ZipReader < ReaderBase
   end
 
 
+  def create_tree_reader( name, more_attribs={} )
+    path = name_to_zip_entry_path( name )
+    logger.info "parsing data (state tree) in zip '#{name}' (#{path})..."
+
+    StateTreeReader.from_zip( @zip_file, path, more_attribs )
+  end
+
 
   def create_city_reader( name, more_attribs={} )
     path = name_to_zip_entry_path( name )

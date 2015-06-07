@@ -40,11 +40,13 @@ test/adm/test_fixture_matcher_adm2.rb
 test/adm/test_fixture_matcher_adm3.rb
 test/adm/test_fixture_matcher_tree.rb
 test/adm/test_read_adm.rb
+test/adm/test_read_tree.rb
 test/data/at-austria/1--b-burgenland/counties.txt
 test/data/at-austria/2--n-niederoesterreich/counties.txt
 test/data/at-austria/3--w-wien/counties.txt
 test/data/at-austria/orte.txt
 test/data/at-austria/setups/adm.txt
+test/data/at-austria/setups/tree.txt
 test/data/at-austria/states.txt
 test/data/de-deutschland/3--by-bayern/1--oberbayern/counties.txt
 test/data/de-deutschland/3--by-bayern/4--oberfranken/counties.txt
@@ -53,6 +55,7 @@ test/data/de-deutschland/3--by-bayern/4--oberfranken/orte_ii.txt
 test/data/de-deutschland/3--by-bayern/parts.txt
 test/data/de-deutschland/orte.txt
 test/data/de-deutschland/setups/adm.txt
+test/data/de-deutschland/setups/tree.txt
 test/data/de-deutschland/states.txt
 test/helper.rb
 test/test_fixture_matchers.rb

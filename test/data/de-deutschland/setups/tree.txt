@@ -1,0 +1,9 @@
+
+# note: same as admin plus tree (orte.txt)
+
+de-deutschland!/states
+de-deutschland!/3--by-bayern/parts
+de-deutschland!/3--by-bayern/1--oberbayern/counties
+de-deutschland!/3--by-bayern/4--oberfranken/counties
+
+de-deutschland!/3--by-bayern/4--oberfranken/orte

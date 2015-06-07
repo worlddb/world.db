@@ -85,6 +85,14 @@ class ReaderBase
             r = create_city_reader( name, country_id: country.id )
             r.read()
           end
+    elsif match_tree_for_country( name ) do |country_key|
+            ## auto-add required country code (from folder structure)
+            country = Country.find_by_key!( country_key )
+            logger.debug "Country #{country.key} >#{country.name} (#{country.code})<"
+
+            r = create_tree_reader( name, country_id: country.id )
+            r.read()
+          end
     elsif match_states_abbr_for_country( name ) do |country_key|   # name =~ /\/([a-z]{2})\/states\.abbr/
             load_states_xxx( country_key, 'abbr', name )
           end

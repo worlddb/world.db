@@ -73,6 +73,13 @@ class Reader < ReaderBase
   end
 
 
+  def create_tree_reader( name, more_attribs={} )
+    path = "#{@include_path}/#{path_to_real_path(name)}.txt"
+    logger.info "parsing data (state tree) '#{name}' (#{path})..."
+
+    StateTreeReader.from_file( path, more_attribs )
+  end
+
 
   def create_city_reader( name, more_attribs={} )
     path = "#{@include_path}/#{path_to_real_path(name)}.txt"
