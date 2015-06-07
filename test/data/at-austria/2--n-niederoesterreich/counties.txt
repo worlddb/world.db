@@ -7,8 +7,9 @@
 ##  ?? Gemeinden
 ##  ?? Ortschaften
 
-Krems an der Donau,                 52 km²,   24_085  # KS
-St. Pölten,                        108 km²,   52_145 # P
+ks, Krems an der Donau (Stadt),         52 km²,   24_085  # KS
+p,  St. Pölten (Stadt),                108 km²,   52_145 # P
+
 Waidhofen an der Ybbs,             132 km²,   11_341 # WY
 Wiener Neustadt,                    61 km²,   42_273  # WN
 Amstetten,                        1188 km²,   112_944 # AM 
@@ -19,13 +20,14 @@ Gmünd,                             786 km²,   37_420  # GD
 Hollabrunn,                       1011 km²,   50_065  # HL
 Horn,                              784 km²,   31_273  # HO
 Korneuburg,                        627 km²,   76_370  # KO
-Krems-Land (Krems an der Donau),   924 km²,   55_945  # KR
+
+kr, Krems-Land (Krems an der Donau),   924 km²,   55_945  # KR
 Lilienfeld,                        932 km²,   26_040  # LF 
 Melk,                             1014 km²,   76_369  # ME
 Mistelbach,                       1291 km²,   74_150  # MI
 Mödling,                           277 km²,   115_677 # MD   
 Neunkirchen,                      1146 km²,   85_539  # NK 
-St. Pölten-Land (St. Pölten),     1122 km²,   97_365  #  PL
+pl, St. Pölten-Land (St. Pölten),     1122 km²,   97_365  #  PL
 Scheibbs,                         1023 km²,   41_073   # SB   
 Tulln (Tulln an der Donau),        658 km²,   72_104  # TU  
 Waidhofen an der Thaya,            669 km²,   26_424   # WT

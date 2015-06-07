@@ -4,6 +4,13 @@ module WorldDb
 
 module Matcher
 
+  def match_tree_for_country( name, &blk )  ## rename to state_tree ?? why? why not??
+    ## match state_tree (for now use orte.txt for austria, deutschland etc.)
+    ##   todo/fix: add more "generic" names
+    
+    simple_match_xxx_for_country( name, 'orte', &blk )  ## note: uses special **simple**_match_xxx_...
+  end
+
 
   def match_cities_for_country( name, &blk )
     ## todo: check if there's a better (more ruby way) to pass along code block ??
@@ -12,6 +19,7 @@ module Matcher
 
     match_xxx_for_country( name, 'cities', &blk )
   end
+
 
 
   def match_states_for_country( name, &blk )
@@ -74,6 +82,7 @@ private
   WORLD_OPT_FOLDERS_PATTERN      = "(?:\\/[^\\/]+)*"     ## check: use double \\ or just \ ??
 
 
+
   def match_xxx_for_country( name, xxx )  # xxx e.g. cities|states|beers|breweries
     #      auto-add required country code (from folder structure)
     #  note: always let match_xxx_for_country_n_state go first
@@ -105,6 +114,21 @@ private
       #
       # (5)  compact style (country part of filename):
       #   e.g. /at-austria--cities or /europe/at-austria--cities
+    else
+      false # no match found
+    end
+  end
+
+  def simple_match_xxx_for_country( name, xxx )
+    xxx_pattern           = "(?:#{xxx})"    ## just xxx for now
+
+    ## used for state tree (e.g. orte.txt)
+    if name =~ /(?:^|\/)#{WORLD_COUNTRY_CLASSIC_PATTERN}#{WORLD_OPT_FOLDERS_PATTERN}\/#{xxx_pattern}/ ||
+       name =~ /(?:^|\/)#{WORLD_COUNTRY_MODERN_PATTERN}#{WORLD_OPT_FOLDERS_PATTERN}\/#{xxx_pattern}/
+
+      country_key = $1.dup
+      yield( country_key )
+      true # bingo - match found
     else
       false # no match found
     end

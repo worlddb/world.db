@@ -1,0 +1,23 @@
+3     Niederösterreich
+301   .. Krems an der Donau (Stadt)
+30101 .... Krems an der Donau                     ## SS; 3500; 3506 3541
+03148 ...... Gneixendorf                          ## 3500
+03149 ...... Krems an der Donau                   ## 3500 3506
+03150 ...... Landersdorf                          ## 3500
+03151 ...... Lerchenfeld                          ## 3500
+03152 ...... Rehberg                              ## 3500 3541
+03153 ...... Stein an der Donau                   ## 3500
+04164 ...... Egelsee                              ## 3500
+04165 ...... Scheibenhof                          ## 3500
+04237 ...... Angern                               ## 3506
+04238 ...... Brunnkirchen                         ## 3506
+04239 ...... Hollenburg                           ## 3506
+04240 ...... Thallern                             ## 3506
+302   .. St. Pölten (Stadt)
+30201 .... St. Pölten                             ## SS; 3100; 3104 3105 3107 3140 3151 3385
+03154 ...... Harland                              ## 3100 3104
+03155 ...... Oberradlberg                         ## 3105
+03156 ...... Oberwagram                           ## 3100
+03157 ...... Ragelsdorf                           ## 3107
+03158 ...... St. Pölten                           ## 3100 3104 3107 3151
+03159 ...... Spratzern                            ## 3100 3151

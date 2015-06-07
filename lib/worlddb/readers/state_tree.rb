@@ -13,6 +13,22 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
 
     stack = []    # note: last_level  => stack.size; starts w/ 0
 
+    if country.key == 'de'
+      ## use state (1) > part (2) > county (3) > muni (4) > city (5)
+      state_level  = 1   # Land
+      part_level   = 2   # Regierungsbezirk
+      county_level = 3   # Landkreis, Kreisfreie Stadt
+      muni_level   = 4   # Gemeinde
+      city_level   = 5   # Stadt, Ort, etc.
+    else
+      ## use state (1) > county (2) > muni (3) > city (4)
+      state_level  = 1
+      part_level   = -1    ## note: not in use (-1)
+      county_level = 2
+      muni_level   = 3
+      city_level   = 4
+    end
+
     reader.each_line do |nodes|
       names = nodes.map { |item| "(#{item.level}) #{item.value}" }
       node = nodes.last
@@ -20,18 +36,18 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
       puts "    #{names.join( ' › ' )}:"
       puts "      key: >#{node.key}<, level: >#{node.level}<, value: >#{node.value}<"
 
-      if node.level == 1
+      if node.level == state_level  # 1
         rec = State.where( "name like '#{node.value}%'" ).first 
-      elsif node.level == 2
+      elsif node.level == part_level # 2 
         state = stack[0]
         rec = Part.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
-      elsif node.level == 3
+      elsif node.level == county_level  # 2 or 3
         state = stack[0]
         rec = County.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
-      elsif node.level == 4
+      elsif node.level == muni_level   # 3 or 4
         state = stack[0]
         rec = Muni.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
-      elsif node.level == 5
+      elsif node.level == city_level  # 4 or 5
         ## note: city requires country scope for lookup
         ## todo/fix: how to deal with cities with the same name
         ##   in the same country (and same state and same county etc.) ??? - add some examples here
@@ -46,24 +62,26 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
         puts "ok - record match found: #{rec.inspect}"
       else
         ## note: for now only auto-adds munis n cities
-        if node.level == 4
+        if node.level == muni_level  # 3 or 4
           ## add muni
-          key  = TextUtils.title_to_key( node.value )
-          name = node.value
+          key    = TextUtils.title_to_key( node.value )
+          name   = node.value
+          level  = node.level
           state  = stack[0]
-          county = stack[2]
+          county = stack[county_level-1]  # note: stack is zero-based (thus, -1)
           puts "*** adding muni record:"
           rec = Muni.create!( key:       key,
                               name:      name,
+                              level:     level,
                               state_id:  state.id,
                               county_id: county.id )
-        elsif node.level == 5
+        elsif node.level == city_level # 4 or 5
           ## add city
-          key  = TextUtils.title_to_key( node.value )
-          name = node.value
+          key    = TextUtils.title_to_key( node.value )
+          name   = node.value
           state  = stack[0]
-          county = stack[2]
-          muni   = stack[3]
+          county = stack[county_level-1]  # note: stack is zero-based (thus, -1)
+          muni   = stack[muni_level-1]    # note: stack is zero-based (thus, -1)
           puts "*** adding city record:"
           rec = City.create!( key:        key,
                               name:       name,
@@ -97,3 +115,4 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
 
 end   # class StateTreeReader
 end   # module WorldDb
+
