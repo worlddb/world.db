@@ -1,0 +1,17 @@
+2     Bayern
+24    .. Oberfranken
+241   .... Bamberg (Stadt)     ## Kreisfreie Stadt
+      ...... Bamberg
+      ........ Bamberg
+242   .... Bayreuth (Stadt)    ## Kreisfreie Stadt
+      ...... Bayreuth
+      ........ Bayreuth
+
+245   .... Bamberg (Land)      ## Landkreis   -- 36 Gemeinden; see de.wikipedia.org/wiki/Landkreis_Bamberg
+             ## 4 Städte
+      ...... Baunach        ## (4013, 30,9 km²)
+      ........ Baunach
+      ...... Hallstadt      ## (8364, 14,5 km²)
+      ........ Hallstadt    ## (7588)
+      ........ Dörfleins    ## (1380)
+

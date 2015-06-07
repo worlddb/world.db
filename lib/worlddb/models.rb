@@ -66,6 +66,7 @@ require 'worlddb/readers/lang'
 require 'worlddb/readers/usage'
 require 'worlddb/readers/country'
 require 'worlddb/readers/state'
+require 'worlddb/readers/state_tree'
 require 'worlddb/readers/city'
 
 require 'worlddb/reader'

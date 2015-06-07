@@ -15,41 +15,24 @@ class TestTreeReader < MiniTest::Test
   end
 
 
-  def test_read
+  def test_oberfranken
     reader = TreeReader.from_file( "#{WorldDb.root}/test/data/de-deutschland/3--by-bayern/4--oberfranken/orte.txt" )
  
-    reader.each_line do |stack|
-      names = stack.map { |item| "(#{item.level}) #{item.value}" }
-      last = stack.last
-
-      puts "    #{names.join( ' › ' )}:"
-      puts "      key: >#{last.key}<, level: >#{last.level}<, value: >#{last.value}<"
+    reader.each_line do |_|
+      ## do nothing for now
     end
+    
+    assert true ## assume everything ok if we get here
   end
 
+  def test_de
+    reader = TreeReader.from_file( "#{WorldDb.root}/test/data/de-deutschland/orte.txt" )
+ 
+    reader.each_line do |_|
+      ## do nothing for now
+    end
 
-  def xxx_test_oberfranken
-    de = Country.create!( key: 'de',
-                          name: 'Germany',
-                          code: 'GER',
-                          pop: 0,
-                          area: 0 )
-
-    reader = WorldDb::Reader.new( "#{WorldDb.root}/test/data/de-deutschland" )
-    reader.load_setup( 'setups/adm' )
-
-    assert_equal 16, de.states.count
-
-    by = State.find_by!( key: 'by' )
-    assert_equal 'Bayern [Bavaria]', by.name
-    assert_equal 7, by.parts.count
-
-    ofr = Part.find_by!( key: 'ofr' )
-    assert_equal 'Oberfranken', ofr.name
-    assert_equal 13, ofr.counties.count
-    
-    baland = County.find_by!( key: 'baland' )
-    assert_equal 'Bamberg (Land)', baland.name
+    assert true ## assume everything ok if we get here
   end
 
 end # class TestTreeReader

@@ -1,0 +1,12 @@
+2     Bayern
+24    .. Oberfranken
+241   .... Bamberg (Stadt)     ## Kreisfreie Stadt
+      ...... Bamberg
+      ........ Bamberg
+
+#####
+# todo: for testing add berlin and some more
+
+9     Berlin
+91    .. Berlin
+

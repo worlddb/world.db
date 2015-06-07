@@ -30,6 +30,7 @@ lib/worlddb/readers/city.rb
 lib/worlddb/readers/country.rb
 lib/worlddb/readers/lang.rb
 lib/worlddb/readers/state.rb
+lib/worlddb/readers/state_tree.rb
 lib/worlddb/readers/usage.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
@@ -46,7 +47,9 @@ test/data/at-austria/states.txt
 test/data/de-deutschland/3--by-bayern/1--oberbayern/counties.txt
 test/data/de-deutschland/3--by-bayern/4--oberfranken/counties.txt
 test/data/de-deutschland/3--by-bayern/4--oberfranken/orte.txt
+test/data/de-deutschland/3--by-bayern/4--oberfranken/orte_ii.txt
 test/data/de-deutschland/3--by-bayern/parts.txt
+test/data/de-deutschland/orte.txt
 test/data/de-deutschland/setups/adm.txt
 test/data/de-deutschland/states.txt
 test/helper.rb
@@ -62,3 +65,5 @@ test/test_models.rb
 test/test_parse_city.rb
 test/test_parse_country.rb
 test/test_parse_state.rb
+test/test_state_tree_reader_de.rb
+test/test_tree_reader.rb

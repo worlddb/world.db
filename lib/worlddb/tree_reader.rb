@@ -62,7 +62,7 @@ class TreeReader
       end
 
       ## assume rest is record
-      rest = s.scan( /.+/ )
+      rest = s.rest  ## was: s.scan( /.+/ )
 
       level_diff = level - stack.size
 
