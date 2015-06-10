@@ -50,7 +50,9 @@ end
 ### alternative names for places
 create_table :names do |t|
   t.string     :name,   null: false
-  t.references :place,  null: false
+  t.references :place,      null: false
+  t.string     :place_kind, null: false  #  add (cached) place_kind for easier search queries (w/o join)
+
   ### todo/fix: add lang_id to reference lang from lang table!!! (for now make it a duplicate; e.g. keep stirng lang for now)
   t.string     :lang,   null: false, default: 'en'   # default to english for now (or use unknown/undeterminded/unspecified???)
 

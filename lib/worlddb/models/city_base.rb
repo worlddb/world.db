@@ -32,11 +32,19 @@ class CityBase < ActiveRecord::Base
   def on_create
     place_rec = Place.create!( name: name, kind: place_kind )
     self.place_id = place_rec.id 
+
+    ## create name recs -- todo: add default lang etc. - move to: after_create callback!!
+    Name.parse( name, alt_names,
+                  place_id:   place_rec.id,
+                  place_kind: place_rec.kind )
   end
 
   def on_update
     ## fix/todo: check - if name or kind changed - only update if changed ?? why? why not??
     place.update_attributes!( name: name, kind: place_kind )
+
+    ## todo/fix:
+    ## update names too ??
   end
 
   validates :key,  format: { with: /#{CITY_KEY_PATTERN}/, message: CITY_KEY_PATTERN_MESSAGE }

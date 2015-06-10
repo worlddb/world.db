@@ -67,6 +67,7 @@ test/test_model_state.rb
 test/test_model_states_at.rb
 test/test_model_states_de.rb
 test/test_models.rb
+test/test_name_parser.rb
 test/test_parse_city.rb
 test/test_parse_country.rb
 test/test_parse_state.rb
