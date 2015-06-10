@@ -18,10 +18,10 @@ create_table :places do |t|
   #  CNTY - country
   #  TERR - terr
   # state:
-  #  ADM1 - e.g. state/province
-  #  ADM2 - e.g. county/bezirk/kreis
-  #  ADM3 - e.g. municipality/gemeinde
-  #  ADM4
+  #  STAT  -- was: ADM1 - e.g. state/province/etc.
+  #  PART   e.g. regierungsbezirk ADM2
+  #  COUN -- was ADM2/ADM3 - e.g. county/bezirk/kreis/etc.
+  #  MUNI -  was ADM3/ADM4 - e.g. municipality/gemeinde/etc.
   # city:
   #  MTRO - metro
   #  CITY - city/town/village/hamlet //(de)ort/stadt/markt
