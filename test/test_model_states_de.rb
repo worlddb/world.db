@@ -36,7 +36,7 @@ class TestModelStatesDe < MiniTest::Test
     assert_equal 1,          by.area 
     assert_equal de.id,      by.country_id
     assert_equal 1,          by.level
-    assert_equal 'ADM1',     by.place_kind
+    assert_equal 'STAT',     by.place_kind
 
     ### test place
     assert_equal  'Bayern', by.place.name
@@ -64,7 +64,7 @@ class TestModelStatesDe < MiniTest::Test
     assert_equal 1,              ob.area 
     assert_equal by.id,          ob.state_id
     assert_equal 2,              ob.level
-    assert_equal 'ADM2',         ob.place_kind
+    assert_equal 'PART',         ob.place_kind
 
     ### test place
     assert_equal  'Oberbayern', ob.place.name
@@ -95,7 +95,7 @@ class TestModelStatesDe < MiniTest::Test
     assert_equal by.id,       fs.state_id
     assert_equal ob.id,       fs.part_id
     assert_equal 3,           fs.level
-    assert_equal 'ADM3',      fs.place_kind
+    assert_equal 'COUN',      fs.place_kind
 
     ### test place
     assert_equal  'Freising', fs.place.name
@@ -129,7 +129,7 @@ class TestModelStatesDe < MiniTest::Test
     assert_equal by.id,               au.state_id
     assert_equal fs.id,               au.county_id
     assert_equal 4,                   au.level
-    assert_equal 'ADM4',              au.place_kind
+    assert_equal 'MUNI',              au.place_kind
 
     ### test place
     assert_equal  'Au i.d. Hallertau', au.place.name

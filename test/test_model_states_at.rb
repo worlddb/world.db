@@ -36,7 +36,7 @@ class TestModelStatesAt < MiniTest::Test
     assert_equal 1,          n.area 
     assert_equal at.id,      n.country_id
     assert_equal 1,          n.level
-    assert_equal 'ADM1',     n.place_kind
+    assert_equal 'STAT',     n.place_kind
 
     ### test place
     assert_equal  'Niederösterreich', n.place.name
@@ -64,7 +64,7 @@ class TestModelStatesAt < MiniTest::Test
     assert_equal 1,        tu.area 
     assert_equal n.id,     tu.state_id
     assert_equal 2,        tu.level
-    assert_equal 'ADM2',   tu.place_kind
+    assert_equal 'COUN',   tu.place_kind
 
     ### test place
     assert_equal  'Tulln', tu.place.name
@@ -94,7 +94,7 @@ class TestModelStatesAt < MiniTest::Test
     assert_equal n.id,          gr.state_id
     assert_equal tu.id,         gr.county_id
     assert_equal 3,             gr.level
-    assert_equal 'ADM3',        gr.place_kind
+    assert_equal 'MUNI',        gr.place_kind
 
     ### test place
     assert_equal  'Grafenwörth', gr.place.name
