@@ -17,3 +17,6 @@ tmp
 _yardoc
 doc/
 
+## ignore dbs in root (used for testing)
+*.db
+

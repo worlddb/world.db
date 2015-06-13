@@ -78,6 +78,9 @@ require 'worlddb/stats'
 require 'worlddb/tree_reader'
 
 
+require 'worlddb/reports/country_report'
+
+
 module WorldDb
 
   def self.create
