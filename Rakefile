@@ -17,7 +17,7 @@ Hoe.spec 'worlddb-models' do
   self.extra_deps = [
     ['props',     '>= 1.1.2'],         # settings / prop(ertie)s / env / INI
     ['logutils',  '>= 0.6.1'],     # logging
-    ['textutils', '>= 1.2.2'], 
+    ['textutils', '>= 1.3.0'], 
 
     ['tagutils',              '>= 0.3.0'],  # tags n categories for activerecord
     ['activerecord-utils',    '>= 0.2.0'],

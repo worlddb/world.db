@@ -75,9 +75,6 @@ require 'worlddb/reader_zip'
 require 'worlddb/deleter'
 require 'worlddb/stats'
 
-require 'worlddb/tree_reader'
-
-
 require 'worlddb/reports/country_report'
 
 

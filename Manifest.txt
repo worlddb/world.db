@@ -35,7 +35,6 @@ lib/worlddb/readers/usage.rb
 lib/worlddb/reports/country_report.rb
 lib/worlddb/schema.rb
 lib/worlddb/stats.rb
-lib/worlddb/tree_reader.rb
 lib/worlddb/version.rb
 test/adm/test_fixture_matcher_adm2.rb
 test/adm/test_fixture_matcher_adm3.rb
@@ -75,4 +74,3 @@ test/test_parse_state.rb
 test/test_report_country.rb
 test/test_state_tree_reader_at.rb
 test/test_state_tree_reader_de.rb
-test/test_tree_reader.rb
