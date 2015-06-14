@@ -9,7 +9,12 @@ require 'helper'
 
 class TestReportCountry < MiniTest::Test
 
-  def test_at
+  ## note: special tests
+  ##   run on its own - will NOT run with test suite
+  ##   requires its own connection
+
+  def xxx_test_at
+
     ## connect to ./austria.db
     WorldDb.connect( adapter: 'sqlite3', database: './austria.db' )
 
@@ -17,7 +22,7 @@ class TestReportCountry < MiniTest::Test
     r.report
   end
 
-  def test_de
+  def xxx_test_de
     ## connect to ./deutschland.db
     WorldDb.connect( adapter: 'sqlite3', database: './deutschland.db' )
 

@@ -146,15 +146,8 @@ create_table :states do |t|
   t.string :alt_names  # comma separated list of alternate names (synonyms)
 
   t.references :country,  null: false
-  t.references :state      ## parent state (optional for now - may be null for top level e.g. state/province)
   t.integer    :level,    null: false, default: 1  # default assumes 1 e.g. state/province/etc.
   ### change to l (instead of level)!!!! - shorter, why, why not???
-
-  ## flags (use single int named flags - why? why not?  
-  ### fix: use a generic kind string type flag!!!!!!
-  ## t.boolean :s,  null: false, default: false   # state flag (use adm1? or a1)
-  ## t.boolean :p,  null: false, default: false   # governmental district falg (use adm2? or a2)  - check is Oberfranken/Oberbayern admin2 in Bayern (DE) ?? - note: might be optional (than adm3 becomes adm2)
-  ## t.boolean :c,  null: false, default: false   # county (or bezirk etc.) (use adm3? or a3?)
 
   t.integer :pop     # optional population count
   t.integer :area    # optional area in square km (sq. km)
@@ -249,12 +242,6 @@ create_table :zones do |t|
   # to be done
 end
 
-## create_table :city_rels do |t|   ## city relationships (w/ states/admins) -- part of state/zone
-##   t.references :city,   null: false
-##   t.references :state  ## optional ?? either state/admin or zone ?? use polymorphic assoc or use node w/ kind for place?
-##   t.references :zone    ## tourist zone e.g. fraenkische schweiz, wachau, steigerwald, etc. - use own join table???
-## end
-
 
 create_table :cities do |t|
   t.string     :name,   null: false
@@ -262,6 +249,7 @@ create_table :cities do |t|
   t.references :place,  null: false
   t.string     :code     # short three letter code (ITAT/airport code e.g. NYC or VIE)
   t.string     :alt_names  # comma separated list of alternate names (synonyms)
+
   t.references :country,  null: false
   t.references :state    # optional for now (e.g. state, bundesland, etc.)  -- ADM1
   t.references :part     # optional for now (e.g. regierungsbezirk, etc.)   -- x   /ADM2
@@ -272,9 +260,6 @@ create_table :cities do |t|
 
   t.integer :pop     # optional population count (city proper); see metro for metro pop
   t.integer :area    # optional area in square km (sq. km)
-
-  ## t.float   :lat   # optional for now  --  FIX: remove?? moved to places
-  ## t.float   :lng   # optional for now  --  FIX: remove?? moved to places
 
   ### t.boolean :capital, null: false, default: false  # is national captial?
 

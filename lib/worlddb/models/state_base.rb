@@ -21,11 +21,6 @@ class StateBase < ActiveRecord::Base
   validates :key,  format: { with: /#{STATE_KEY_PATTERN}/,  message: STATE_KEY_PATTERN_MESSAGE }
   validates :code, format: { with: /#{STATE_CODE_PATTERN}/, message: STATE_CODE_PATTERN_MESSAGE }, allow_nil: true
 
-  ### recursive self-reference - use "generic" node??
-  ## has_many :nodes, class_name: 'State', foreign_key: 'state_id'
-  # belongs_to :parent,  class_name: 'State', foreign_key: 'state_id'
-  # has_many   :states,  class_name: 'State', foreign_key: 'state_id'  ## substates
-
   ## begin compat
   def title()       name;              end
   def title=(value) self.name = value; end
@@ -143,13 +138,13 @@ class StateBase < ActiveRecord::Base
     # note: was self.find_by_key_and_country_id
     if self == State
       ## note: state scoped by country (all others by top-level state and NOT country)
-      rec = self.where(
+      rec = self.find_by(
                     key:         new_attributes[ :key ],
-                    country_id:  new_attributes[ :country_id] ).first
+                    country_id:  new_attributes[ :country_id] )
     else
-      rec = self.where(
+      rec = self.find_by(
                     key:      new_attributes[ :key ],
-                    state_id: new_attributes[ :state_id] ).first
+                    state_id: new_attributes[ :state_id] )
     end
 
     if rec.present?

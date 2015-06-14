@@ -31,7 +31,7 @@ class TestStateTreeReaderAt < MiniTest::Test
     reader.read
 
     n = State.find_by!( key: 'n' )
-    assert_equal 'Niederösterreich [Lower Austria]',  n.name
+    assert_equal 'Niederösterreich',  n.name
     assert_equal 25,                                  n.counties.count
 
     ks = County.find_by!( key: 'ks' )
@@ -47,7 +47,7 @@ class TestStateTreeReaderAt < MiniTest::Test
     assert_equal 'Gneixendorf',                      gneixendorf.name
     assert_equal 'Krems an der Donau',               gneixendorf.muni.name
     assert_equal 'Krems an der Donau (Stadt)',       gneixendorf.muni.county.name
-    assert_equal 'Niederösterreich [Lower Austria]', gneixendorf.muni.county.state.name
+    assert_equal 'Niederösterreich', gneixendorf.muni.county.state.name
   end
 
 end # class TestStateTreeReaderAt
