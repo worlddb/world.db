@@ -163,12 +163,12 @@ class StateBase < ActiveRecord::Base
     # auto add capital cities
     #  - note: get added to top-level state (e.g. adm1)
 
-    City.create_or_update_from_titles( value_cities,
-                                            state_id:  rec.state_id,
-                                            country_id: rec.country_id )
+    City.parse( value_cities,
+                   state_id:   rec.state_id,
+                   country_id: rec.country_id )  # note: will return an array of (new) city records
 
     ### todo/fix: add captial ref to country/state
-    ## todo/fix: use update_from_title and only allow one capital city
+    ## todo/fix: only allow one capital city (now it's an array)
 
 
     ##################

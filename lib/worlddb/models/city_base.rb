@@ -71,13 +71,27 @@ class CityBase < ActiveRecord::Base
   end
 
 
-
   def self.parse( *args )
     ## remove (extract) attribs hash (if last arg is a hash n present)
     more_attribs = args.last.is_a?(Hash) ? args.pop : {}  ## extract_options!
-    values       = args
-  
-    self.create_or_update_from_values( values, more_attribs )
+
+    ## check if array passed in for batch (multi record) parse
+    ##  - fix/todo: add to all other parse model methods too!!!! it's a standard (feature)
+    if args.size == 1 && args[0].is_a?(Array)
+      ## e.g. City.parse( [ 'Vienna', 'Salzburg' ] )
+      ##  note: works for now only w/ *single* name/title records
+      ##  add support for array in array too - why? why not?
+      ##  e.g. City.parse( [['Vienna', 'VIE'],
+      ##                    ['Salzbrug', 'SZB']] )
+      ary = args[0]
+      ## note: return array of new objs
+      ary.map { |value| self.create_or_update_from_values( [value], more_attribs ) }
+    else
+      ## standard (sinlge) record case
+      ##  e.g.  City.parse( 'Vienna', 'VIE', '1 800 000' )
+      values  = args
+      self.create_or_update_from_values( values, more_attribs )
+    end
   end
 
 

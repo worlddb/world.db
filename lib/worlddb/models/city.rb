@@ -19,16 +19,6 @@ class City < CityBase
     'CITY'
   end
 
-  def self.create_or_update_from_titles( titles, more_attribs = {} )
-    # ary of titles e.g. ['Wien', 'Graz'] etc.
-
-    titles.each do |title|
-      values = [title]
-      City.create_or_update_from_values( values, more_attribs ) 
-    end # each city
-  end  # method create_or_update_from_titles
-
-
 end # class City
 
 

@@ -311,7 +311,7 @@ class Country < ActiveRecord::Base
       #################
       ## auto add capital cities
 
-      City.create_or_update_from_titles( value_cities, country_id: rec.id )
+      City.parse( value_cities, country_id: rec.id )
 
       ##################
       ## add taggings 
