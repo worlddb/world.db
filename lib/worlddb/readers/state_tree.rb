@@ -36,17 +36,55 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
       puts "    #{names.join( ' › ' )}:"
       puts "      key: >#{node.key}<, level: >#{node.level}<, value: >#{node.value}<"
 
+      ## use name for lookup - use where() to find - might match more than 1 record!!
+      ##   todo/fix: check for multiple or no matches!!!
+      ##   todo/fix: check how to add state.id scope (and country.id scope) etc.
+      ##   add state.id to name - why? why not?
+      ##  move finders to name model for reuse (and testing) - why? why not ??
       if node.level == state_level  # 1
-        rec = State.where( "name like '#{node.value}%'" ).first 
+        ##  was: rec = State.where( "name like '#{node.value}%'" ).first 
+        names = Name.joins(
+                       :place => :state
+                     ).find_by(
+                        :name                => node.value,
+                        :place_kind          => 'STAT',
+                        :'states.country_id' => country.id )
+        rec = if names.nil?
+          nil
+        else
+          names.place.state   # get first record; fix: use where instead of find_by etc.
+        end
       elsif node.level == part_level # 2 
         state = stack[0]
         rec = Part.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
       elsif node.level == county_level  # 2 or 3
         state = stack[0]
-        rec = County.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
+        ## was: rec = County.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
+        names = Name.joins(
+                       :place => :county
+                     ).find_by(
+                       :name                => node.value,
+                       :place_kind          => 'COUN',
+                       :'counties.state_id' => state.id )
+        rec = if names.nil?
+          nil
+        else
+          names.place.county   # get first record
+        end
       elsif node.level == muni_level   # 3 or 4
         state = stack[0]
-        rec = Muni.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
+        ## was: rec = Muni.where( "name like '#{node.value}%' AND state_id = #{state.id}" ).first
+        names = Name.joins(
+                       :place => :muni
+                     ).find_by(
+                        :name             => node.value,
+                        :place_kind       => 'MUNI',
+                        :'munis.state_id' => state.id )
+        rec = if names.nil?
+          nil
+        else
+          names.place.muni   # get first record
+        end
       elsif node.level == city_level  # 4 or 5
         ## note: city requires country scope for lookup
         ## todo/fix: how to deal with cities with the same name

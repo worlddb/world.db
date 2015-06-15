@@ -6,6 +6,8 @@ module WorldDb
 
 class Name < ActiveRecord::Base
 
+  belongs_to :place,   class_name: 'Place',    foreign_key: 'place_id'
+
 
   def self.parse( *args )
     ## remove (extract) attribs hash (if last arg is a hash n present)
