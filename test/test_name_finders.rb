@@ -2,12 +2,12 @@
 
 ###
 #  to run use
-#     ruby -I ./lib -I ./test test/test_state_tree_reader_name_finder.rb
+#     ruby -I ./lib -I ./test test/test_name_finders.rb
 
 
 require 'helper'
 
-class TestStateTreeReaderNameFinder < MiniTest::Test
+class TestNameFinders < MiniTest::Test
 
   def setup
     #  delete all countries, states, cities in in-memory only db
@@ -24,14 +24,25 @@ class TestStateTreeReaderNameFinder < MiniTest::Test
     reader = WorldDb::Reader.new( "#{WorldDb.root}/test/data/at-austria" )
     reader.load_setup( 'setups/adm' )
 
+    recs = Name.find_states( 'Wien', at.id )
+    pp recs
+    
+    recs = Name.find_cities( 'Krems', at.id )
+    pp recs
+
+
+    ####
+    # -- finders scoped by state
+
     n = State.find_by!( key: 'n' )
 
+    recs = Name.find_parts( 'Waldviertel', n.id )
+    pp recs
 
     ## find counties w/ state_id using names 
-    names = Name.joins( :place => :county ).where(
-                                              :name                => 'Horn',
-                                              :place_kind          => 'COUN',
-                                              :'counties.state_id' => n.id )
+    recs = Name.find_counties( 'Horn', n.id )
+    pp recs
+    
     ## results in:
     ## SELECT "names".* FROM "names"
     ##   INNER JOIN "places" ON "places"."id" = "names"."place_id"
@@ -41,14 +52,11 @@ class TestStateTreeReaderNameFinder < MiniTest::Test
     ##     AND "counties"."state_id" = 2
     ## [["name", "Horn"], ["place_kind", "COUN"]]
 
-    pp names
 
 
-    ## find munies w/ state_id using names 
-    names = Name.joins( :place => :muni ).where(
-                                                :name             => 'Horn',
-                                                :place_kind       => 'MUNI',
-                                                :'munis.state_id' => n.id )
+    ## find munis w/ state_id using names 
+    recs = Name.find_munis( 'Horn', n.id )
+    pp recs
 
     ## results in:
     ## SELECT "names".* FROM "names"
@@ -59,9 +67,7 @@ class TestStateTreeReaderNameFinder < MiniTest::Test
     ##     AND "munis"."state_id" = 2
     ##  [["name", "Horn"], ["place_kind", "MUNI"]]
 
-    pp names
-
   end
 
-end # class TestStateTreeReaderNameFinder
+end # class TestNameFinders
 

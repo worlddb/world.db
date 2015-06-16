@@ -43,7 +43,7 @@ test/adm/test_read_adm.rb
 test/adm/test_read_tree.rb
 test/data/at-austria/1--b-burgenland/counties.txt
 test/data/at-austria/2--n-niederoesterreich/counties.txt
-test/data/at-austria/3--w-wien/counties.txt
+test/data/at-austria/3--w-wien/districts.txt
 test/data/at-austria/orte.txt
 test/data/at-austria/setups/adm.txt
 test/data/at-austria/setups/tree.txt
@@ -67,6 +67,7 @@ test/test_model_state.rb
 test/test_model_states_at.rb
 test/test_model_states_de.rb
 test/test_models.rb
+test/test_name_finders.rb
 test/test_name_parser.rb
 test/test_parse_city.rb
 test/test_parse_country.rb
@@ -74,4 +75,3 @@ test/test_parse_state.rb
 test/test_report_country.rb
 test/test_state_tree_reader_at.rb
 test/test_state_tree_reader_de.rb
-test/test_state_tree_reader_name_finder.rb
