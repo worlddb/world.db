@@ -195,4 +195,4 @@ end  # module WorldDb
 
 
 # say hello
-puts WorldDb.banner    if $DEBUG || (defined?($RUBYLIBS_DEBUG) && $RUBYLIBS_DEBUG)
+puts WorldDb.banner    if defined?($RUBYLIBS_DEBUG) && $RUBYLIBS_DEBUG

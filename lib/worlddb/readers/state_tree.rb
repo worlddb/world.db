@@ -54,18 +54,19 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
         recs = Name.find_cities( node.value, country.id )
       else
         puts "*** (fatal) error: unknown level for tree node: #{node.inspect}"
-        ## todo/fix: exit here - throw exception!!!!
+        fail "[StateTreeReader] unknown level for tree node: #{node.inspect}"
       end
 
 
       if recs.size > 0
         if recs.size == 1
           puts "ok - record match found: #{recs.inspect}"      
-          rec = recs[1].place_object  # e.g. state,part,county,muni,city,etc.
+          rec = recs[0].place_object  # e.g. state,part,county,muni,city,etc.
         else
           puts "** ok - #{recs.size} record(s) match found: #{recs.inspect}"
-          ## fix/todo: uses always first entry for now; make it more intelligent/usable!!
-          rec = recs[1].place_object  # e.g. state,part,county,muni,city,etc.
+          ## fix/todo: note - uses always first entry for now;
+          ##   make lookup/matching more intelligent/usable!!
+          rec = recs[0].place_object  # e.g. state,part,county,muni,city,etc.
         end
       else
         ## note: for now only auto-adds munis n cities
@@ -98,7 +99,7 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
                               country_id: country.id )
         else
           puts "*** (fatal) error: record not found for tree node: #{node.inspect}"
-          ## todo/fix: exit here; throw exception  !!!!!
+          fail "[StateTreeReader] record not found for tree node: #{node.inspect}"
         end
       end
 
@@ -106,7 +107,9 @@ class StateTreeReader < ReaderBaseWithMoreAttribs
 
       if level_diff > 0
         logger.debug "[StateTreeReader]    up  +#{level_diff}"
-        ## FIX!!! todo/check/verify/assert: always must be +1
+        if level_diff > 1
+          fail "[StateTreeReader] level diff MUST be +1 is +#{level_diff}"
+        end
       elsif level_diff < 0
         logger.debug "[StateTreeReader]    down #{level_diff}"
         level_diff.abs.times { stack.pop }

@@ -10,16 +10,22 @@ class Name < ActiveRecord::Base
 
 
   def place_object  # returns "typed" place object e.g. state, part, county, muni, city, etc.
-    ## todo/fix: use switch/when here ??
-    if place_kind == 'STAT'
-      place.state
-    elsif place_kind == 'PART'
-      place.part
+
+    case place_kind
+      when 'STAT'  ## state
+        place.state
+      when 'PART'  ## part
+        place.part
+      when 'COUN'  ## county
+        place.county
+      when 'MUNI'  ## muni
+        place.muni
+      when 'CITY'  ## city
+        place.city
     else
       puts "*** error [Name#place_object] - unknown place_kind #{place_kind}"
-      ## throw exception - unknown type
-      nil
-    end
+      fail "[Name#place_object] - unknown place_kind #{place_kind}"
+    end # end case
   end
 
   #########
@@ -28,57 +34,51 @@ class Name < ActiveRecord::Base
   # -- search scoped by country
 
   def self.find_states( name, country_id )  # note: requires country_id (for search scope)
-    recs = Name.joins(
-                       :place => :state
-                     ).where(
-                       :name                => name,
-                       :place_kind          => 'STAT',
-                       :'states.country_id' => country_id )
-    recs
+    Name.joins(
+                :place => :state
+              ).where(
+                :name                => name,
+                :place_kind          => 'STAT',
+                :'states.country_id' => country_id )
   end
 
   def self.find_cities( name, country_id ) # note: requires country_id (for search scope)  -- add version w/ state_id scope - why?? why not??
-    recs = Name.joins(
-                      :place => :city
-                     ).where(
-                       :name       => name,
-                       :place_kind => 'CITY',
-                       :'cities.country_id' => country_id )
-    recs
+    Name.joins(
+                :place => :city
+              ).where(
+                :name       => name,
+                :place_kind => 'CITY',
+                :'cities.country_id' => country_id )
   end
 
   ## -- search scoped by state
 
   def self.find_parts( name, state_id )  # note requires state_id (for search scope)
-    recs = Name.joins(
-                       :place => :part
-                     ).where(
-                       :name                => name,
-                       :place_kind          => 'PART',
-                       :'parts.state_id' => state_id )
-    recs
+    Name.joins(
+                :place => :part
+              ).where(
+                :name                => name,
+                :place_kind          => 'PART',
+                :'parts.state_id' => state_id )
   end
 
   def self.find_counties( name, state_id )  # note requires state_id (for search scope)
-    recs = Name.joins(
-                       :place => :county
-                     ).where(
-                       :name                => name,
-                       :place_kind          => 'COUN',
-                       :'counties.state_id' => state_id )
-    recs
+    Name.joins(
+                :place => :county
+              ).where(
+                :name                => name,
+                :place_kind          => 'COUN',
+                :'counties.state_id' => state_id )
   end
 
   def self.find_munis( name, state_id )    # note requires state_id (for search scope)
-    recs = Name.joins(
-                       :place => :muni
-                     ).where(
-                        :name             => name,
-                        :place_kind       => 'MUNI',
-                        :'munis.state_id' => state_id )
-    recs
+    Name.joins(
+                :place => :muni
+              ).where(
+                :name             => name,
+                :place_kind       => 'MUNI',
+                :'munis.state_id' => state_id )
   end
-
 
 
   ########
