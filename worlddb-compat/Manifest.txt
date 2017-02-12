@@ -1,0 +1,12 @@
+HISTORY.md
+Manifest.txt
+README.md
+Rakefile
+lib/worlddb/compat.rb
+lib/worlddb/compat/city.rb
+lib/worlddb/compat/continent.rb
+lib/worlddb/compat/country.rb
+lib/worlddb/compat/lang.rb
+lib/worlddb/compat/matcher.rb
+lib/worlddb/compat/state.rb
+lib/worlddb/compat/version.rb

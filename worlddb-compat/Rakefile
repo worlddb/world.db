@@ -1,0 +1,33 @@
+require 'hoe'
+require './lib/worlddb/compat/version.rb'
+
+
+Hoe.spec 'worlddb-compat' do
+
+  self.version = WorldDbCompat::VERSION
+
+  self.summary = "worlddb-compat - worlddb addon for backward compatibility (compat)"
+  self.description = summary
+
+  self.urls    = ['https://github.com/worlddb/world.db.compat']
+
+  self.author  = 'Gerald Bauer'
+  self.email   = 'openmundi@googlegroups.com'
+
+  self.extra_deps = [
+    ['worlddb-models'],
+  ]
+
+  # switch extension to .markdown for gihub formatting
+  #  -- NB: auto-changed when included in manifest
+  self.readme_file  = 'README.md'
+  self.history_file = 'HISTORY.md'
+
+
+  self.licenses = ['Public Domain']
+
+  self.spec_extras = {
+    required_ruby_version: '>= 1.9.2'
+  }
+
+end

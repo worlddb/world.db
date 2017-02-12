@@ -4,6 +4,7 @@ Gem Family:
 
 - [**worlddb**](worlddb) - open world database (world.db) command line tool
 - [worlddb-models](worlddb-models) - world.db schema 'n' models for easy (re)use
+- [worlddb-compat](worlddb-compat) - world.db addon for backward compatibility (compat)
 
 
 
