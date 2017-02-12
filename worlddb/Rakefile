@@ -1,0 +1,41 @@
+require 'hoe'
+require './lib/worlddb/cli/version.rb'
+
+
+Hoe.spec 'worlddb' do
+  
+  self.version = WorldDbCli::VERSION
+
+  self.summary = "worlddb - world.db command line tool"
+  self.description = summary
+
+  self.urls    = ['https://github.com/worlddb/world.db.tools']
+
+  self.author  = 'Gerald Bauer'
+  self.email   = 'openmundi@googlegroups.com'
+
+  self.extra_deps = [
+    ['worlddb-models', '>=2.3.0'],
+    ### ['worlddb-service'],
+
+    ['datafile', '>= 0.2.2'],
+    ['fetcher', '>= 0.4.5'],
+
+     ## 3rd party
+    ['gli', '>= 2.12.2'],
+    ['sqlite3']   # Note: will include sqlite for activerecord; use worlddb-models for apps etc.
+  ]
+
+  # switch extension to .markdown for gihub formatting
+  #  -- NB: auto-changed when included in manifest
+  self.readme_file  = 'README.md'
+  self.history_file = 'HISTORY.md'
+
+
+  self.licenses = ['Public Domain']
+
+  self.spec_extras = {
+    required_ruby_version: '>= 1.9.2'
+  }
+
+end

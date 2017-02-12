@@ -1,0 +1,10 @@
+HISTORY.md
+Manifest.txt
+README.md
+Rakefile
+bin/worlddb
+lib/worlddb.rb
+lib/worlddb/cli/main.rb
+lib/worlddb/cli/opts.rb
+lib/worlddb/cli/version.rb
+lib/worlddb/console.rb

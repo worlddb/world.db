@@ -3,7 +3,14 @@
 Gem Family:
 
 - [**worlddb**](worlddb) - open world database (world.db) command line tool
-- [world-models](world-models) - world.db schema 'n' models for easy (re)use
+- [worlddb-models](worlddb-models) - world.db schema 'n' models for easy (re)use
+
+
+
+
+## Free Open Public Domain Datasets
+
+- [`world.db`](https://github.com/openmundi) - free open public domain countries, regions, cities n more data for use in any (programming) language
 
 
 
