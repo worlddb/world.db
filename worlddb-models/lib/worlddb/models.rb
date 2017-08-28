@@ -57,6 +57,10 @@ require 'worlddb/models/tagdb/tagging'
 require 'worlddb/helpers/value_helper'  # Note: extends module TextUtils(!!)::ValueHelper
 
 
+require 'worlddb/serializers/city'
+require 'worlddb/serializers/country'
+
+
 require 'worlddb/schema'       # Note: requires worlddb/models (include WorldDB::Models)
 require 'worlddb/matcher'
 require 'worlddb/matcher_adm'
@@ -163,7 +167,7 @@ module WorldDb
     end
 
     ## todo/check: use if defined?( JRUBY_VERSION ) instead ??
-    if RUBY_PLATFORM =~ /java/ && config[:adapter] == 'sqlite3' 
+    if RUBY_PLATFORM =~ /java/ && config[:adapter] == 'sqlite3'
       # quick hack for JRuby sqlite3 support via jdbc
       puts "jruby quick hack - adding jdbc libs for jruby sqlite3 database support"
       require 'jdbc/sqlite3'

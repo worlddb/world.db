@@ -34,6 +34,8 @@ lib/worlddb/readers/state_tree.rb
 lib/worlddb/readers/usage.rb
 lib/worlddb/reports/country_report.rb
 lib/worlddb/schema.rb
+lib/worlddb/serializers/city.rb
+lib/worlddb/serializers/country.rb
 lib/worlddb/stats.rb
 lib/worlddb/version.rb
 test/adm/test_fixture_matcher_adm2.rb

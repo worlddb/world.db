@@ -19,6 +19,11 @@ class City < CityBase
     'CITY'
   end
 
+
+  def as_tab( opts={} )
+    CitySerializer.new( self ).as_tab
+  end
+
 end # class City
 
 

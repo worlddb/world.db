@@ -4,7 +4,7 @@ module WorldDb
   module Model
 
 ########
-# Country / Supra (e.g. European Union) / Territory (e.g. Puerto Rico) or Dependency (e.g. Dependent territory) 
+# Country / Supra (e.g. European Union) / Territory (e.g. Puerto Rico) or Dependency (e.g. Dependent territory)
 
 class Country < ActiveRecord::Base
 
@@ -62,9 +62,13 @@ class Country < ActiveRecord::Base
   scope :by_net,      ->{ order( 'net asc' ) }    # internet cc top level domain; ccTLD
 
 
+  def as_tab( opts={} )
+    CountrySerializer.new( self ).as_tab
+  end
+
+
   before_create :on_create
   before_update :on_update
-
 
   def on_create
     place_rec = Place.create!( name: name, kind: place_kind )
@@ -94,7 +98,7 @@ class Country < ActiveRecord::Base
       'TERR'
     elsif is_misc?  ## misc(ellaneous) country or dependent territory
       # todo: use different marker?
-      # territory w/ shared or disputes claims e.g Antartica/Western Sahara/Paracel Islands pg Spratly Islands/etc. 
+      # territory w/ shared or disputes claims e.g Antartica/Western Sahara/Paracel Islands pg Spratly Islands/etc.
       'MISC'
     else
       'CNTY'
@@ -103,8 +107,8 @@ class Country < ActiveRecord::Base
 
 
   ###
-  #  NB: use is_  for flags to avoid conflict w/ assocs 
-  
+  #  NB: use is_  for flags to avoid conflict w/ assocs
+
   def is_supra?()      s? == true;  end
   def is_country?()    c? == true;  end
   def is_dependency?() d? == true;  end
@@ -116,7 +120,7 @@ class Country < ActiveRecord::Base
     ## allow to passing in sep or separator e.g. | or other
 
     return name if alt_names.blank?
-    
+
     buf = ''
     buf << name
     buf << ' | '
@@ -149,7 +153,7 @@ class Country < ActiveRecord::Base
 
       ### NOTE: escape ' for sql like clause
       ##   for now use '' for escapes, that is, double quotes
-      ##  check - working for postgresql n sqlite?? 
+      ##  check - working for postgresql n sqlite??
       name_esc = name.gsub( /'/, "''" )
 
       ## 3) retry: use SQL like match
@@ -180,7 +184,7 @@ class Country < ActiveRecord::Base
     ## remove (extract) attribs hash (if last arg is a hash n present)
     more_attribs = args.last.is_a?(Hash) ? args.pop : {}  ## extract_options!
     values       = args
-  
+
     self.create_or_update_from_values( values, more_attribs )
   end
 
@@ -236,13 +240,13 @@ class Country < ActiveRecord::Base
         elsif match_number( value ) do |num|  # numeric (nb: can use any _ or spaces inside digits e.g. 1_000_000 or 1 000 000)
                 value_numbers << num
               end
-        elsif value =~ /#{COUNTRY_CODE_PATTERN}/  ## three letter code 
+        elsif value =~ /#{COUNTRY_CODE_PATTERN}/  ## three letter code
           new_attributes[ :code ] = value
         elsif (values.size==(index+1)) && is_taglist?( value )   # tags must be last entry
           logger.debug "   found tags: >>#{value}<<"
           value_tag_keys += find_tags( value )
         else
-          
+
           ### assume it is the capital city - mark it for auto add
           value_cities << value
           next
@@ -261,7 +265,7 @@ class Country < ActiveRecord::Base
             # auto-add tags
             area = value_numbers[0]
             pop  = value_numbers[1]
-            
+
             # categorize into brackets
             if area >= 1_000_000
               value_tag_keys << 'area_1_000_000_n_up'
@@ -277,7 +281,7 @@ class Country < ActiveRecord::Base
             value_tag_keys << 'area_100_000_n_up'  if area >= 100_000
             value_tag_keys << 'area_1_000_n_up'    if area >=   1_000
 
-            
+
             # categorize into brackets
             if pop >= 100_000_000
               value_tag_keys << 'pop_100m_n_up'
@@ -288,7 +292,7 @@ class Country < ActiveRecord::Base
             else
               value_tag_keys << 'pop_1m_n_less'
             end
-            
+
             # include all
             value_tag_keys << 'pop_10m_n_up'  if pop >= 10_000_000
             value_tag_keys << 'pop_1m_n_up'   if pop >=  1_000_000
@@ -303,9 +307,9 @@ class Country < ActiveRecord::Base
         logger.debug "create Country:"
         rec = Country.new
       end
-      
+
       logger.debug new_attributes.to_json
-   
+
       rec.update_attributes!( new_attributes )
 
       #################
@@ -314,10 +318,10 @@ class Country < ActiveRecord::Base
       City.parse( value_cities, country_id: rec.id )
 
       ##################
-      ## add taggings 
+      ## add taggings
 
       if value_tag_keys.size > 0
-        
+
         if opts[:skip_tags].present?
           logger.debug "   skipping add taggings (flag skip_tag)"
         else
