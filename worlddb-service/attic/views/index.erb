@@ -1,0 +1,131 @@
+
+<h1>world.db JSON(P) API Demo</h1>
+
+<h2>Examples</h2>
+
+
+<h3>List all countries <code>/countries.(txt|html)</code></h3>
+
+<table>
+  <td>
+    <code>
+     <a href='<%= url("/countries") %>'>
+        /countries
+     </a>
+    </code>
+  </td>
+  <td>
+     &nbsp; &nbsp; &nbsp; &nbsp;
+     Alternative Formats:
+     <code><a href='<%= url("/countries.txt") %>'>.txt</a></code> |
+     <code><a href='<%= url("/countries.html") %>'>.html</a></code>
+  </td>
+ </tr>
+</table>
+
+<h3>List all countries for a tag <code>/tag/<span class='params'>:tag</span></code></h3>
+
+<table>
+ <tr>
+  <td>
+    <code>
+     <a href='<%= url("/tag/europe") %>'>
+        /tag/<span class='params'>europe</span>
+     </a>
+    </code>
+  </td>
+  <td>
+     &nbsp; &nbsp; &nbsp; &nbsp;
+     Alternative Formats:
+     <code><a href='<%= url("/tag/europe.txt") %>'>.txt</a></code> |
+     <code><a href='<%= url("/tag/europe.html") %>'>.html</a></code>
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+    <code>
+     <a href='<%= url("/tag/south_america") %>'>
+        /tag/<span class='params'>south_america</span>
+     </a>
+    </code>
+  </td>
+  <td>
+     &nbsp; &nbsp; &nbsp; &nbsp;
+     Alternative Formats:
+     <code><a href='<%= url("/tag/south_america.txt") %>'>.txt</a></code> |
+     <code><a href='<%= url("/tag/south_america.html") %>'>.html</a></code>
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+    <code>
+     <a href='<%= url("/tag/un") %>'>
+        /tag/<span class='params'>un</span>
+     </a>
+    </code>
+  </td>
+  <td>
+     &nbsp; &nbsp; &nbsp; &nbsp;
+     Alternative Formats:
+     <code><a href='<%= url("/tag/un.txt") %>'>.txt</a></code> |
+     <code><a href='<%= url("/tag/un.html") %>'>.html</a></code>
+  </td>
+ </tr>
+
+<tr>
+  <td>
+    <code>
+     <a href='<%= url("/tag/eu") %>'>
+        /tag/<span class='params'>eu</span>
+     </a>
+    </code>
+  </td>
+  <td>
+     &nbsp; &nbsp; &nbsp; &nbsp;
+     Alternative Formats:
+     <code><a href='<%= url("/tag/eu.txt") %>'>.txt</a></code> |
+     <code><a href='<%= url("/tag/eu.html") %>'>.html</a></code>
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+    <code>
+     <a href='<%= url("/tag/uefa") %>'>
+        /tag/<span class='params'>uefa</span>
+     </a>
+    </code>
+  </td>
+  <td>
+     &nbsp; &nbsp; &nbsp; &nbsp;
+     Alternative Formats:
+     <code><a href='<%= url("/tag/uefa.txt") %>'>.txt</a></code> |
+     <code><a href='<%= url("/tag/uefa.html") %>'>.html</a></code>
+  </td>
+ </tr>
+
+</table>
+
+<h3>List all cities <code>/cities.(txt|html)</code></h3>
+
+<table>
+  <td>
+    <code>
+     <a href='<%= url("/cities") %>'>
+        /cities
+     </a>
+    </code>
+  </td>
+  <td>
+     &nbsp; &nbsp; &nbsp; &nbsp;
+     Alternative Formats:
+     <code><a href='<%= url("/cities.txt") %>'>.txt</a></code> |
+     <code><a href='<%= url("/cities.html") %>'>.html</a></code>
+  </td>
+ </tr>
+</table>
+
+
+<%= erb :'_debug' %>
