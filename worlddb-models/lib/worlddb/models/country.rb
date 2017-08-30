@@ -62,8 +62,8 @@ class Country < ActiveRecord::Base
   scope :by_net,      ->{ order( 'net asc' ) }    # internet cc top level domain; ccTLD
 
 
-  def as_tab( opts={} )
-    CountrySerializer.new( self ).as_tab
+  def as_row( opts={} )
+    CountrySerializer.new( self ).as_row
   end
 
 

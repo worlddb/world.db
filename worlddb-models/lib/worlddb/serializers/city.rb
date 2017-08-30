@@ -4,7 +4,7 @@ module WorldDb::Model
 
 
   ## todo/check:
-  ##   add as_tab(ular) to CityBase for all classes - why? why not??
+  ##   add as_row to CityBase for all classes - why? why not??
 
   class CitySerializer
 
@@ -14,7 +14,7 @@ module WorldDb::Model
 
     attr_reader :city
 
-    def as_tab  # as_tabular (returns an array of records/hashes)
+    def as_row
 
       ## add virtual column like kind for metro, metro|city, city, district
 
