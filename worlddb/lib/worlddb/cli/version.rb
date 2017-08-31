@@ -3,10 +3,10 @@
 # Note: WorldDb::VERSION gets used by core, that is, worlddb-models
 
 
-module WorldDbCli    # todo/check - rename to WorldDbTool or WorldDbCommands or WorldDbShell ??
+module WorldDbTool    # todo/check - rename to WorldDbTool or WorldDbCommands or WorldDbShell ??
 
   MAJOR = 2 ## todo: namespace inside version or something - why? why not??
-  MINOR = 3
+  MINOR = 4
   PATCH = 0
   VERSION = [MAJOR,MINOR,PATCH].join('.')
 
@@ -22,4 +22,4 @@ module WorldDbCli    # todo/check - rename to WorldDbTool or WorldDbCommands or 
     "#{File.expand_path( File.dirname(File.dirname(File.dirname(File.dirname(__FILE__)))) )}"
   end
 
-end # module WorldDbCli
+end # module WorldDbTool

@@ -8,11 +8,11 @@ module WorldDb
 
   class Tool
      def initialize
-       LogUtils::Logger.root.level = :info   # set logging level to info 
+       LogUtils::Logger.root.level = :info   # set logging level to info
      end
 
      def run( args )
-       puts WorldDbCli.banner
+       puts WorldDbTool.banner
        Toolii.run( args )
      end
   end
@@ -38,12 +38,12 @@ module WorldDb
    end
 
 logger = LogUtils::Logger.root
-opts   = WorldDb::Opts.new 
+opts   = WorldDb::Opts.new
 
 
 program_desc 'world.db command line tool'
 
-version WorldDbCli::VERSION
+version WorldDbTool::VERSION
 
 =begin
 ### add to help use new sections
@@ -86,7 +86,7 @@ command [:build,:b] do |c|
   c.action do |g,o,args|
 
     datafile = Datafile::Datafile.load_file( './Datafile' )
-    datafile.download  # datafile step 1 - download all datasets/zips 
+    datafile.download  # datafile step 1 - download all datasets/zips
 
     connect_to_db( opts )
 
@@ -142,7 +142,7 @@ command [:new,:n] do |c|
 
     ## step 2: same as command build (todo - reuse code)
     datafile = Datafile::Datafile.load_file( './Datafile' )
-    datafile.download  # datafile step 1 - download all datasets/zips 
+    datafile.download  # datafile step 1 - download all datasets/zips
 
     connect_to_db( opts )  ### todo: check let connect go first?? - for logging (logs) to db  ???
 
@@ -159,9 +159,9 @@ end  # command setup
 desc 'Create DB schema'
 command [:create] do |c|
   c.action do |g,o,args|
-    
+
     connect_to_db( opts )
-    
+
     WorldDb.create_all
 
     puts 'Done.'
@@ -180,10 +180,10 @@ command [:setup,:s] do |c|
   c.action do |g,o,args|
 
     connect_to_db( opts )
- 
+
     ## todo: document optional setup profile arg (defaults to all)
     setup = args[0] || 'all'
-    
+
     WorldDb.create_all
 
     WorldDb.read_setup( "setups/#{setup}", opts.data_path )
@@ -234,7 +234,7 @@ command [:load, :l] do |c|
   c.action do |g,o,args|
 
     connect_to_db( opts )
-    
+
     if o[:delete].present?
       ## todo/fix: also delete TagDb.delete!
       WorldDb.delete!
@@ -271,9 +271,11 @@ command :props do |c|
   c.action do |g,o,args|
 
     connect_to_db( opts )
-    
+
     ### fix: use ConfDb.dump or similar  (for reuse) !!!
-    ## WorldDb.props
+    ConfDb::Models::Prop.all.each do |prop|
+      puts "#{prop.key}  |  #{prop.value}"
+    end
 
     puts 'Done.'
   end
@@ -286,14 +288,55 @@ command :logs do |c|
 
     connect_to_db( opts )
 
-    ### fix: use LogDb.dump or similar (for reuse) !!!!    
+    ### fix: use LogDb.dump or similar (for reuse) !!!!
     LogDb::Models::Log.all.each do |log|
       puts "[#{log.level}] -- #{log.msg}"
     end
-    
+
     puts 'Done.'
   end
 end
+
+
+
+desc 'Start web service (HTTP JSON API)'
+arg_name 'NAME'   # optional setup profile name
+command [:serve,:server,:s] do |c|
+
+  c.action do |g,o,args|
+
+    ## todo: document optional script arg (defaults to service)
+    script      = args[0] || 'service'
+
+    ## todo/fix: add support for (default) Service (with no extension)
+
+    script_path = "#{script}.rb"     ## auto-add .rb extension
+
+    unless File.exist?( script_path ) ## if file doesn't exist try to fetch service script
+      script_path = "./#{script}.rb"   ## use / save script in local (current) working dir/folder
+      worker = Fetcher::Worker.new
+      ## note: lets use http:// instead of https:// for now - lets us use person proxy (NOT working w/ https for now)
+      worker.copy( "http://github.com/worlddb/world.db.service/raw/master/#{script}.rb", script_path )
+    end
+
+
+    code = File.read_utf8( script_path )
+
+    connect_to_db( opts )
+
+    WorldDb.tables   ## print table stats
+
+    WorldDbService.class_eval( code )  ## note: MUST use class_eval (do NOT use instance_eval)  !!!
+
+    puts "dump routes:"
+    pp WorldDbService.routes
+
+    puts "starting server..."
+    WorldDbService.run!
+
+    puts 'Done.'
+  end
+end # command serve
 
 
 desc '(Debug) Test command suite'
@@ -307,11 +350,11 @@ command :test do |c|
     pp o
     puts "g (#{g.class.name}):"
     pp g
-    
+
     LogUtils::Logger.root.debug 'test debug msg'
     LogUtils::Logger.root.info 'test info msg'
     LogUtils::Logger.root.warn 'test warn msg'
-    
+
     puts 'Done.'
   end
 end
@@ -351,4 +394,3 @@ end
 
   end  # class Toolii
 end  # module WorldDb
-

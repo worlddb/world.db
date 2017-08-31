@@ -2,6 +2,7 @@ HISTORY.md
 Manifest.txt
 README.md
 Rakefile
+assets/webservice-worlddb-32x32.png
 bin/worlddb
 lib/worlddb.rb
 lib/worlddb/cli/main.rb
