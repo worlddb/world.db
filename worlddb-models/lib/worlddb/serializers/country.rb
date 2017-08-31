@@ -18,7 +18,7 @@ module WorldDb::Model
 
       ## todo: add tags too??
       data = { key:      country.key,
-               title:    country.title,
+               name:     country.name,
                code:     country.code,
                pop:      country.pop,
                area:     country.area,

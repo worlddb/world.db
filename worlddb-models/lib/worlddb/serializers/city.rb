@@ -19,15 +19,15 @@ module WorldDb::Model
       ## add virtual column like kind for metro, metro|city, city, district
 
       ## todo add region.title if present
+      ## todo add metro.name if available - why? why not??
 
       data = { key:      city.key,
-               title:    city.title,
+               name:     city.name,
                code:     city.code,
                pop:      city.pop,
-               popm:     city.popm,
                area:     city.area,
                synonyms: city.synonyms,
-               country:  city.country.title }
+               country:  city.country.name }
       data
     end
 
