@@ -26,11 +26,17 @@ module WorldDb
 # move to notes  regex|patterns on  geraldb.github.io ??
 #
 
-  COUNTRY_KEY_PATTERN = '\A[a-z]{2,3}\z'    # allow two AND three letter keys e.g. at, mx, eng, sco, etc.
-  COUNTRY_KEY_PATTERN_MESSAGE = "expected two or three lowercase letters a-z /#{COUNTRY_KEY_PATTERN}/"
+  ## todo/check: allow country keys with single letter - why? why not?
+  ## todo/check: allow country codes with single or two letters or with underscore - why? why not?
 
-  COUNTRY_CODE_PATTERN = '\A[A-Z_]{3}\z'
-  COUNTRY_CODE_PATTERN_MESSAGE = "expected three uppercase letters A-Z (and _) /#{COUNTRY_CODE_PATTERN}/"
+  ## todo/fix:  change to COUNTRY_KEY_RE    and make it regexp type!!
+  ## todo/fix:  change to COUNTRY_CODE_RE   and make it regexp type!!
+
+  COUNTRY_KEY_PATTERN = '\A[a-z]{2,}\z'    # allow two AND three letter keys e.g. at, mx, eng, sco, etc.
+  COUNTRY_KEY_PATTERN_MESSAGE = "expected two or more lowercase letters a-z /#{COUNTRY_KEY_PATTERN}/"
+
+  COUNTRY_CODE_PATTERN = '\A[A-Z]{3,}\z'
+  COUNTRY_CODE_PATTERN_MESSAGE = "expected three or more uppercase letters A-Z /#{COUNTRY_CODE_PATTERN}/"
 
 
   STATE_KEY_PATTERN = '\A[a-z]+\z'
@@ -42,7 +48,7 @@ module WorldDb
 
   CITY_KEY_PATTERN = '\A[a-z]{3,}\z'
   CITY_KEY_PATTERN_MESSAGE = "expected three or more lowercase letters a-z' /#{CITY_KEY_PATTERN}/"
-  
+
   CITY_CODE_PATTERN = '\A[A-Z_]{3}\z'
   CITY_CODE_PATTERN_MESSAGE = "expected three uppercase letters A-Z (and _)' /#{CITY_CODE_PATTERN}/"
 
