@@ -8,6 +8,12 @@ Gem Family:
 
 
 
+More
+
+- [**worldlite**](worldlite) - lightweight public domain country data (all data included as good ol' ruby code - no database, no dependencies, no copyright)
+
+
+
 
 ## Free Open Public Domain Datasets
 

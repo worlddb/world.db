@@ -1,0 +1,40 @@
+
+### <%= Country.where(s:true).count %> Supras / <%= Country.where(c:true).count %> Countries / <%= Country.where(d:true).count %> Territories
+
+
+<% Continent.order(:id).each do |continent|
+      supras_count      = continent.countries.where( s: true ).count
+      countries_count   = continent.countries.where( c: true ).count
+      territories_count = continent.countries.where( d: true ).count
+ %>
+
+<% if supras_count > 0 %>
+#### <%= continent.name %> - <%= supras_count %> Supras / <%= countries_count %> Countries / <%= territories_count %> Territories
+<% else %>
+#### <%= continent.name %> - <%= countries_count %> Countries / <%= territories_count %> Territories
+<% end %>
+
+<% if supras_count > 0 %>
+<%= supras_count %>:
+<% continent.countries.where( s: true ).order(:name).each do |country| %>
+`<%= country.key %>` <%= fmt_str( country.name ) %> (<%= fmt_str( country.iso3, nil: '?') %>)
+<% end %>
+<% end %>
+
+
+<% if countries_count > 0 %>
+<%= countries_count %>:
+<% continent.countries.where( c: true ).order(:name).each do |country| %>
+`<%= country.key %>` <%= fmt_str( country.name ) %> (<%= fmt_str( country.iso3, nil: '?') %>)
+<% end %>
+<% end %>
+
+
+<% if territories_count > 0 %>
+<%= territories_count %>:
+<% continent.countries.where( d: true ).order(:name).each do |country| %>
+`<%= country.key %>` <%= fmt_str( country.name ) %> (<%= fmt_str( country.iso3, nil: '?') %>)
+<% end %>
+<% end %>
+
+<% end %>

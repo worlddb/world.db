@@ -1,0 +1,62 @@
+# encoding: utf-8
+
+module WorldLite
+
+  c = Country.new
+  c.name   = <%= fmt_str( country.name ) %>
+  c.key    = <%= fmt_str( country.key )  %>
+  c.alpha3 = <%= fmt_str( country.iso3 ) %>
+  c.fifa   = <%= fmt_str( country.fifa ) %>
+  c.net    = <%= fmt_str( country.net  ) %>
+
+<%#
+#  c.num    =  ???  # check if leading zero leads to octal num system?? just use 21 ??
+#  c.alpha2 = '??'
+#  c.ioc    = '???'
+ %>
+
+  c.continent_name =  <%= fmt_str( country.continent.name ) %>
+
+  c.un     = <%= fmt_bool( has_tag?( country, 'un' )) %>
+  c.eu     = <%= fmt_bool( has_tag?( country, 'eu' )) %>
+  c.euro   = <%= fmt_bool( has_tag?( country, 'euro' )) %>
+
+  #  <%= country.name %> / <%= country.continent.name %>
+  #    tags: <%= fmt_tags( country.tags ) %>
+  <%= country.key.upcase %> = c
+
+  WORLD      << <%= country.key.upcase %>
+<% if has_tag?( country, 'un' ) %>
+  WORLD_UN   << <%= country.key.upcase %>
+<% end %>
+<% if country.iso3 %>
+  WORLD_ISO  << <%= country.key.upcase %>
+<% end %>
+<% if country.fifa %>
+  WORLD_FIFA << <%= country.key.upcase %>
+<% end %>
+<% if has_tag?( country, 'g8' ) %>
+  WORLD_G8   << <%= country.key.upcase %>
+<% end %>
+<% if has_tag?( country, 'g20' ) %>
+  WORLD_G20  << <%= country.key.upcase %>
+<% end %>
+<% if has_tag?( country, 'commonwealth' ) %>
+  WORLD_COMMONWEALTH  << <%= country.key.upcase %>
+<% end %>
+
+<% if country.continent.name == 'Europe' %>
+  EUROPE       << <%= country.key.upcase %>
+<% end %>
+<% if has_tag?( country, 'eu' ) %>
+  EUROPE_EU    << <%= country.key.upcase %>
+<% end %>
+<% if has_tag?( country, 'euro' ) %>
+  EUROPE_EURO  << <%= country.key.upcase %>
+<% end %>
+
+<%# use tags to check (or flags) or continent etc. ??
+#  EUROPE_UEFA  << AT
+%>
+
+end  # module WorldLite
